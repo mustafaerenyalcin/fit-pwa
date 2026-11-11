@@ -6571,6 +6571,551 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   color: #fff !important;
 }
 
+/* =====================================================================
+   ATHLETE STORY KARTI (9:16 VIRAL SOCIAL CARD)
+   ===================================================================== */
+.fx-storyCardModal {
+  max-width: 440px !important;
+  background: rgba(10, 12, 18, 0.96) !important;
+  border: 1px solid rgba(255, 77, 28, 0.28) !important;
+  backdrop-filter: blur(28px) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 77, 28, 0.12) !important;
+}
+.fx-storyPreviewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+.fx-storyVisualCard {
+  width: 100%;
+  max-width: 320px;
+  min-height: 480px;
+  background: linear-gradient(180deg, #111420 0%, #08090d 100%);
+  border: 2px solid rgba(255, 77, 28, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 77, 28, 0.12);
+  border-radius: 22px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.fx-storyVisualCard::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 77, 28, 0.24) 0%, transparent 70%);
+  pointer-events: none;
+}
+.fx-storyCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.fx-storyEyebrow {
+  color: #ff4d1c;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+.fx-storyCardTop small {
+  color: #94a3b8;
+}
+.fx-storyAthleteRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 6px;
+}
+.fx-storyAthleteRow h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+.fx-storyAthleteRow span {
+  font-size: 12px;
+  color: #ff7a50;
+  font-weight: 600;
+}
+.fx-storyBigVolume {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 77, 28, 0.3);
+  border-radius: 16px;
+  padding: 14px;
+  text-align: center;
+  margin: 10px 0;
+}
+.fx-storyBigVolume small {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  font-weight: 800;
+  display: block;
+}
+.fx-volumeDigits {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.fx-volumeDigits b {
+  font-size: 32px;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+}
+.fx-volumeDigits span {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ff4d1c;
+}
+.fx-storyTrioRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.fx-storyTrioBox {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 6px;
+  text-align: center;
+}
+.fx-storyTrioBox small {
+  font-size: 9.5px;
+  color: #94a3b8;
+  font-weight: 800;
+  display: block;
+}
+.fx-storyTrioBox b {
+  font-size: 15px;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  display: block;
+  margin-top: 2px;
+}
+.fx-storyFooterWatermark {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.fx-storyFooterWatermark b {
+  font-size: 15px;
+  font-weight: 900;
+  color: #ff4d1c;
+  letter-spacing: 2px;
+}
+.fx-storyFooterWatermark b span {
+  color: #fff;
+}
+.fx-storyFooterWatermark small {
+  font-size: 8.5px;
+  color: #64748b;
+  letter-spacing: 1px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.fx-storyActionsRow {
+  margin-top: 14px;
+}
+
+/* =====================================================================
+   ÜCRETSİZ BARKOD TARAYICI (ZERO-PAYWALL CAMERA SCANNER)
+   ===================================================================== */
+.fx-barcodeModal {
+  max-width: 480px !important;
+  background: rgba(12, 14, 22, 0.96) !important;
+  border: 1px solid rgba(0, 240, 255, 0.3) !important;
+}
+.fx-barcodeCameraContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.fx-viewfinderBox {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fx-cameraFeed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fx-viewfinderTarget {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 210px;
+  height: 130px;
+  pointer-events: none;
+}
+.fx-targetCorner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: #00f0ff;
+  border-style: solid;
+}
+.fx-targetCorner.top-left {
+  top: 0;
+  left: 0;
+  border-width: 3px 0 0 3px;
+  border-top-left-radius: 8px;
+}
+.fx-targetCorner.top-right {
+  top: 0;
+  right: 0;
+  border-width: 3px 3px 0 0;
+  border-top-right-radius: 8px;
+}
+.fx-targetCorner.bottom-left {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 3px 3px;
+  border-bottom-left-radius: 8px;
+}
+.fx-targetCorner.bottom-right {
+  bottom: 0;
+  right: 0;
+  border-width: 0 3px 3px 0;
+  border-bottom-right-radius: 8px;
+}
+.fx-barcodeLaserLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00f0ff, #ff4d1c, transparent);
+  box-shadow: 0 0 12px #00f0ff;
+  animation: barcodeLaserScan 2s infinite ease-in-out;
+}
+@keyframes barcodeLaserScan {
+  0%, 100% {
+    top: 8%;
+    opacity: 0.7;
+  }
+  50% {
+    top: 90%;
+    opacity: 1;
+  }
+}
+.fx-scannerHint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
+}
+.fx-cameraFallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  text-align: center;
+  background: rgba(245, 196, 81, 0.05);
+  border: 1px dashed rgba(245, 196, 81, 0.35);
+  border-radius: 16px;
+  gap: 10px;
+}
+.fx-cameraFallback p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--fx-muted);
+  line-height: 1.5;
+}
+.fx-sampleBarcodesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fx-sampleBarcodePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.fx-sampleBarcodeBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 11.5px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.fx-sampleBarcodeBtn:hover {
+  background: rgba(0, 240, 255, 0.12);
+  border-color: rgba(0, 240, 255, 0.4);
+  color: #00f0ff;
+}
+.fx-manualBarcodeInputRow {
+  display: flex;
+  gap: 8px;
+}
+.fx-manualBarcodeInputRow input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 13px;
+}
+.fx-scannedResultCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 18px;
+  padding: 18px;
+}
+.fx-scannedHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fx-scannedHeader h4 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+}
+.fx-macroTrioGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.fx-macroBox {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.fx-macroBox small {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+.fx-macroBox b {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  display: block;
+  margin-top: 4px;
+}
+.fx-scannedActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* =====================================================================
+   AI KAMERA İLE FORM & BİYOMEKANİK ANALİZÖRÜ
+   ===================================================================== */
+.fx-aiFormStudio {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.fx-formExPills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.fx-formExBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--fx-muted);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.fx-formExBtn.active {
+  background: rgba(0, 240, 255, 0.16);
+  border-color: #00f0ff;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.25);
+}
+.fx-formUploadCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fx-formDropzone {
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.02);
+}
+.fx-formDropzone:hover {
+  border-color: #ff4d1c;
+  background: rgba(255, 77, 28, 0.04);
+}
+.fx-dropzoneContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.fx-dropzoneContent p {
+  font-size: 12px;
+  color: var(--fx-muted);
+  margin: 0;
+  max-width: 260px;
+}
+.fx-formPreviewImg {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.fx-analyzingBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: #00f0ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.fx-formScoreCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.fx-formScoreHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.fx-formScoreHead small {
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+.fx-formBigScore {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.fx-formBigScore b {
+  font-size: 38px;
+  font-weight: 900;
+}
+.fx-formBigScore span {
+  font-size: 16px;
+  color: var(--fx-muted);
+  font-weight: 700;
+}
+.fx-formScoreBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(200, 255, 0, 0.1);
+  border: 1px solid rgba(200, 255, 0, 0.3);
+  color: #c8ff00;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 800;
+}
+.fx-jointsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fx-jointRow {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+}
+.fx-jointHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.fx-jointHeader b {
+  font-size: 12.5px;
+  color: #fff;
+}
+.fx-jointRow p {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--fx-muted);
+  line-height: 1.4;
+}
+.fx-formTipRow {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+}
+.fx-tipNum {
+  font-size: 13px;
+  font-weight: 800;
+  color: #c8ff00;
+  font-family: 'JetBrains Mono', monospace;
+}
+.fx-formTipRow p {
+  margin: 0;
+  font-size: 12.5px;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

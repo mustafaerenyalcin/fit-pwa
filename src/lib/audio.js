@@ -108,6 +108,30 @@ class SoundEngine {
       console.warn('Success audio error:', e);
     }
   }
+
+  // Kulaklık İçi Sesli Antrenör (In-Ear Voice Coach via Web Speech API)
+  speak(text, lang = 'tr-TR') {
+    if (!this.enabled || typeof window === 'undefined') return;
+    if (!('speechSynthesis' in window)) return;
+
+    try {
+      window.speechSynthesis.cancel(); // Stop any pending speech
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = 1.05; // Slightly athletic pace
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      // Select female or natural voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find((v) => v.lang.startsWith(lang.slice(0, 2)));
+      if (preferred) utterance.voice = preferred;
+
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn('Speech synthesis error:', e);
+    }
+  }
 }
 
 export const sounds = new SoundEngine();

@@ -14,12 +14,14 @@ import {
   Pill,
   Copy,
   ChevronDown,
-  Layers
+  Layers,
+  Scan
 } from 'lucide-react';
 import Metric from '../components/Metric.jsx';
 import Panel from '../components/Panel.jsx';
 import ProgressBar from '../components/ProgressBar.jsx';
 import EmptyState from '../components/EmptyState.jsx';
+import BarcodeScannerModal from '../components/BarcodeScannerModal.jsx';
 import { FOOD_DATABASE, calculateFoodNutrition } from '../lib/foodDatabase.js';
 import { FOOD_EXAMPLES, SUPPLEMENT_LIST } from '../lib/constants.js';
 
@@ -45,6 +47,9 @@ export default function NutritionView({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFood, setSelectedFood] = useState(null);
   const [customGram, setCustomGram] = useState(150);
+
+  // Barcode Scanner Modal State
+  const [showBarcodeScanner, setShowBarcodeScanner] = useState(false);
 
   // Supplements state
   const [selectedSupplement, setSelectedSupplement] = useState('Kreatin');
@@ -163,6 +168,17 @@ export default function NutritionView({
     });
   };
 
+  const handleBarcodeMealAdd = (foodItem) => {
+    onAddMeal({
+      category: mealCategory,
+      name: foodItem.name,
+      calories: foodItem.calories,
+      protein: foodItem.protein,
+      carbs: foodItem.carbs,
+      fat: foodItem.fat
+    });
+  };
+
   // Macro Calorie Distribution percentages (% Pro, % Carb, % Fat)
   const totalCalFromMacros = totals.protein * 4 + totals.carbs * 4 + totals.fat * 9;
   const proPct = totalCalFromMacros > 0 ? Math.round(((totals.protein * 4) / totalCalFromMacros) * 100) : 0;
@@ -234,6 +250,29 @@ export default function NutritionView({
                 {cat}
               </button>
             ))}
+          </div>
+
+          {/* Ücretsiz Barkod Tarayıcı Hızlı Başlatma Butonu */}
+          <div className="fx-barcodeTriggerWrap" style={{ margin: '10px 0 14px 0' }}>
+            <button
+              type="button"
+              className="fx-btn fx-solarBtn"
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                padding: '11px 16px',
+                fontSize: 13.5,
+                fontWeight: 800,
+                borderRadius: 14,
+                boxShadow: '0 4px 18px rgba(255, 77, 28, 0.22)'
+              }}
+              onClick={() => setShowBarcodeScanner(true)}
+            >
+              <Scan size={17} /> Kamera ile Ücretsiz Barkod Tara (Sıfır Paywall)
+            </button>
           </div>
 
           {/* Database Search Input */}
@@ -601,6 +640,14 @@ export default function NutritionView({
           ))}
         </div>
       </Panel>
+
+      {/* Ücretsiz Barkod Tarayıcı Modalı */}
+      {showBarcodeScanner && (
+        <BarcodeScannerModal
+          onAddMeal={handleBarcodeMealAdd}
+          onClose={() => setShowBarcodeScanner(false)}
+        />
+      )}
     </div>
   );
 }

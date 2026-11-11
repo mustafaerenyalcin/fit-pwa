@@ -25,6 +25,7 @@ import RecoveryStudio from '../components/RecoveryStudio.jsx';
 import StrengthOverloadCard from '../components/StrengthOverloadCard.jsx';
 import BodyCompositionPro from '../components/BodyCompositionPro.jsx';
 import BeforeAfterSlider from '../components/BeforeAfterSlider.jsx';
+import AiFormCheckStudio from '../components/AiFormCheckStudio.jsx';
 import { sounds } from '../lib/audio.js';
 
 export const TOOLS_CONFIG = [
@@ -117,6 +118,16 @@ export const TOOLS_CONFIG = [
     badge: 'Before / After',
     color: '#94a3b8',
     bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.16), rgba(148, 163, 184, 0.02))'
+  },
+  {
+    id: 'form_check',
+    title: 'AI Form & Biyomekanik',
+    subtitle: 'Kamera ve yapay zeka ile Squat, Deadlift eklem açısı ve sakatlık analizi',
+    symbol: '🦾',
+    category: 'training',
+    badge: 'AI Biyomekanik',
+    color: '#00f0ff',
+    bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(0, 240, 255, 0.02))'
   }
 ];
 
@@ -158,7 +169,7 @@ export default function ToolsView({ profile, entries, target, onStartWorkout }) 
                 Araçlar <span>&amp; Stüdyo Launchpad</span>
               </h2>
               <p className="fx-cockpitSub">
-                Performansını, biyometrik ölçümlerini ve antrenmanlarını optimize eden 9 adet özel laboratuvar aracı.
+                Performansını, biyometrik ölçümlerini ve antrenmanlarını optimize eden 10 adet özel laboratuvar aracı.
               </p>
             </div>
           </section>
@@ -301,6 +312,7 @@ export default function ToolsView({ profile, entries, target, onStartWorkout }) 
                 <BeforeAfterSlider profile={profile} entries={entries} />
               </div>
             )}
+            {selectedToolId === 'form_check' && <AiFormCheckStudio />}
           </div>
 
           {/* ALT GEÇİŞ DOKU (MOBİLDE BAŞPARMAKLA ANINDA DİĞER ARACA GEÇİŞ İÇİN) */}

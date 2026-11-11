@@ -469,6 +469,8 @@ function MainApp() {
           <ActiveWorkoutModal
             plan={activeWorkoutPlan}
             previousWorkout={entries.workout.find((e) => e.payload?.name === activeWorkoutPlan.name)}
+            profile={profile}
+            streak={streak}
             onFinish={handleFinishActiveWorkout}
             onClose={() => setActiveWorkoutPlan(null)}
           />

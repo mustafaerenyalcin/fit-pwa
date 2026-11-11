@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import ExerciseVisual from './ExerciseVisual.jsx';
 import WorkoutSummaryCard from './WorkoutSummaryCard.jsx';
+import AthleteStoryCardModal from './AthleteStoryCardModal.jsx';
 import { getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
 import { getDetailedExerciseGuide } from '../lib/exerciseGuide.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
@@ -29,6 +30,8 @@ const ACTIVE_WORKOUT_KEY = 'fit-active-session-v1';
 export default function ActiveWorkoutModal({
   plan,
   previousWorkout,
+  profile,
+  streak,
   onFinish,
   onClose
 }) {
@@ -98,6 +101,7 @@ export default function ActiveWorkoutModal({
   const [showSummary, setShowSummary] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [showReplaceModal, setShowReplaceModal] = useState(false);
+  const [showStoryModal, setShowStoryModal] = useState(false);
 
   // Workout duration counter
   useEffect(() => {
@@ -120,7 +124,7 @@ export default function ActiveWorkoutModal({
     return () => clearInterval(interval);
   }, [isTimerRunning, showSummary]);
 
-  // Rest timer countdown
+  // Rest timer countdown with In-Ear Voice Coach
   useEffect(() => {
     let timer = null;
     if (restActive) {
@@ -128,7 +132,10 @@ export default function ActiveWorkoutModal({
         setRestSeconds((curr) => {
           if (curr <= 1) {
             setRestActive(false);
-            if (soundEnabled) sounds.chime();
+            if (soundEnabled) {
+              sounds.chime();
+              sounds.speak('Dinlenme bitti şampiyon. Sıradaki sete hazırsın, hadi bas!');
+            }
             return 0;
           }
           return curr - 1;
@@ -262,6 +269,47 @@ export default function ActiveWorkoutModal({
       return updated;
     });
     setShowReplaceModal(false);
+  };
+
+  // Otomatik Bilimsel Isınma Piramidi Setleri Ekle (%45x10, %70x5, %85x2)
+  const handleAddWarmupSets = (exIdx) => {
+    sounds.tap();
+    setSessionData((prev) => {
+      const nextExercises = [...prev.exercises];
+      const ex = { ...nextExercises[exIdx] };
+      const targetKg = Number(ex.sets.find((s) => s.type === 'normal' && s.kg)?.kg) || Number(ex.previousKg) || 50;
+
+      const warmup1 = {
+        type: 'warmup',
+        kg: String(Math.max(10, Math.round(targetKg * 0.45))),
+        reps: 10,
+        rpe: 6,
+        done: false
+      };
+      const warmup2 = {
+        type: 'warmup',
+        kg: String(Math.max(15, Math.round(targetKg * 0.70))),
+        reps: 5,
+        rpe: 7,
+        done: false
+      };
+      const warmup3 = {
+        type: 'warmup',
+        kg: String(Math.max(20, Math.round(targetKg * 0.85))),
+        reps: 2,
+        rpe: 8,
+        done: false
+      };
+
+      const normalSets = ex.sets.filter((s) => s.type !== 'warmup');
+      ex.sets = [warmup1, warmup2, warmup3, ...normalSets];
+      nextExercises[exIdx] = ex;
+      const updated = { ...prev, exercises: nextExercises };
+      try {
+        localStorage.setItem(ACTIVE_WORKOUT_KEY, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
   };
 
   const handleCompleteWorkout = () => {
@@ -503,6 +551,15 @@ export default function ActiveWorkoutModal({
                     title="Dambıl başına girilen ağırlığı toplam hacimde otomatik 2 ile çarpar"
                   >
                     <Dumbbell size={13} /> {currentExercise.isDoubleDumbbell ? '2× Çift Dambıl (Aktif)' : 'Dambıl Çarpanı (2×)'}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="guideToggleBtn"
+                    onClick={() => handleAddWarmupSets(activeExIndex)}
+                    title="Hedef ağırlığına göre otomatik 3 aşamalı bilimsel ısınma seti piramidi ekler (%45x10, %70x5, %85x2)"
+                  >
+                    🔥 Isınma Piramidi
                   </button>
 
                   {currentExercise.alternatives && currentExercise.alternatives.length > 0 && (
@@ -808,9 +865,49 @@ export default function ActiveWorkoutModal({
                 ← Setlere Geri Dön ve Düzenle
               </button>
             </div>
+
+            <button
+              type="button"
+              className="fx-btn fx-solarBtn"
+              style={{
+                width: '100%',
+                marginTop: 12,
+                padding: '12px 18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                fontSize: 14,
+                fontWeight: 800
+              }}
+              onClick={() => setShowStoryModal(true)}
+            >
+              📸 Athlete Story Kartı Oluştur &amp; Paylaş (Instagram / WhatsApp)
+            </button>
           </div>
         )}
       </div>
+
+      {showStoryModal && (
+        <AthleteStoryCardModal
+          workoutResult={{
+            name: plan.name,
+            durationSeconds: elapsed,
+            totalVolume: liveTotalVolume,
+            sets: sessionData.exercises.reduce((acc, ex) => {
+              const comp = ex.sets.filter((s) => s.done);
+              if (comp.length > 0) {
+                const last = comp[comp.length - 1];
+                acc[ex.name] = { kg: last.kg || 0, reps: last.reps || 0 };
+              }
+              return acc;
+            }, {})
+          }}
+          profile={profile}
+          streak={streak}
+          onClose={() => setShowStoryModal(false)}
+        />
+      )}
     </div>
   );
 }
