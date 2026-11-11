@@ -146,6 +146,33 @@ export default function AdonisRatioCalc({ profile }) {
           </div>
         </div>
       </div>
+
+      {/* KLASİK ESTETİK ANATOMİSİ: STEVE REEVES KANONU */}
+      <div className="fx-card fx-scienceGuideBox">
+        <div className="fx-scienceHead">
+          <Sparkles size={16} color="#eab308" />
+          <b>BİYOMEKANİK V-TAPER KANONU (STEVE REEVES &amp; FIBONACCI ORANTISI)</b>
+        </div>
+        <div className="fx-scienceGrid">
+          <div className="fx-scienceCol">
+            <h4>🏛️ Altın Oranı Yaratan 3 Anahtar Kas Grubu</h4>
+            <p>
+              V-Taper silueti sadece kilo vermekle oluşmaz. İllüzyonu yaratan 3 anatomik sütun vardır:
+              <b> Lateral Deltoid (Yan Omuz)</b> omuz genişliğini dışa açar, 
+              <b> Latissimus Dorsi (Kanat)</b> koltuk altından bele doğru açılan V çizgisi çizer, 
+              <b> Transversus Abdominis (Vakum Kası)</b> beli korse gibi sıkılaştırır.
+            </p>
+          </div>
+          <div className="fx-scienceCol">
+            <h4>📐 Steve Reeves 1:1:1 Simetri Kuralı</h4>
+            <p>
+              Efsanevi doğal vücut geliştirici Steve Reeves'in klasik proporsiyon kuralına göre:
+              <b> Kol Çevresi = Boyun Çevresi = Kalf Çevresi</b> olmalıdır. 
+              Göğüs çevresi ise bel çevresinin tam <b>1.40 katı</b> olduğunda vücut heykelsi bir dengeye ulaşır.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

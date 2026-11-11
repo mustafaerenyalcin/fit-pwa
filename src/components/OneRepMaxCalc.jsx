@@ -177,6 +177,32 @@ export default function OneRepMaxCalc() {
           </table>
         </div>
       </div>
+
+      {/* SOVYET HALTER BİLİMİ & PRİLEPİN KURALI REHBERİ */}
+      <div className="fx-card fx-scienceGuideBox">
+        <div className="fx-scienceHead">
+          <Sparkles size={16} color="#00f0ff" />
+          <b>PRİLEPİN TABLOSU: OPTİMAL SET &amp; TEKRAR DENGESİ (1974 SOVYET ÇALIŞMASI)</b>
+        </div>
+        <div className="fx-scienceGrid">
+          <div className="fx-scienceCol">
+            <h4>📊 Aşırı Yorgunluk Olmadan Maksimum Güç</h4>
+            <p>
+              Sovyet spor bilimci A.S. Prilepin'in binlerce olimpik şampiyon üzerinde kanıtladığı kurala göre:
+              <b> %70-80 1RM</b> ağırlıklarda seans başına toplam <b>18 tekrar</b> (örn: 6 set × 3 tekrar) yapmak,
+              tükenişe gidilen 10 tekrarlı setlerden çok daha fazla saf güç ve kas fibrili uyarımı sağlar.
+            </p>
+          </div>
+          <div className="fx-scienceCol">
+            <h4>⚙️ RPE ve RIR (Reps in Reserve) Stratejisi</h4>
+            <p>
+              Hipertrofi için her sette tükenişe gitmek sinir sistemini (CNS) tüketir. İdeal gelişim için son sette 
+              <b> RPE 8 (Cebinde 2 tekrar payı bırakarak)</b> durun. Ağırlığı artırmak yerine barın kalkış hızını (bar speed)
+              korumak kasın nöral adaptasyonunu ikiye katlar.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

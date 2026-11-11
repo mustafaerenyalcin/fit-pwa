@@ -205,6 +205,30 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
           </div>
         </div>
       </div>
+
+      {/* METABOLİK BİYOKİMYA: TEF & NEAT GERÇEKLERİ */}
+      <div className="fx-card fx-scienceGuideBox">
+        <div className="fx-scienceHead">
+          <Sparkles size={16} color="#ff4d1c" />
+          <b>METABOLİZMA BİLİMİ: TEF &amp; NEAT GİZLİ YAKIT MOTORLARI</b>
+        </div>
+        <div className="fx-scienceGrid">
+          <div className="fx-scienceCol">
+            <h4>🥩 TEF (Besinlerin Termik Etkisi)</h4>
+            <p>
+              Yediğin her 100 kalori proteinin <b>25-30 kalorisi</b> sadece o proteini sindirmek ve amino asitlere parçalamak için harcanır!
+              Karbonhidratta bu oran %5-10, yağda ise yalnızca %0-3'tür. Bu nedenle yüksek proteinli beslenmek dinlenirken metabolizmayı hızlandırır.
+            </p>
+          </div>
+          <div className="fx-scienceCol">
+            <h4>🚶 NEAT (Egzersiz Dışı Aktivite Termogenezi)</h4>
+            <p>
+              Günde 1 saat salonda basarak 350-450 kcal yakarsın. Ancak gün içinde atılan 10.000 adım, ayakta durmak ve hareket etmek 
+              <b> 600-900 kcal ek enerji harcatır</b>. Yağ yakımını asıl belirleyen spor salonundaki 1 saat değil, geriye kalan 23 saattir!
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

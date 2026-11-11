@@ -193,6 +193,32 @@ export default function FastingTimer() {
           )}
         </div>
       </div>
+
+      {/* 2016 NOBEL TIP ÖDÜLÜ: OTOFAJİ & METABOLİK FAZLAR */}
+      <div className="fx-scienceGuideBox" style={{ marginTop: 16 }}>
+        <div className="fx-scienceHead">
+          <Sparkles size={16} color="#c084fc" />
+          <b>OTOFAJİ BİYOKİMYASI: 2016 NOBEL TIP ÖDÜLÜ (DR. YOSHINORI OHSUMI)</b>
+        </div>
+        <div className="fx-scienceGrid">
+          <div className="fx-scienceCol">
+            <h4>🧬 Otofaji (Hücresel Geri Dönüşüm)</h4>
+            <p>
+              Açlık 16. saati aştığında <b>mTOR proteini baskılanır ve AMPK enzimi aktive olur</b>. 
+              Hücreleriniz hayatta kalmak için sitoplazmadaki hasarlı mitokondrileri (mitofaji), yaşlı protein yumaklarını 
+              ve hücresel çöpü parçalayarak amino asitlere dönüştürür.
+            </p>
+          </div>
+          <div className="fx-scienceCol">
+            <h4>🛡️ Kas Kaybı Efsanesi &amp; HGH Artışı</h4>
+            <p>
+              "Oruçta kas erir" miti bilimsel olarak çürütülmüştür: Açlık sırasında vücut kas dokusunu korumak için 
+              <b> Büyüme Hormonunu (HGH) %300 ila %500 artırır</b>. Asıl dikkat edilmesi gereken tek kural, 
+              orucu açarken ani insülin fırlaması yaratmamak için ilk lokmayı rafine şeker yerine protein ve sağlıklı yağla almaktır.
+            </p>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 }

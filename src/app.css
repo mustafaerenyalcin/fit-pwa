@@ -6479,6 +6479,98 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   line-height: 1.45;
 }
 
+/* =====================================================================
+   KLİNİK SPOR HEKİMLİĞİ VE BİYOMEKANİK REHBERİ KARTLARI
+   ===================================================================== */
+.fx-scienceGuideBox {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.fx-scienceHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+}
+.fx-scienceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (max-width: 768px) {
+  .fx-scienceGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.fx-scienceCol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fx-scienceCol h4 {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+}
+.fx-scienceCol p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--fx-muted);
+  line-height: 1.5;
+}
+
+/* =====================================================================
+   SERİ KALKANI (STREAK SHIELD) & DAMBIL ÇARPANI STİLLERİ
+   ===================================================================== */
+.fx-shieldActivePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0, 240, 255, 0.16);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: #00f0ff;
+  font-size: 10px;
+  font-weight: 800;
+}
+.fx-shieldStandbyPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--fx-muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+.fx-multHint {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #00f0ff;
+  margin-top: 2px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.guideToggleBtn.active-accent {
+  background: rgba(255, 77, 28, 0.2) !important;
+  border-color: #ff4d1c !important;
+  color: #fff !important;
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

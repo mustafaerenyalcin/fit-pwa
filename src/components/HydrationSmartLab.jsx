@@ -166,6 +166,32 @@ export default function HydrationSmartLab({ profile, entries, target }) {
           </div>
         </div>
       </div>
+
+      {/* DR. ANDY GALPIN & HUCELLULAR HİDRASYON BİLİMİ */}
+      <div className="fx-card fx-scienceGuideBox">
+        <div className="fx-scienceHead">
+          <Sparkles size={16} color="#00b4d8" />
+          <b>HÜCRE İÇİ OZMOLALİTE: NEDEN SADECE SU İÇMEK YETMEZ? (DR. ANDY GALPIN)</b>
+        </div>
+        <div className="fx-scienceGrid">
+          <div className="fx-scienceCol">
+            <h4>🧠 %2 Susuzluk = %11 Güç Kaybı</h4>
+            <p>
+              Kinesiyoloji araştırmaları, vücut ağırlığının yalnızca <b>%2'si kadar dehidrasyona</b> uğrandığında, 
+              merkezi sinir sistemi reaksiyon süresinin %20 yavaşladığını ve Bench Press/Squat maksimum gücünün 
+              <b> %11 düştüğünü</b> kanıtlamıştır.
+            </p>
+          </div>
+          <div className="fx-scienceCol">
+            <h4>⚡ Sodyum-Potasyum Pompası (Na+/K+-ATPase)</h4>
+            <p>
+              Saf su içildiğinde kan plazması seyrelebilir ve su hücre içine giremeden idrarla atılır. 
+              Kas hücresinin suyu tutup hacim kazanması (hücresel şişme / pump) için suyun yanında mutlaka 
+              <b> sodyum ve potasyum iyonları</b> bulunmalıdır.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

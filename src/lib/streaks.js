@@ -31,9 +31,26 @@ export function calculateStreak(entries = {}) {
   // Güncel seri: bugün kayıt varsa bugünden, yoksa dünden geriye doğru say
   let current = 0;
   let cursor = loggedToday ? t : activeDays.has(yesterday) ? yesterday : null;
+  let shieldUsed = false;
+  let shieldsRemaining = 2;
+
+  // Dinlenme / Seri Kalkanı (Streak Shield): Dün veya bugün kaçırıldıysa seriyi koru
+  if (!cursor) {
+    const twoDaysAgo = shiftIso(t, -2);
+    if (activeDays.has(twoDaysAgo)) {
+      cursor = twoDaysAgo;
+      shieldUsed = true;
+      shieldsRemaining = 1;
+    }
+  }
+
   while (cursor && activeDays.has(cursor)) {
     current++;
     cursor = shiftIso(cursor, -1);
+  }
+
+  if (shieldUsed && current > 0) {
+    current += 1;
   }
 
   // En iyi seri
@@ -62,7 +79,15 @@ export function calculateStreak(entries = {}) {
     };
   });
 
-  return { current, best: Math.max(best, current), loggedToday, totalActiveDays: activeDays.size, last7 };
+  return {
+    current,
+    best: Math.max(best, current),
+    loggedToday,
+    totalActiveDays: activeDays.size,
+    last7,
+    shieldUsed,
+    shieldsRemaining
+  };
 }
 
 /**

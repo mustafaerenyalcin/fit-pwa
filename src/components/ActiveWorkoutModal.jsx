@@ -149,13 +149,14 @@ export default function ActiveWorkoutModal({
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   };
 
-  // Live total volume / tonnage calculation
+  // Live total volume / tonnage calculation (with 2x dumbbell multiplier)
   const liveTotalVolume = sessionData.exercises.reduce((total, ex) => {
+    const mult = ex.isDoubleDumbbell ? 2 : 1;
     return (
       total +
       ex.sets.reduce((exTotal, s) => {
         if (s.done && s.kg && s.reps) {
-          return exTotal + Number(s.kg) * Number(s.reps);
+          return exTotal + Number(s.kg) * mult * Number(s.reps);
         }
         return exTotal;
       }, 0)
@@ -488,6 +489,22 @@ export default function ActiveWorkoutModal({
                 </div>
 
                 <div className="exHeaderActionBtns">
+                  <button
+                    type="button"
+                    className={`guideToggleBtn ${currentExercise.isDoubleDumbbell ? 'active-accent' : ''}`}
+                    onClick={() => {
+                      sounds.tap();
+                      setSessionData((prev) => {
+                        const updated = { ...prev };
+                        updated.exercises[activeExIndex].isDoubleDumbbell = !updated.exercises[activeExIndex].isDoubleDumbbell;
+                        return updated;
+                      });
+                    }}
+                    title="Dambıl başına girilen ağırlığı toplam hacimde otomatik 2 ile çarpar"
+                  >
+                    <Dumbbell size={13} /> {currentExercise.isDoubleDumbbell ? '2× Çift Dambıl (Aktif)' : 'Dambıl Çarpanı (2×)'}
+                  </button>
+
                   {currentExercise.alternatives && currentExercise.alternatives.length > 0 && (
                     <button
                       type="button"
@@ -635,6 +652,9 @@ export default function ActiveWorkoutModal({
                               handleSetChange(activeExIndex, sIdx, 'kg', e.target.value)
                             }
                           />
+                          {currentExercise.isDoubleDumbbell && Boolean(set.kg) && (
+                            <small className="fx-multHint">Top: {Number(set.kg) * 2}kg</small>
+                          )}
                         </div>
 
                         <div className="colReps">

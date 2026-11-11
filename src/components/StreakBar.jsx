@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Flame, Trophy, ChevronDown, ChevronUp } from 'lucide-react';
+import { Flame, Trophy, ChevronDown, ChevronUp, Shield, Sparkles } from 'lucide-react';
 import { calculateGamification } from '../lib/streaks.js';
 import { useI18n } from '../lib/i18n.js';
 
@@ -22,6 +22,15 @@ export default function StreakBar({ entries, target }) {
             <div className="fx-streakTitleRow">
               <b>{streak.current} {t('streak.dayStreak')}!</b>
               <span className="fx-levelPill">{t('streak.level')} {level} · {title}</span>
+              {streak.shieldUsed ? (
+                <span className="fx-shieldActivePill animate-pulse" title="Dinlenme Kalkanı serini korudu">
+                  <Shield size={11} fill="currentColor" /> Kalkan Aktif
+                </span>
+              ) : (
+                <span className="fx-shieldStandbyPill" title={`${streak.shieldsRemaining} adet seri koruma kalkanın var`}>
+                  <Shield size={11} /> {streak.shieldsRemaining} Kalkan
+                </span>
+              )}
             </div>
             <small className="fx-muted">
               {streak.loggedToday

@@ -322,6 +322,31 @@ export default function TabataIntervalTimer() {
           <RotateCcw size={18} />
         </button>
       </div>
+
+      {/* KLİNİK SPOR BİLİMİ & EPOC MASTER REHBERİ */}
+      <div className="fx-card fx-scienceGuideBox">
+        <div className="fx-scienceHead">
+          <Sparkles size={16} color="#c8ff00" />
+          <b>BİLİMSEL TABATA PROTOKOLÜ &amp; EPOC ETKİSİ (TOKYO 1996)</b>
+        </div>
+        <div className="fx-scienceGrid">
+          <div className="fx-scienceCol">
+            <h4>🔬 Neden 4 Dakika 60 Dakikalık Koşudan Üstündür?</h4>
+            <p>
+              Tokyo Ulusal Fitness ve Spor Enstitüsü'nde Dr. Izumi Tabata tarafından elit sürat patencileri üzerinde yapılan deneyde, 
+              <b> %170 VO2max</b> ile uygulanan 20s sprint / 10s dinlenme protokolü; 1 saatlik geleneksel orta tempo kardiyoya göre 
+              <b> anaerobik kapasiteyi %28 artırmış</b> ve mitokondri yoğunluğunu ikiye katlamıştır.
+            </p>
+          </div>
+          <div className="fx-scienceCol">
+            <h4>🔥 EPOC (Afterburn) Etkisi Nedir?</h4>
+            <p>
+              Tabata seansında laktat eşiği aşıldığında vücut "Oksijen Borcu"na (EPOC) girer. Kalp ve akciğerler antrenman bittikten sonraki 
+              <b> 24 ila 36 saat boyunca</b> bazal metabolizmayı yüksek tutarak dinlenir halde ek kalori ve yağ yakımını sürdürür.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
