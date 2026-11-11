@@ -3864,6 +3864,330 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   color: var(--fx-muted);
 }
 
+/* =====================================================================
+   FIT. ATELIER — AWWWARDS EDITORIAL LUXURY & SCULPTURAL TITANIUM DESIGN
+   (Sıfır Klişe Izgara / Sıfır AI Nokta Ağı — Saf Editoryal Mimari)
+   ===================================================================== */
+
+:root {
+  --fx-bg: #09090b;
+  --fx-bg-2: #111115;
+  --fx-surface: #141418;
+  --fx-surface-2: #1c1c22;
+  --fx-border: rgba(244, 242, 237, 0.08);
+  --fx-border-strong: rgba(244, 242, 237, 0.16);
+  --fx-text: #f4f2ed;
+  --fx-muted: #9a9891;
+  --fx-accent: #ff4d1c;
+  --fx-accent-ink: #ffffff;
+  --fx-accent-soft: rgba(255, 77, 28, 0.14);
+  --fx-volt: #d4ff33;
+  --fx-ivory: #f4f2ed;
+  --fx-radius: 20px;
+  --fx-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+}
+
+/* Klişe AI ızgaralarını tamamen devre dışı bırak */
+.fx-gridMesh,
+.fx-spatialDotMesh {
+  display: none !important;
+}
+
+/* Editoryal Tipografi: Syne (Display) + JetBrains Mono (Rakam/İndeks) */
+.fx-atelierLogo,
+.fx-atelierHeroTitle,
+.fx-atelierDisplay,
+.fx-launchpadTitle,
+.fx-totemBlock strong {
+  font-family: 'Syne', 'Plus Jakarta Sans', sans-serif !important;
+  letter-spacing: -0.03em;
+}
+
+.fx-navIndex,
+.fx-atelierStamp,
+.fx-atelierIssueTag,
+.fx-atelierEyebrow,
+.fx-moduleEyebrow,
+.fx-pillarNum,
+.fx-totemBlock small,
+.fx-monoBig,
+.fx-monoVal,
+.fx-moveIndex {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Arka Plan: Sıcak Diyagonal Güneş Hüzmesi + Dev Heykelsi Tipografi Filigranı */
+.fx-atelierBackdrop {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse 80% 50% at 80% -10%, rgba(255, 77, 28, 0.16), transparent 65%),
+              radial-gradient(ellipse 60% 50% at 10% 100%, rgba(212, 255, 51, 0.06), transparent 65%);
+}
+
+.fx-atelierBeam {
+  position: absolute;
+  top: -25%;
+  right: 8%;
+  width: 540px;
+  height: 900px;
+  background: linear-gradient(180deg, rgba(255, 77, 28, 0.12), rgba(244, 242, 237, 0.02) 60%, transparent);
+  transform: rotate(-28deg);
+  filter: blur(60px);
+}
+
+.fx-atelierWatermark {
+  position: absolute;
+  bottom: -4vw;
+  left: -1vw;
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(120px, 21vw, 340px);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: rgba(244, 242, 237, 0.024);
+  user-select: none;
+  white-space: nowrap;
+}
+:root[data-theme="light"] .fx-atelierWatermark {
+  color: rgba(15, 23, 42, 0.035);
+}
+
+/* Kinetik Editoryal Kayan Şerit (Kinetic Marquee Ticker) */
+.fx-kineticTicker {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 34px;
+  background: #ff4d1c;
+  color: #09090b;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.fx-kineticTrack {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  animation: fx-marquee 26s linear infinite;
+}
+
+@keyframes fx-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Editoryal Üst Bar & Numaralı Sekmeler */
+.fx-atelierHeader {
+  border-radius: 16px;
+  background: rgba(18, 18, 22, 0.9);
+  border: 1px solid rgba(244, 242, 237, 0.14);
+}
+
+.fx-atelierLogo {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--fx-text);
+}
+.fx-atelierLogo span {
+  color: #ff4d1c;
+}
+
+.fx-atelierStamp {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(244, 242, 237, 0.06);
+  border: 1px solid rgba(244, 242, 237, 0.14);
+  color: var(--fx-ivory);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.fx-atelierNav {
+  border-radius: 10px;
+  background: #0d0d10;
+  border: 1px solid rgba(244, 242, 237, 0.1);
+}
+
+.fx-atelierNavBtn {
+  border-radius: 7px;
+  padding: 8px 14px;
+  gap: 8px;
+}
+
+.fx-navIndex {
+  font-size: 10px;
+  opacity: 0.55;
+  color: #ff4d1c;
+}
+
+.fx-atelierNavBtn.active {
+  background: #f4f2ed !important;
+  color: #09090b !important;
+  box-shadow: none !important;
+}
+.fx-atelierNavBtn.active .fx-navIndex {
+  color: #ff4d1c;
+  opacity: 1;
+}
+
+/* AuthScreen: Editoryal Heykelsi Stat Totemi & Numaralı Sütunlar */
+.fx-atelierAuth .fx-corpTopbar,
+.fx-atelierAuth .fx-corpMainGrid {
+  position: relative;
+  z-index: 2;
+}
+
+.fx-atelierIssueTag {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 6px 12px;
+  background: #f4f2ed;
+  color: #09090b;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.fx-atelierHeroTitle {
+  font-size: clamp(30px, 3.6vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -1.4px;
+}
+
+.fx-atelierStatTotem {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 6px 0;
+}
+
+@media (max-width: 520px) {
+  .fx-atelierStatTotem {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fx-totemBlock {
+  padding: 18px 16px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.fx-totemBlock small {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  opacity: 0.8;
+}
+
+.fx-totemBlock strong {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fx-totemBlock span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* 3 Kontrast Malzeme: Solar Corsa, Ham Fildişi, Fırçalanmış Titanyum */
+.fx-totemBlock--solar {
+  background: #ff4d1c;
+  color: #09090b;
+}
+
+.fx-totemBlock--ivory {
+  background: #f4f2ed;
+  color: #09090b;
+}
+
+.fx-totemBlock--titanium {
+  background: #18181f;
+  border: 1px solid rgba(244, 242, 237, 0.18);
+  color: #d4ff33;
+}
+
+.fx-atelierPillar {
+  border-radius: 12px;
+  background: rgba(20, 20, 25, 0.88);
+  border: 1px solid rgba(244, 242, 237, 0.1);
+  border-left: 3px solid #ff4d1c;
+}
+
+.fx-pillarNum {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ff4d1c;
+  line-height: 1;
+  padding-top: 2px;
+}
+
+.fx-atelierAuth .fx-corpSubmitBtn,
+.fx-solarBtn {
+  background: #ff4d1c !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 30px rgba(255, 77, 28, 0.32) !important;
+  border-radius: 12px !important;
+}
+
+.fx-ivoryBtn {
+  background: #f4f2ed !important;
+  color: #09090b !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-weight: 800 !important;
+}
+
+/* TodayView Editoryal Başlık ve Modüller */
+.fx-atelierEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--fx-muted);
+  margin-bottom: 8px;
+}
+.fx-atelierEyebrow span {
+  color: #ff4d1c;
+}
+
+.fx-atelierDisplay span {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: #ff4d1c !important;
+}
+
+.fx-atelierModule {
+  border-radius: 20px;
+  background: #131317;
+  border: 1px solid rgba(244, 242, 237, 0.12);
+}
+
+.fx-moduleEyebrow b {
+  color: #ff4d1c;
+}
+
+.fx-atelierLaunchpad {
+  background: linear-gradient(160deg, rgba(255, 77, 28, 0.14), #131317 62%) !important;
+  border: 1px solid rgba(255, 77, 28, 0.35) !important;
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

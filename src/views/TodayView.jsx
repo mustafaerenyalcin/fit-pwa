@@ -75,14 +75,14 @@ export default function TodayView({
 
   return (
     <div className="fx-cockpit">
-      {/* Üst Biyometrik Durum & Karşılama Kapsülü */}
-      <section className="fx-cockpitHeroBar">
+      {/* Üst Editoryal Karşılama Bloğu */}
+      <section className="fx-cockpitHeroBar fx-atelierHeroBar">
         <div className="fx-cockpitGreetCol">
-          <div className="fx-telemetryTag">
-            <span className="fx-osPulse" /> BIOMETRIC TELEMETRY · LIVE
+          <div className="fx-atelierEyebrow">
+            <span>[ATELIER EDITION // 01]</span> · GÜNLÜK PERFORMANS ÖZETİ
           </div>
-          <h2 className="fx-cockpitGreeting">
-            {greeting}, <span>{profile.name || t('today.champ')}</span>
+          <h2 className="fx-cockpitGreeting fx-atelierDisplay">
+            {greeting}, <span>{profile.name || t('today.champ')}</span>.
           </h2>
           <p className="fx-cockpitSub">
             {remProtein > 0
@@ -95,7 +95,7 @@ export default function TodayView({
           {!doneToday.length && !isRest && (
             <button
               type="button"
-              className="fx-neonActionBtn"
+              className="fx-neonActionBtn fx-solarBtn"
               onClick={() => onStartWorkout(plan)}
             >
               <Play size={15} fill="currentColor" /> {t('today.startWorkout')}
@@ -103,7 +103,7 @@ export default function TodayView({
           )}
           <button
             type="button"
-            className="fx-spatialCoachBtn"
+            className="fx-spatialCoachBtn fx-ivoryBtn"
             onClick={() => onNavigate('coach')}
           >
             <Sparkles size={15} /> {t('today.askCoach')}
@@ -114,10 +114,10 @@ export default function TodayView({
       {/* Asimetrik Uzamsal Bento Matrisi (Spatial Bento Grid) */}
       <div className="fx-bentoMatrix">
         {/* KART 1 (SOL GENİŞ): BİYOMETRİK ENERJİ, MAKRO & HİDRASYON KOKPİTİ */}
-        <section className="fx-bentoCell fx-bentoCell--span7 fx-glassModule">
+        <section className="fx-bentoCell fx-bentoCell--span7 fx-glassModule fx-atelierModule">
           <div className="fx-moduleTopRow">
             <span className="fx-moduleEyebrow">
-              <Activity size={13} /> METABOLIC ENGINE & MACROS
+              <b>01</b> // GÜNLÜK MAKRO & ENERJİ DENGESİ
             </span>
             <button type="button" className="fx-linkMini" onClick={() => onNavigate('nutrition')}>
               <Camera size={12} /> {t('today.aiCamera')} →
@@ -253,11 +253,11 @@ export default function TodayView({
           </div>
         </section>
 
-        {/* KART 2 (SAĞ 5 SÜTUN): ANTRENMAN FIRLATMA RAMPASI (LAUNCHPAD) */}
-        <section className="fx-bentoCell fx-bentoCell--span5 fx-glassModule fx-workoutLaunchpad">
+        {/* KART 2 (SAĞ 5 SÜTUN): ANTRENMAN STÜDYOSU (LAUNCHPAD) */}
+        <section className="fx-bentoCell fx-bentoCell--span5 fx-glassModule fx-workoutLaunchpad fx-atelierLaunchpad">
           <div className="fx-moduleTopRow">
             <span className="fx-moduleEyebrow">
-              <Dumbbell size={13} /> WORKOUT LAUNCHPAD
+              <b>02</b> // ANTRENMAN STÜDYOSU
             </span>
             {doneToday.length ? (
               <span className="fx-statusPill fx-statusPill--done">
@@ -268,7 +268,7 @@ export default function TodayView({
                 <Moon size={13} /> RECOVERY
               </span>
             ) : (
-              <span className="fx-statusPill fx-statusPill--ready">HAZIR</span>
+              <span className="fx-statusPill fx-statusPill--ready">AKTİF SEANS</span>
             )}
           </div>
 
@@ -303,7 +303,7 @@ export default function TodayView({
             {!doneToday.length && !isRest ? (
               <button
                 type="button"
-                className="fx-neonActionBtn fx-btn--block"
+                className="fx-neonActionBtn fx-solarBtn fx-btn--block"
                 onClick={() => onStartWorkout(plan)}
               >
                 <Play size={16} fill="currentColor" /> {t('today.startWorkout')}

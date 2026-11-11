@@ -229,19 +229,39 @@ export default function AuthScreen() {
   };
 
   return (
-    <div className="fx-corpAuth">
-      <div className="fx-spatialAmbient" aria-hidden="true">
-        <div className="fx-auroraOrb fx-auroraOrb--volt" />
-        <div className="fx-auroraOrb fx-auroraOrb--cyan" />
-        <div className="fx-auroraOrb fx-auroraOrb--violet" />
-        <div className="fx-spatialDotMesh" />
+    <div className="fx-corpAuth fx-atelierAuth">
+      {/* Sıfır Izgara / Sıfır Klişe: Sadece Organik Işık Hüzmesi ve Dev Heykelsi Tipografi */}
+      <div className="fx-atelierBackdrop" aria-hidden="true">
+        <div className="fx-atelierBeam" />
+        <span className="fx-atelierWatermark">ATELIER</span>
+      </div>
+
+      {/* Üst Kinetik Editoryal Şerit (Kinetic Ticker) */}
+      <div className="fx-kineticTicker" aria-hidden="true">
+        <div className="fx-kineticTrack">
+          <span>FIT. ATELIER // PRIVATE ATHLETIC CLUB</span>
+          <span>•</span>
+          <span>1RM PROGRESSIVE OVERLOAD</span>
+          <span>•</span>
+          <span>ADAPTIVE TDEE CALIBRATION</span>
+          <span>•</span>
+          <span>ADONIS 1.618 SYMMETRY</span>
+          <span>•</span>
+          <span>INTERMITTENT FASTING & AUTOPHAGY</span>
+          <span>•</span>
+          <span>FIT. ATELIER // PRIVATE ATHLETIC CLUB</span>
+          <span>•</span>
+          <span>1RM PROGRESSIVE OVERLOAD</span>
+          <span>•</span>
+          <span>ADAPTIVE TDEE CALIBRATION</span>
+        </div>
       </div>
 
       {/* Üst Kurumsal Bar */}
       <header className="fx-corpTopbar">
         <div className="fx-corpBrand">
-          <div className="fx-logo">
-            fit<span>.</span>
+          <div className="fx-logo fx-atelierLogo">
+            FIT<span>.</span>
           </div>
           <span className="fx-corpDivider" />
           <span className="fx-corpBrandSub">{c.brandSub}</span>
@@ -267,59 +287,51 @@ export default function AuthScreen() {
       </header>
 
       <div className="fx-corpMainGrid">
-        {/* SOL PANEL: UZAMSAL BİYOMETRİK SAHNE & KURUMSAL PLATFORM MİMARİSİ */}
+        {/* SOL PANEL: EDİTORYAL ATLETİK MANİFESTO & HEYKELSİ VERİ BLOKLARI */}
         <section className="fx-corpInfoCol">
           <div className="fx-corpInfoInner">
-            <span className="fx-corpVersionTag">
-              <span className="fx-osPulse" /> FIT SPATIAL AI OS · v5.0
-            </span>
-            <h1 className="fx-corpHeadline">{c.heroTitle}</h1>
+            <span className="fx-atelierIssueTag">EDITION 026 // PERFORMANCE ATELIER</span>
+            <h1 className="fx-corpHeadline fx-atelierHeroTitle">{c.heroTitle}</h1>
             <p className="fx-corpLead">{c.heroLead}</p>
 
-            {/* Canlı Biyometrik Telemetri Hologram Kartı */}
-            <div className="fx-hologramStage">
-              <div className="fx-holoMetric">
-                <small>READINESS INDEX</small>
-                <strong style={{ color: '#c8ff00' }}>94%</strong>
-                <span>Optimal CNS Recovery</span>
+            {/* Yüksek Kontrastlı Editoryal Stat Plakaları (Solar Corsa + Raw Ivory + Titanium) */}
+            <div className="fx-atelierStatTotem">
+              <div className="fx-totemBlock fx-totemBlock--solar">
+                <small>[01 // RECOVERY]</small>
+                <strong>94%</strong>
+                <span>CNS Readiness</span>
               </div>
-              <div className="fx-holoMetric">
-                <small>ADAPTIVE TDEE</small>
-                <strong style={{ color: '#00f0ff' }}>2,480</strong>
-                <span>kcal · 185g Protein</span>
+              <div className="fx-totemBlock fx-totemBlock--ivory">
+                <small>[02 // METABOLIC]</small>
+                <strong>2,480</strong>
+                <span>kcal · 185g Pro</span>
               </div>
-              <div className="fx-holoMetric">
-                <small>ADONIS RATIO</small>
-                <strong style={{ color: '#c084fc' }}>1.618</strong>
-                <span>1RM Overload Active</span>
+              <div className="fx-totemBlock fx-totemBlock--titanium">
+                <small>[03 // PROPORTION]</small>
+                <strong>1.618</strong>
+                <span>Adonis Index</span>
               </div>
             </div>
 
             <div className="fx-corpPillars">
-              <div className="fx-corpPillarItem">
-                <div className="fx-corpPillarIcon">
-                  <Activity size={20} />
-                </div>
+              <div className="fx-corpPillarItem fx-atelierPillar">
+                <span className="fx-pillarNum">01</span>
                 <div>
                   <h3>{c.pillar1Title}</h3>
                   <p>{c.pillar1Desc}</p>
                 </div>
               </div>
 
-              <div className="fx-corpPillarItem">
-                <div className="fx-corpPillarIcon">
-                  <Building2 size={20} />
-                </div>
+              <div className="fx-corpPillarItem fx-atelierPillar">
+                <span className="fx-pillarNum">02</span>
                 <div>
                   <h3>{c.pillar2Title}</h3>
                   <p>{c.pillar2Desc}</p>
                 </div>
               </div>
 
-              <div className="fx-corpPillarItem">
-                <div className="fx-corpPillarIcon">
-                  <Database size={20} />
-                </div>
+              <div className="fx-corpPillarItem fx-atelierPillar">
+                <span className="fx-pillarNum">03</span>
                 <div>
                   <h3>{c.pillar3Title}</h3>
                   <p>{c.pillar3Desc}</p>
