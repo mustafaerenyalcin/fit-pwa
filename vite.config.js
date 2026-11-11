@@ -45,6 +45,17 @@ function netlifyFunctionDevPlugin() {
 export default defineConfig({
   plugins: [react(), netlifyFunctionDevPlugin()],
   base: './',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-icons': ['lucide-react'],
+          'vendor-supabase': ['@supabase/supabase-js']
+        }
+      }
+    }
+  },
   server: {
     port: 5173,
     open: true,

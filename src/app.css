@@ -1723,6 +1723,294 @@ main.fx-content .metrics { gap: 12px; }
   .fx-miniWorkoutBar { bottom: 24px; }
 }
 
+/* =====================================================================
+   Fit v3.0 Ultra-Pro: Auth Interactive Showcase, Live Onboarding & Command Center
+   ===================================================================== */
+.fx-orb--purple {
+  width: 360px;
+  height: 360px;
+  top: 40%;
+  left: 35%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.16), transparent 70%);
+}
+
+.fx-previewSelector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.fx-previewTab {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--fx-muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: center;
+}
+.fx-previewTab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--fx-text);
+}
+.fx-previewTab.active {
+  background: var(--fx-accent-soft);
+  border-color: rgba(179, 244, 111, 0.45);
+  color: var(--fx-accent);
+  box-shadow: 0 6px 20px rgba(179, 244, 111, 0.12);
+}
+
+.fx-InteractiveStage {
+  margin: 4px 0;
+}
+.fx-stageCard {
+  padding: 20px;
+  border-radius: 22px;
+  background: rgba(13, 19, 29, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(20px);
+}
+:root[data-theme="light"] .fx-stageCard {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: var(--fx-border-strong);
+  box-shadow: var(--fx-shadow);
+}
+.fx-stageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.fx-stageIconBox {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  border: 1px solid;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.fx-stageBadge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+.fx-stageTitle {
+  margin: 0 0 6px;
+  font-size: 18px;
+  letter-spacing: -0.4px;
+}
+.fx-stageDesc {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--fx-muted);
+}
+.fx-stageMoves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.fx-stagePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+  font-size: 12px;
+  font-weight: 600;
+}
+.fx-stageMacros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--fx-border);
+}
+.fx-stageMacros > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fx-stageMacros small {
+  font-size: 11px;
+  color: var(--fx-muted);
+}
+.fx-stageMacros b {
+  font-size: 13px;
+  color: var(--fx-text);
+}
+
+.fx-validTick {
+  color: var(--fx-ok);
+  flex-shrink: 0;
+}
+
+/* Onboarding v3.0 Live Calibration Card */
+.fx-onboardProCard {
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 28px 26px;
+  border-radius: 28px;
+  background: rgba(18, 26, 37, 0.92);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+:root[data-theme="light"] .fx-onboardProCard {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: var(--fx-border-strong);
+  box-shadow: var(--fx-shadow);
+}
+.fx-liveCalcStrip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(179, 244, 111, 0.1), rgba(126, 224, 255, 0.08));
+  border: 1px solid rgba(179, 244, 111, 0.25);
+}
+.fx-liveCalcStrip > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+}
+.fx-liveCalcStrip small {
+  font-size: 11px;
+  color: var(--fx-muted);
+}
+.fx-liveCalcStrip b {
+  font-size: 15px;
+  color: var(--fx-accent);
+  font-weight: 800;
+}
+
+/* TodayView Command Center Hero */
+.fx-todayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.fx-todaySub {
+  display: block;
+  font-size: 13px;
+  color: var(--fx-muted);
+  margin-top: 2px;
+}
+.fx-coachShortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(179, 244, 111, 0.16), rgba(126, 224, 255, 0.14));
+  border: 1px solid rgba(179, 244, 111, 0.35);
+  color: var(--fx-accent);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.fx-coachShortcut:hover {
+  transform: translateY(-1px);
+}
+
+.fx-commandHero {
+  padding: 16px;
+  border-radius: 22px;
+  background: var(--fx-surface);
+  border: 1px solid var(--fx-border);
+  box-shadow: var(--fx-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.fx-commandRingsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+@media (max-width: 560px) {
+  .fx-commandRingsRow {
+    grid-template-columns: 1fr;
+  }
+}
+.fx-commandQuickGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--fx-border);
+}
+@media (max-width: 640px) {
+  .fx-commandQuickGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.fx-commandWaterBox,
+.fx-commandMealBox {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+.fx-commandMealHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+.fx-commandMealHead span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fx-linkMini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--fx-accent-soft);
+  border: 1px solid rgba(179, 244, 111, 0.3);
+  color: var(--fx-accent);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.fx-quickProteinChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.fx-chip--accent {
+  background: var(--fx-accent-soft);
+  border-color: rgba(179, 244, 111, 0.35);
+  color: var(--fx-accent);
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

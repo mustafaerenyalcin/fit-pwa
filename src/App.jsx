@@ -271,6 +271,10 @@ function MainApp() {
           onStartWorkout={(plan) => setActiveWorkoutPlan(plan)}
           onNavigate={setTab}
           onQuickWaterAdd={handleQuickWaterAdd}
+          onQuickMealAdd={(payload) => {
+            handleAddEntry('meal', payload);
+            showToast(`${payload.name} eklendi (+${payload.protein}g protein)`);
+          }}
           onSaveCheckin={handleSaveCheckin}
           onRemoveCheckin={(id) => handleRemoveEntry(id, true)}
         />

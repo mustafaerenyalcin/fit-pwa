@@ -13,21 +13,24 @@ import {
   ShieldCheck,
   Zap,
   CheckCircle2,
-  Activity
+  Activity,
+  Trophy,
+  Play,
+  HeartPulse
 } from 'lucide-react';
 import { signin, signup, signinWithGoogle, resetPassword, continueAsLocalUser } from '../lib/supabase.js';
 import { hasUnclaimedLegacyData } from '../lib/store.js';
 
 const translateError = (msg = '') => {
   const m = msg.toLowerCase();
-  if (m.includes('invalid login')) return 'E-posta veya şifre hatalı. Tekrar kontrol et.';
+  if (m.includes('invalid login')) return 'E-posta veya şifre hatalı. Bilgilerini kontrol edip tekrar dene.';
   if (m.includes('email not confirmed')) return 'E-postanı henüz onaylamadın. Gelen kutunu kontrol et.';
   if (m.includes('already registered') || m.includes('already been registered'))
-    return 'Bu e-posta ile zaten bir hesap var. "Giriş Yap" sekmesine geçebilirsin.';
+    return 'Bu e-posta ile zaten bir hesap var. Üstten "Oturum Aç" sekmesine geçebilirsin.';
   if (m.includes('password should be')) return 'Şifre en az 6 karakter olmalıdır.';
   if (m.includes('rate limit')) return 'Çok fazla deneme yapıldı. Lütfen 1 dakika bekle.';
   if (m.includes('provider is not enabled'))
-    return 'Sosyal giriş henüz Supabase panelinden aktif edilmedi. E-posta veya Hızlı Giriş ile devam edebilirsin.';
+    return 'Google girişi henüz aktif edilmedi. E-posta veya Hızlı Giriş ile anında devam edebilirsin.';
   if (m.includes('fetch')) return 'Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.';
   return msg || 'İşlem sırasında bir hata oluştu.';
 };
@@ -42,16 +45,17 @@ function calcPasswordStrength(pw = '') {
   score = Math.max(1, Math.min(4, score));
 
   const map = {
-    1: { label: 'Zayıf', color: '#ff6b6b' },
-    2: { label: 'Orta', color: '#f5c451' },
-    3: { label: 'İyi', color: '#7ee0ff' },
-    4: { label: 'Güçlü', color: '#b3f46f' }
+    1: { label: 'Zayıf Şifre', color: '#ff6b6b' },
+    2: { label: 'Orta Güçte', color: '#f5c451' },
+    3: { label: 'İyi Şifre', color: '#7ee0ff' },
+    4: { label: 'Çok Güçlü', color: '#b3f46f' }
   };
   return { score, ...map[score] };
 }
 
 export default function AuthScreen() {
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup' | 'reset'
+  const [previewTab, setPreviewTab] = useState('checkin'); // 'checkin' | 'nutrition' | 'muscle'
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -62,6 +66,7 @@ export default function AuthScreen() {
 
   const hasLegacy = useMemo(() => hasUnclaimedLegacyData(), []);
   const pwStrength = useMemo(() => calcPasswordStrength(password), [password]);
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   const switchMode = (nextMode) => {
     setMode(nextMode);
@@ -77,11 +82,11 @@ export default function AuthScreen() {
     if (mode === 'signup' && !fullName.trim()) {
       return setError('Lütfen adını veya hitap edilmesini istediğin ismi gir.');
     }
-    if (!email.includes('@') || !email.includes('.')) {
-      return setError('Geçerli bir e-posta adresi gir.');
+    if (!isEmailValid) {
+      return setError('Lütfen geçerli bir e-posta adresi gir (Örn: adin@mail.com).');
     }
     if (mode !== 'reset' && password.length < 6) {
-      return setError('Şifre en az 6 karakter olmalıdır.');
+      return setError('Güvenliğin için şifren en az 6 karakter olmalıdır.');
     }
 
     setBusy(true);
@@ -117,96 +122,183 @@ export default function AuthScreen() {
 
   return (
     <div className="fx-authPro">
-      {/* Arka Plan Aurora Işık Efektleri */}
+      {/* Arka Plan Sinematik Işık Efektleri */}
       <div className="fx-authBackdrop" aria-hidden="true">
         <div className="fx-orb fx-orb--green" />
         <div className="fx-orb fx-orb--blue" />
+        <div className="fx-orb fx-orb--purple" />
         <div className="fx-gridMesh" />
       </div>
 
       <div className="fx-authContainer">
-        {/* SOL PANEL: CANLI ÜRÜN VİTRİNİ (BENTO SHOWCASE) */}
+        {/* SOL PANEL: İNTERAKTİF CANLI ÜRÜN DENEYİMİ */}
         <div className="fx-authShowcase">
           <div className="fx-brandBadgeRow">
             <div className="fx-logo fx-logo--lg">
               fit<span>.</span>
             </div>
             <span className="fx-proPill">
-              <Sparkles size={12} /> ELITE AI ENGINE v2.0
+              <Sparkles size={12} /> ELITE AI ENGINE v3.0
             </span>
           </div>
 
           <h1 className="fx-heroHeadline">
-            Vücudunu tanıyan,
+            Sıradan bir takipçi değil.
             <br />
-            her sabah planını kuran
-            <br />
-            <em>kişisel AI koçun.</em>
+            <em>Seni tanıyan AI koçun.</em>
           </h1>
 
           <p className="fx-heroLead">
-            Sabit programları unut. Uyku sürene, enerjine, evdeki dambıl ağırlıklarına ve Türk
-            mutfağına göre her gün kendini yeniden kalibre eden akıllı antrenman ve beslenme sistemi.
+            Her sabah uykunu, enerjini ve kas yorgunluğunu analiz eder; o günün dambıl/salon
+            antrenmanını ve Türk mutfağına uygun öğünlerini saniyeler içinde yeniden kurar.
           </p>
 
-          {/* Canlı Bento Önizleme Kartları */}
-          <div className="fx-bentoPreview">
-            {/* Kart 1: Canlı Hazırlık & Check-in */}
-            <div className="fx-bentoCard fx-bentoCard--wide">
-              <div className="fx-bentoRing">
-                <svg width="64" height="64" viewBox="0 0 64 64">
-                  <circle cx="32" cy="32" r="26" stroke="#243142" strokeWidth="6" fill="none" />
-                  <circle
-                    cx="32"
-                    cy="32"
-                    r="26"
-                    stroke="#b3f46f"
-                    strokeWidth="6"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeDasharray="163"
-                    strokeDashoffset="16"
-                    transform="rotate(-90 32 32)"
-                  />
-                </svg>
-                <span>%92</span>
-              </div>
-              <div className="fx-bentoMeta">
-                <span className="fx-bentoTag">
-                  <Activity size={12} /> GÜNLÜK AI CHECK-IN
-                </span>
-                <b>Hazırlık Skoru Yüksek · Omuz & Core Vurgusu</b>
-                <small>8 saat uyku · Kaslar %95 dinlendi · 45 dk dambıl hipertrofi planı hazır</small>
-              </div>
-            </div>
+          {/* İnteraktif Canlı Önizleme Seçicisi */}
+          <div className="fx-previewSelector">
+            <button
+              type="button"
+              className={previewTab === 'checkin' ? 'active' : ''}
+              onClick={() => setPreviewTab('checkin')}
+            >
+              <Activity size={14} /> Sabah AI Check-in
+            </button>
+            <button
+              type="button"
+              className={previewTab === 'nutrition' ? 'active' : ''}
+              onClick={() => setPreviewTab('nutrition')}
+            >
+              <Utensils size={14} /> Türk Mutfağı AI
+            </button>
+            <button
+              type="button"
+              className={previewTab === 'muscle' ? 'active' : ''}
+              onClick={() => setPreviewTab('muscle')}
+            >
+              <HeartPulse size={14} /> Kas & Adonis Analizi
+            </button>
+          </div>
 
-            {/* Kart 2: Türk Mutfağı AI Analizi */}
-            <div className="fx-bentoCard">
-              <div className="fx-bentoCardTop">
-                <Utensils size={16} className="fx-accentIcon" />
-                <span>AI Öğün Tanıma</span>
+          {/* Seçili Önizleme Sahnesi */}
+          <div className="fx-InteractiveStage" key={previewTab}>
+            {previewTab === 'checkin' && (
+              <div className="fx-stageCard">
+                <div className="fx-stageHeader">
+                  <div className="fx-bentoRing">
+                    <svg width="68" height="68" viewBox="0 0 68 68">
+                      <circle cx="34" cy="34" r="28" stroke="#243142" strokeWidth="6" fill="none" />
+                      <circle
+                        cx="34"
+                        cy="34"
+                        r="28"
+                        stroke="#b3f46f"
+                        strokeWidth="6"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeDasharray="176"
+                        strokeDashoffset="14"
+                        transform="rotate(-90 34 34)"
+                      />
+                    </svg>
+                    <span>%92</span>
+                  </div>
+                  <div className="fx-stageTitle">
+                    <span className="fx-bentoTag">
+                      <Sparkles size={11} /> BUGÜNÜN AI STRATEJİSİ HAZIR
+                    </span>
+                    <b>Yüksek Hazırlık · Omuz & Core Hipertrofi</b>
+                    <small>8 sa uyku · Ağrı yok · 45 dk Ev Dambıl Programı optimize edildi</small>
+                  </div>
+                </div>
+                <div className="fx-stageMoves">
+                  <div>
+                    <span>1. Dumbbell Shoulder Press</span>
+                    <b>4 × 10 · 12.5 kg</b>
+                  </div>
+                  <div>
+                    <span>2. Lateral Raise (Drop Set)</span>
+                    <b>4 × 15 · 7.5 kg</b>
+                  </div>
+                  <div>
+                    <span>3. Weighted Plank & Leg Raise</span>
+                    <b>3 × Süperset</b>
+                  </div>
+                </div>
               </div>
-              <strong>540 kcal · 48g P</strong>
-              <small>“150g ızgara köfte, 1 kase mercimek, ayran”</small>
-            </div>
+            )}
 
-            {/* Kart 3: Adonis & Kas Haritası */}
-            <div className="fx-bentoCard">
-              <div className="fx-bentoCardTop">
-                <Flame size={16} style={{ color: '#ff983d' }} />
-                <span>Seri & Adonis Oranı</span>
+            {previewTab === 'nutrition' && (
+              <div className="fx-stageCard">
+                <div className="fx-stageHeader">
+                  <div className="fx-stageIconBox">
+                    <Utensils size={24} />
+                  </div>
+                  <div className="fx-stageTitle">
+                    <span className="fx-bentoTag">SERBEST METİN & FOTOĞRAF TANIMA</span>
+                    <b>“1 tabak kuru fasulye, yarım pilav, 200g süzme yoğurt”</b>
+                    <small>Saniyeler içinde Türk porsiyonlarına göre makro ayrıştırma</small>
+                  </div>
+                </div>
+                <div className="fx-stageMacros">
+                  <div>
+                    <b>610</b>
+                    <small>Kalori (kcal)</small>
+                  </div>
+                  <div>
+                    <b style={{ color: '#7ee0ff' }}>39 g</b>
+                    <small>Protein</small>
+                  </div>
+                  <div>
+                    <b style={{ color: '#f5c451' }}>74 g</b>
+                    <small>Karbonhidrat</small>
+                  </div>
+                  <div>
+                    <b style={{ color: '#ff983d' }}>16 g</b>
+                    <small>Sağlıklı Yağ</small>
+                  </div>
+                </div>
               </div>
-              <strong>🔥 14 Gün · 1.61</strong>
-              <small>Omuz/Bel altın oran simetri takibi</small>
-            </div>
+            )}
+
+            {previewTab === 'muscle' && (
+              <div className="fx-stageCard">
+                <div className="fx-stageHeader">
+                  <div className="fx-stageIconBox" style={{ color: '#7ee0ff' }}>
+                    <Trophy size={24} />
+                  </div>
+                  <div className="fx-stageTitle">
+                    <span className="fx-bentoTag">PRO VÜCUT KOMPOZİSYONU & RECOVERY</span>
+                    <b>Adonis Altın Oranı (1.618) & Kas Toparlanma Haritası</b>
+                    <small>Son 72 saatteki setlerine göre hangi kasın %100 hazır olduğunu gör</small>
+                  </div>
+                </div>
+                <div className="fx-stageMacros">
+                  <div>
+                    <b style={{ color: '#b3f46f' }}>%100</b>
+                    <small>Omuz Hazır</small>
+                  </div>
+                  <div>
+                    <b style={{ color: '#b3f46f' }}>%95</b>
+                    <small>Karın / Core</small>
+                  </div>
+                  <div>
+                    <b style={{ color: '#7ee0ff' }}>1.61</b>
+                    <small>Omuz/Bel Oranı</small>
+                  </div>
+                  <div>
+                    <b style={{ color: '#ff983d' }}>%12.8</b>
+                    <small>Tahmini Yağ</small>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="fx-trustBar">
             <span>
-              <ShieldCheck size={15} /> Uçtan uca şifreli bulut senkronizasyonu
+              <ShieldCheck size={15} /> Bulut senkronizasyonlu & çevrimdışı çalışır
             </span>
             <span>
-              <Dumbbell size={15} /> Ev & Salon ekipmanına tam uyum
+              <Dumbbell size={15} /> iOS, Android ve Masaüstü tam uyum
             </span>
           </div>
         </div>
@@ -214,20 +306,22 @@ export default function AuthScreen() {
         {/* SAĞ PANEL: ULTRA-PRO GİRİŞ / KAYIT KARTI */}
         <div className="fx-authFormWrap">
           <div className="fx-authGlassCard">
-            {/* Kayıtlı Yerel Veri Varsa Tek Tıkla Devam Banner'ı */}
-            {hasLegacy && (
-              <button type="button" className="fx-legacyContinueBanner" onClick={handleInstantLocal}>
-                <div className="fx-legacyIcon">
-                  <Zap size={18} />
-                </div>
-                <div className="fx-legacyText">
-                  <b>Mevcut verilerin bu cihazda hazır!</b>
-                  <small>Beklemeden kaldığın yerden anında devam etmek için dokun →</small>
-                </div>
-              </button>
-            )}
+            {/* Tek Tıkla Anında Giriş Kartı (Önceki veriler varsa veya beklemek istemiyorsa) */}
+            <button type="button" className="fx-legacyContinueBanner" onClick={handleInstantLocal}>
+              <div className="fx-legacyIcon">
+                <Play size={18} fill="currentColor" />
+              </div>
+              <div className="fx-legacyText">
+                <b>{hasLegacy ? 'Kayıtlı Profilinle Anında Devam Et' : 'Şifresiz Hızlı Başlangıç (Anında Aç)'}</b>
+                <small>
+                  {hasLegacy
+                    ? 'Bu cihazdaki mevcut antrenman ve ölçümlerinle saniyesinde içeri gir →'
+                    : 'Hesap doğrulaması beklemeden uygulamayı hemen şimdi aç ve kullan →'}
+                </small>
+              </div>
+            </button>
 
-            {/* Kayan Sekme Seçici (Giriş Yap / Ücretsiz Kayıt Ol) */}
+            {/* Kayan Sekme Seçici (Oturum Aç / Yeni Hesap Oluştur) */}
             {mode !== 'reset' && (
               <div className="fx-authTabs" role="tablist">
                 <button
@@ -246,7 +340,7 @@ export default function AuthScreen() {
                   className={mode === 'signup' ? 'active' : ''}
                   onClick={() => switchMode('signup')}
                 >
-                  Yeni Hesap Oluştur
+                  Ücretsiz Kayıt Ol
                 </button>
               </div>
             )}
@@ -254,17 +348,17 @@ export default function AuthScreen() {
             <div className="fx-authCardHeader">
               <h2>
                 {mode === 'signin'
-                  ? 'Hesabına Giriş Yap'
+                  ? 'Bulut Hesabına Giriş Yap'
                   : mode === 'signup'
-                    ? 'Profesyonel Koçuna Başla'
-                    : 'Şifre Sıfırlama'}
+                    ? 'Yeni Sporcu Hesabı Oluştur'
+                    : 'Şifreni Sıfırla'}
               </h2>
               <p>
                 {mode === 'signin'
-                  ? 'Antrenmanların, ölçümlerin ve AI analizlerin tüm cihazlarında senkronize.'
+                  ? 'Telefonun ve bilgisayarın arasında tüm kayıtların anında eşitlenir.'
                   : mode === 'signup'
-                    ? '30 saniyede ücretsiz hesabını aç, kişisel programını hemen oluşturalım.'
-                    : 'Kayıtlı e-posta adresini gir, sıfırlama bağlantısını hemen gönderelim.'}
+                    ? 'Bilgilerini gir; e-posta onayı beklemeden anında kişisel kurulumuna geçelim.'
+                    : 'Kayıtlı e-posta adresini yaz, sıfırlama bağlantısını gönderelim.'}
               </p>
             </div>
 
@@ -281,6 +375,9 @@ export default function AuthScreen() {
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                     />
+                    {fullName.trim().length >= 2 && (
+                      <CheckCircle2 size={17} className="fx-validTick" />
+                    )}
                   </div>
                 </label>
               )}
@@ -297,6 +394,7 @@ export default function AuthScreen() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
+                  {isEmailValid && <CheckCircle2 size={17} className="fx-validTick" />}
                 </div>
               </label>
 
@@ -333,7 +431,6 @@ export default function AuthScreen() {
                     </button>
                   </div>
 
-                  {/* Kayıt Modunda Canlı Şifre Gücü Çubuğu */}
                   {mode === 'signup' && password.length > 0 && (
                     <div className="fx-pwStrength">
                       <div className="fx-pwBars">
@@ -362,11 +459,11 @@ export default function AuthScreen() {
                 disabled={busy}
               >
                 {busy
-                  ? 'İşleniyor…'
+                  ? 'Bağlanıyor…'
                   : mode === 'signin'
-                    ? 'Oturum Aç'
+                    ? 'Hesabımla Oturum Aç'
                     : mode === 'signup'
-                      ? 'Hesabımı Oluştur ve Başla'
+                      ? 'Hesabımı Oluştur ve İçeri Gir'
                       : 'Sıfırlama Bağlantısı Gönder'}
                 {!busy && <ArrowRight size={18} />}
               </button>
@@ -375,7 +472,7 @@ export default function AuthScreen() {
             {mode !== 'reset' ? (
               <>
                 <div className="fx-divider">
-                  <span>veya hızlı devam et</span>
+                  <span>veya tek dokunuşla</span>
                 </div>
 
                 <div className="fx-socialGrid">
@@ -398,12 +495,12 @@ export default function AuthScreen() {
                         d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"
                       />
                     </svg>
-                    <span>Google ile Giriş</span>
+                    <span>Google ile Devam Et</span>
                   </button>
 
                   <button type="button" className="fx-socialBtn fx-socialBtn--fast" onClick={handleInstantLocal}>
                     <Zap size={17} className="fx-accentIcon" />
-                    <span>Hızlı Başlangıç</span>
+                    <span>Misafir / Hızlı Mod</span>
                   </button>
                 </div>
               </>
@@ -418,7 +515,7 @@ export default function AuthScreen() {
             <p className="fx-legal">
               Devam ederek{' '}
               <a href="/gizlilik.html" target="_blank" rel="noreferrer">
-                Gizlilik Politikası
+                KVKK & Gizlilik Politikası
               </a>{' '}
               ve{' '}
               <a href="/kosullar.html" target="_blank" rel="noreferrer">
