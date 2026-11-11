@@ -4188,6 +4188,744 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border: 1px solid rgba(255, 77, 28, 0.35) !important;
 }
 
+/* =====================================================================
+   FIT. ATELIER — INTERACTIVE DIAGNOSTIC ONBOARDING & BLUEPRINT MATRIX
+   ===================================================================== */
+.fx-quizOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--fx-bg);
+  color: var(--fx-text);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.fx-quizTopBar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(9, 9, 11, 0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--fx-border);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.fx-quizBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fx-quizTag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--fx-muted);
+}
+
+.fx-quizProgressWrap {
+  flex: 1;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fx-quizProgressMeta {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--fx-muted);
+}
+.fx-quizProgressMeta b {
+  color: #ff4d1c;
+}
+
+.fx-quizProgressBar {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.fx-quizProgressBar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff4d1c, #d4ff33);
+  box-shadow: 0 0 12px rgba(255, 77, 28, 0.6);
+  transition: width 0.3s ease;
+}
+
+/* Canlı Telemetri Şeridi */
+.fx-quizTelemetryStrip {
+  width: 100%;
+  max-width: 980px;
+  margin: 16px auto 0;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+@media (max-width: 680px) {
+  .fx-quizTelemetryStrip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.fx-stripPod {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #141418;
+  border: 1px solid var(--fx-border);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.fx-stripPod small {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  color: var(--fx-muted);
+}
+.fx-stripPod strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  color: var(--fx-text);
+  line-height: 1.1;
+}
+.fx-stripPod .unit {
+  font-size: 12px;
+  color: var(--fx-muted);
+  font-weight: 500;
+}
+
+/* Ana Soru Sahnesi */
+.fx-quizStage {
+  flex: 1;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 32px 20px 120px;
+}
+
+.fx-quizStep {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fx-stepBadge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #ff4d1c;
+}
+
+.fx-stepHeadline {
+  margin: 0;
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.fx-stepDesc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--fx-muted);
+  max-width: 680px;
+}
+
+/* 4 ŞIKLI İNTERAKTİF BENTO IZGARASI */
+.fx-quizBentoGrid4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 14px;
+}
+@media (max-width: 620px) {
+  .fx-quizBentoGrid4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fx-quizCard {
+  position: relative;
+  padding: 24px 20px;
+  border-radius: 18px;
+  background: #141418;
+  border: 1.5px solid var(--fx-border);
+  color: var(--fx-text);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.fx-quizCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 77, 28, 0.5);
+  background: #18181f;
+}
+
+.fx-quizCard.selected {
+  border-color: #ff4d1c;
+  background: linear-gradient(145deg, rgba(255, 77, 28, 0.16), #16161c 65%);
+  box-shadow: 0 14px 40px rgba(255, 77, 28, 0.22), inset 0 0 0 1px #ff4d1c;
+}
+
+.fx-cardTag {
+  align-self: flex-start;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fx-border);
+  color: var(--fx-muted);
+}
+.fx-quizCard.selected .fx-cardTag {
+  background: rgba(255, 77, 28, 0.2);
+  color: #ff4d1c;
+  border-color: rgba(255, 77, 28, 0.4);
+}
+
+.fx-cardIconBox {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--fx-border);
+  color: #d4ff33;
+  display: grid;
+  place-items: center;
+  margin: 4px 0;
+}
+.fx-quizCard.selected .fx-cardIconBox {
+  border-color: #ff4d1c;
+  box-shadow: 0 0 20px rgba(255, 77, 28, 0.35);
+}
+
+.fx-quizCard h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.fx-quizCard p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fx-muted);
+}
+
+.fx-cardSelectTick {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--fx-border-strong);
+  display: grid;
+  place-items: center;
+  opacity: 0.3;
+  transition: all 0.2s ease;
+}
+.fx-quizCard.selected .fx-cardSelectTick {
+  opacity: 1;
+  background: #ff4d1c;
+  border-color: #ff4d1c;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(255, 77, 28, 0.5);
+}
+
+/* Adım 1 Form Elemanları */
+.fx-stepFormBox {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+.fx-quizInputRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fx-quizInputRow span,
+.fx-quizField span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--fx-muted);
+}
+.fx-quizInputRow input {
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 12px;
+  background: #141418;
+  border: 1.5px solid var(--fx-border);
+  color: var(--fx-text);
+  font-size: 16px;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.fx-quizInputRow input:focus {
+  border-color: #ff4d1c;
+  box-shadow: 0 0 0 3px rgba(255, 77, 28, 0.15);
+}
+
+.fx-quizGrid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.fx-quizGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .fx-quizGrid2,
+  .fx-quizGrid3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fx-binaryChoiceRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  height: 52px;
+}
+.fx-binaryBtn {
+  border-radius: 12px;
+  background: #141418;
+  border: 1.5px solid var(--fx-border);
+  color: var(--fx-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.fx-binaryBtn.active {
+  background: #f4f2ed;
+  color: #09090b;
+  border-color: #f4f2ed;
+}
+
+.fx-telemetryInsight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(255, 77, 28, 0.08);
+  border: 1px solid rgba(255, 77, 28, 0.25);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--fx-text);
+}
+
+/* Sıklık Seçici */
+.fx-stepSubSection {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fx-subLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--fx-muted);
+}
+.fx-frequencySelector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 600px) {
+  .fx-frequencySelector {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.fx-freqBtn {
+  padding: 14px;
+  border-radius: 14px;
+  background: #141418;
+  border: 1.5px solid var(--fx-border);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.fx-freqBtn strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+.fx-freqBtn small {
+  font-size: 11px;
+  color: var(--fx-muted);
+}
+.fx-freqBtn.active {
+  border-color: #d4ff33;
+  background: rgba(212, 255, 51, 0.1);
+  color: #d4ff33;
+}
+.fx-freqBtn.active small {
+  color: #d4ff33;
+}
+
+/* Sistem Kontrol Kartları (Adım 7) */
+.fx-directorCard {
+  position: relative;
+  padding: 28px 24px;
+  border-radius: 20px;
+  background: #141418;
+  border: 1.5px solid var(--fx-border);
+  color: var(--fx-text);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+.fx-directorCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 77, 28, 0.4);
+}
+.fx-directorCard.selected {
+  border-color: #ff4d1c;
+  background: linear-gradient(155deg, rgba(255, 77, 28, 0.14), #16161c 65%);
+  box-shadow: 0 16px 40px rgba(255, 77, 28, 0.25);
+}
+.fx-directorBadge {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 77, 28, 0.16);
+  border: 1px solid rgba(255, 77, 28, 0.4);
+  color: #ff4d1c;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.fx-directorIcon {
+  color: #d4ff33;
+  margin: 4px 0;
+}
+.fx-directorCard h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+.fx-directorCard p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fx-muted);
+}
+.fx-directorList {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--fx-text);
+}
+
+/* =====================================================================
+   ADIM 8: BLUEPRINT TABLOSU & 90 GÜNLÜK YOL HARİTASI
+   ===================================================================== */
+.fx-blueprintHero {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.fx-blueprintEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 77, 28, 0.16);
+  border: 1px solid rgba(255, 77, 28, 0.4);
+  color: #ff4d1c;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+.fx-blueprintTitle {
+  margin: 0;
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(26px, 3.4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+.fx-blueprintSub {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fx-muted);
+  line-height: 1.55;
+}
+
+.fx-blueprintMatrixTable {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+@media (max-width: 720px) {
+  .fx-blueprintMatrixTable {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.fx-matrixCol {
+  padding: 20px 18px;
+  border-radius: 16px;
+  background: #141418;
+  border: 1px solid var(--fx-border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fx-matrixCol--accent {
+  background: linear-gradient(155deg, rgba(255, 77, 28, 0.15), #16161b 70%);
+  border-color: rgba(255, 77, 28, 0.45);
+}
+.fx-matrixCol small {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--fx-muted);
+}
+.fx-matrixCol strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.fx-matrixCol .unit {
+  font-size: 14px;
+  color: var(--fx-muted);
+  font-weight: 500;
+}
+.fx-matrixCol span {
+  font-size: 11.5px;
+  color: var(--fx-muted);
+  margin-top: 4px;
+}
+
+.fx-roadmapBox {
+  padding: 24px;
+  border-radius: 20px;
+  background: #121216;
+  border: 1.5px solid var(--fx-border);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.fx-roadmapHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #f4f2ed;
+}
+.fx-roadmapGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 760px) {
+  .fx-roadmapGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.fx-roadmapPhase {
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--fx-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fx-roadmapPhase--highlight {
+  border-color: rgba(255, 77, 28, 0.4);
+  background: rgba(255, 77, 28, 0.08);
+}
+.fx-phaseNumber {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: #d4ff33;
+}
+.fx-roadmapPhase h4 {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.fx-roadmapPhase p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--fx-muted);
+  flex: 1;
+}
+.fx-phaseOutcome {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 8px;
+  border-top: 1px solid var(--fx-border);
+  font-size: 11.5px;
+  color: var(--fx-muted);
+}
+.fx-phaseOutcome b {
+  color: var(--fx-text);
+}
+
+/* Alt Sabit Buton Barı */
+.fx-quizFooterBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 16px 24px;
+  background: rgba(9, 9, 11, 0.92);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--fx-border);
+}
+.fx-footerInner {
+  max-width: 980px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.fx-quizBackBtn {
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 12px;
+  background: transparent;
+  border: 1.5px solid var(--fx-border-strong);
+  color: var(--fx-text);
+  font-size: 13.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.fx-quizBackBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.fx-quizNextBtn {
+  margin-left: auto;
+  height: 48px;
+  padding: 0 28px;
+  border-radius: 12px;
+  background: #ff4d1c;
+  color: #fff;
+  border: none;
+  font-size: 14.5px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(255, 77, 28, 0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.fx-quizNextBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(255, 77, 28, 0.45);
+}
+.fx-quizNextBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fx-blueprintActionGroup {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 680px) {
+  .fx-blueprintActionGroup {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Ayarlar ekranında kalibrasyonu yeniden başlatma kartı */
+.fx-recalibrateBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 77, 28, 0.14), #16161b 75%);
+  border: 1px solid rgba(255, 77, 28, 0.35);
+  margin-bottom: 16px;
+}
+.fx-recalibrateBanner h4 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.fx-recalibrateBanner p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--fx-muted);
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

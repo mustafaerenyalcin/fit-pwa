@@ -9,7 +9,7 @@ import { useI18n } from '../lib/i18n.js';
 
 const APP_VERSION = '4.0.0 Global';
 
-export default function SettingsView({ profile, onSaveProfile, installed, setMessage }) {
+export default function SettingsView({ profile, onSaveProfile, installed, setMessage, onRetakeOnboarding }) {
   const { lang, setLang, t, languages } = useI18n();
   const [section, setSection] = useState('profile');
   const [, force] = useState(0);
@@ -70,6 +70,23 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
           ))}
         </div>
       </Card>
+
+      {onRetakeOnboarding && (
+        <div className="fx-recalibrateBanner">
+          <div>
+            <h4>🎯 Biyometrik Testi & 90 Günlük Blueprint'i Yeniden Başlat</h4>
+            <p>Yeni bir hedef, kilo, vücut tipi veya ekipman düzenine geçtiysen 8 aşamalı testi tekrar çözüp sistemi kalibre et.</p>
+          </div>
+          <button
+            type="button"
+            className="fx-btn fx-solarBtn fx-btn--sm"
+            onClick={onRetakeOnboarding}
+            style={{ whiteSpace: 'nowrap' }}
+          >
+            Testi Başlat →
+          </button>
+        </div>
+      )}
 
       <Segmented
         value={section}

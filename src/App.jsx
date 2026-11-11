@@ -114,6 +114,7 @@ function MainApp() {
     (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true);
 
   const [activeWorkoutPlan, setActiveWorkoutPlan] = useState(null);
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
 
   const profile = useMemo(() => ({ ...DEFAULT_PROFILE, ...(storedProfile || {}) }), [storedProfile]);
 
@@ -400,10 +401,28 @@ function MainApp() {
       {tab === 'settings' && (
         <div className="fx-stack">
           <SmartReminders totals={totals} target={target} setMessage={showToast} />
-          <SettingsView profile={profile} onSaveProfile={handleSaveProfile} installed={installed} setMessage={showToast} />
+          <SettingsView
+            profile={profile}
+            onSaveProfile={handleSaveProfile}
+            installed={installed}
+            setMessage={showToast}
+            onRetakeOnboarding={() => setShowOnboardingModal(true)}
+          />
         </div>
       )}
       </Suspense>
+
+      {showOnboardingModal && (
+        <Onboarding
+          initialProfile={profile}
+          onComplete={async (updatedProfile) => {
+            await handleSaveProfile(updatedProfile);
+            setShowOnboardingModal(false);
+            showToast('🎯 Biyometrik kalibrasyonun başarıyla güncellendi.');
+          }}
+          onCancel={() => setShowOnboardingModal(false)}
+        />
+      )}
 
       {activeWorkoutPlan && (
         <Suspense fallback={null}>
