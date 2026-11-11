@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Cloud, RefreshCw, Download, Upload, LogOut, Trash2, Smartphone, Shield, FileText, Sun, Moon, Bell } from 'lucide-react';
+import { Cloud, RefreshCw, Download, Upload, LogOut, Trash2, Smartphone, Shield, FileText, Sun, Moon, Bell, Globe } from 'lucide-react';
 import ProfileView from './ProfileView.jsx';
 import { Segmented, Card } from '../components/ui.jsx';
 import { getAuthState, getSyncState, sync, signout, deleteAccount } from '../lib/supabase.js';
 import { exportBackup, importBackup } from '../lib/store.js';
 import { getTheme, setTheme, getReminderConfig, toggleMorningReminder } from '../lib/notifications.js';
+import { useI18n } from '../lib/i18n.js';
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '4.0.0 Global';
 
 export default function SettingsView({ profile, onSaveProfile, installed, setMessage }) {
+  const { lang, setLang, t, languages } = useI18n();
   const [section, setSection] = useState('profile');
   const [, force] = useState(0);
   const [themeMode, setThemeMode] = useState(getTheme);
@@ -47,6 +49,28 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
 
   return (
     <div className="fx-stack">
+      <Card title={t('settings.langTitle')} subtitle={t('settings.langSub')}>
+        <div className="fx-langGrid">
+          {languages.map((l) => (
+            <button
+              key={l.code}
+              type="button"
+              className={`fx-langCardBtn ${lang === l.code ? 'active' : ''}`}
+              onClick={() => {
+                setLang(l.code);
+                setMessage?.(`${l.flag} ${l.name}`);
+              }}
+            >
+              <span className="fx-langFlag">{l.flag}</span>
+              <div>
+                <b>{l.name}</b>
+                <small>{l.speechLang}</small>
+              </div>
+            </button>
+          ))}
+        </div>
+      </Card>
+
       <Segmented
         value={section}
         onChange={setSection}

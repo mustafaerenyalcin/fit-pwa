@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { Flame, Trophy, ChevronDown, ChevronUp } from 'lucide-react';
 import { calculateGamification } from '../lib/streaks.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function StreakBar({ entries, target }) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const g = useMemo(() => calculateGamification(entries, target), [entries, target]);
   const { streak, level, title, currentLevelXp, nextLevelXp, badges } = g;
@@ -18,13 +20,13 @@ export default function StreakBar({ entries, target }) {
           </div>
           <div>
             <div className="fx-streakTitleRow">
-              <b>{streak.current > 0 ? `${streak.current} Günlük Seri!` : 'Seriyi Başlat'}</b>
-              <span className="fx-levelPill">Sv. {level} · {title}</span>
+              <b>{streak.current} {t('streak.dayStreak')}!</b>
+              <span className="fx-levelPill">{t('streak.level')} {level} · {title}</span>
             </div>
             <small className="fx-muted">
               {streak.loggedToday
-                ? 'Bugünkü kaydın tamam · Serin güvende!'
-                : 'Bugün check-in, su, öğün veya antrenman kaydederek serini koru'}
+                ? '✓ Active Streak'
+                : `${t('streak.best')}: ${streak.best} ${t('streak.days')}`}
             </small>
           </div>
         </div>

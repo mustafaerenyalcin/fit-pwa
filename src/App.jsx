@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef, lazy, Suspense } from 'react';
 import Layout from './components/Layout.jsx';
-import ActiveWorkoutModal from './components/ActiveWorkoutModal.jsx';
 import AuthScreen from './components/AuthScreen.jsx';
 import Onboarding from './components/Onboarding.jsx';
-import AiMealLogger from './components/AiMealLogger.jsx';
-import SmartMealRecommender from './components/SmartMealRecommender.jsx';
-import AdaptiveMacroCoach from './components/AdaptiveMacroCoach.jsx';
-import BodyCompositionPro from './components/BodyCompositionPro.jsx';
-import RecoveryStudio from './components/RecoveryStudio.jsx';
-import WeeklyReport from './components/WeeklyReport.jsx';
-import ProgramGenerator from './components/ProgramGenerator.jsx';
-import CustomWorkoutBuilder from './components/CustomWorkoutBuilder.jsx';
-import StrengthOverloadCard from './components/StrengthOverloadCard.jsx';
-import FastingTimer from './components/FastingTimer.jsx';
-import BeforeAfterSlider from './components/BeforeAfterSlider.jsx';
-import SmartReminders from './components/SmartReminders.jsx';
 import { Segmented, Skeleton } from './components/ui.jsx';
-
 import TodayView from './views/TodayView.jsx';
+
+const ActiveWorkoutModal = lazy(() => import('./components/ActiveWorkoutModal.jsx'));
+const AiMealLogger = lazy(() => import('./components/AiMealLogger.jsx'));
+const SmartMealRecommender = lazy(() => import('./components/SmartMealRecommender.jsx'));
+const AdaptiveMacroCoach = lazy(() => import('./components/AdaptiveMacroCoach.jsx'));
+const BodyCompositionPro = lazy(() => import('./components/BodyCompositionPro.jsx'));
+const RecoveryStudio = lazy(() => import('./components/RecoveryStudio.jsx'));
+const WeeklyReport = lazy(() => import('./components/WeeklyReport.jsx'));
+const ProgramGenerator = lazy(() => import('./components/ProgramGenerator.jsx'));
+const CustomWorkoutBuilder = lazy(() => import('./components/CustomWorkoutBuilder.jsx'));
+const StrengthOverloadCard = lazy(() => import('./components/StrengthOverloadCard.jsx'));
+const FastingTimer = lazy(() => import('./components/FastingTimer.jsx'));
+const BeforeAfterSlider = lazy(() => import('./components/BeforeAfterSlider.jsx'));
+const SmartReminders = lazy(() => import('./components/SmartReminders.jsx'));
+
 const CalendarView = lazy(() => import('./views/CalendarView.jsx'));
 const TrainingView = lazy(() => import('./views/TrainingView.jsx'));
 const NutritionView = lazy(() => import('./views/NutritionView.jsx'));
@@ -32,6 +33,7 @@ import { getSetting, setSetting, list, add, remove, subscribe } from './lib/stor
 import { scheduleSync, getAuthState, getSyncState } from './lib/supabase.js';
 import { getCustomProgram } from './lib/workoutPlans.js';
 import { initTheme } from './lib/notifications.js';
+import { useI18n } from './lib/i18n.js';
 
 const CATEGORIES = ['workout', 'meal', 'habit', 'weight', 'supplement', 'checkin', 'report'];
 const VALID_TABS = ['today', 'training', 'nutrition', 'progress', 'coach', 'settings'];
@@ -92,6 +94,7 @@ function readEntries() {
 }
 
 function MainApp() {
+  const { t } = useI18n();
   const [tab, setTabState] = useState(readTabFromHash);
   const [day, setDay] = useState(today());
   const [storedProfile, setStoredProfile] = useState(readProfile);
@@ -290,13 +293,13 @@ function MainApp() {
             value={trainingSection}
             onChange={setTrainingSection}
             options={[
-              ['program', 'Program'],
-              ['week', 'Haftalık takvim']
+              ['program', t('sub.program')],
+              ['week', t('sub.week')]
             ]}
           />
           {trainingSection === 'program' && (
             <>
-              <ProgramGenerator profile={profile} program={program} onDone={() => showToast('Yeni programın hazır!')} />
+              <ProgramGenerator profile={profile} program={program} onDone={() => showToast('✓')} />
               <StrengthOverloadCard entries={entries} />
               <RecoveryStudio />
               <CustomWorkoutBuilder onStartWorkout={(plan) => setActiveWorkoutPlan(plan)} />
@@ -354,9 +357,9 @@ function MainApp() {
             value={progressSection}
             onChange={setProgressSection}
             options={[
-              ['report', 'Haftalık rapor'],
-              ['body', 'Ölçümler & Değişim'],
-              ['habits', 'Alışkanlıklar & Bildirim']
+              ['report', t('sub.report')],
+              ['body', t('sub.body')],
+              ['habits', t('sub.habits')]
             ]}
           />
           {progressSection === 'report' && (
@@ -403,12 +406,14 @@ function MainApp() {
       </Suspense>
 
       {activeWorkoutPlan && (
-        <ActiveWorkoutModal
-          plan={activeWorkoutPlan}
-          previousWorkout={entries.workout.find((e) => e.payload?.name === activeWorkoutPlan.name)}
-          onFinish={handleFinishActiveWorkout}
-          onClose={() => setActiveWorkoutPlan(null)}
-        />
+        <Suspense fallback={null}>
+          <ActiveWorkoutModal
+            plan={activeWorkoutPlan}
+            previousWorkout={entries.workout.find((e) => e.payload?.name === activeWorkoutPlan.name)}
+            onFinish={handleFinishActiveWorkout}
+            onClose={() => setActiveWorkoutPlan(null)}
+          />
+        </Suspense>
       )}
 
       {toast && (

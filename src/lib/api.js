@@ -5,6 +5,7 @@
  */
 
 import { supabase, getAuthState } from './supabase.js';
+import { getLang } from './i18n.js';
 
 const PRODUCTION_ORIGIN = 'https://lighthearted-gaufre-61028a.netlify.app';
 
@@ -66,7 +67,7 @@ export async function callAI(mode, payload = {}) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ mode, ...payload })
+      body: JSON.stringify({ mode, lang: getLang(), ...payload })
     });
   } catch {
     throw new AiError('Sunucuya ulaşılamadı. Bağlantını kontrol et.', 'NETWORK');

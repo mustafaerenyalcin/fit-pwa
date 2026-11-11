@@ -2467,6 +2467,98 @@ main.fx-content .chatContainer {
   box-shadow: var(--fx-shadow) !important;
 }
 
+/* =====================================================================
+   Fit v4.0 Global Final: Multi-Language Switcher & Global Polish
+   ===================================================================== */
+.fx-langPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border-strong);
+  color: var(--fx-text);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.fx-langPill:hover {
+  border-color: var(--fx-accent);
+  background: var(--fx-accent-soft);
+}
+
+.fx-authLangBar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  align-self: flex-start;
+}
+.fx-authLangBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 9px;
+  background: transparent;
+  border: none;
+  color: var(--fx-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.fx-authLangBtn.active {
+  background: var(--fx-accent-soft);
+  color: var(--fx-accent);
+}
+
+.fx-langGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 560px) {
+  .fx-langGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.fx-langCardBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--fx-surface-2);
+  border: 1.5px solid var(--fx-border);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.fx-langCardBtn.active {
+  border-color: var(--fx-accent);
+  background: var(--fx-accent-soft);
+}
+.fx-langFlag {
+  font-size: 22px;
+  line-height: 1;
+}
+.fx-langCardBtn b {
+  display: block;
+  font-size: 13px;
+}
+.fx-langCardBtn small {
+  display: block;
+  font-size: 11px;
+  color: var(--fx-muted);
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

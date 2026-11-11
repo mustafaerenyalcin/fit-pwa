@@ -19,6 +19,7 @@ import MuscleRecoveryMap from '../components/MuscleRecoveryMap.jsx';
 import { Card, Ring } from '../components/ui.jsx';
 import { getWorkoutForDay } from '../lib/workoutPlans.js';
 import { calculateCalories, today } from '../lib/calculations.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function TodayView({
   day,
@@ -33,6 +34,7 @@ export default function TodayView({
   onSaveCheckin,
   onRemoveCheckin
 }) {
+  const { t } = useI18n();
   const dayIndex = (new Date(day + 'T12:00:00').getDay() + 6) % 7;
   const plan = getWorkoutForDay(profile.training || 'home', dayIndex);
   const isRest = !plan || plan.rest || !plan.moves;
@@ -61,7 +63,14 @@ export default function TodayView({
   const waterPct = Math.min(100, Math.round((water / (target.water || 2500)) * 100) || 0);
 
   const hour = new Date().getHours();
-  const greeting = hour < 6 ? 'İyi geceler' : hour < 12 ? 'Günaydın' : hour < 18 ? 'İyi günler' : 'İyi akşamlar';
+  const greeting =
+    hour < 6
+      ? t('today.greetNight')
+      : hour < 12
+        ? t('today.greetMorning')
+        : hour < 18
+          ? t('today.greetDay')
+          : t('today.greetEvening');
 
   return (
     <div className="fx-today">
@@ -69,16 +78,16 @@ export default function TodayView({
       <div className="fx-todayHeader">
         <div>
           <p className="fx-greeting">
-            {greeting}, <b>{profile.name || 'Şampiyon'}</b> 👋
+            {greeting}, <b>{profile.name || t('today.champ')}</b> 👋
           </p>
           <span className="fx-todaySub">
             {remProtein > 0
-              ? `Hedefe ${remProtein}g protein ve ${remCalories} kcal kaldı`
-              : 'Günlük protein hedefin tamamlandı, harika gidiyorsun!'}
+              ? t('today.remSub', { pro: remProtein, cal: remCalories })
+              : t('today.doneSub')}
           </span>
         </div>
         <button type="button" className="fx-coachShortcut" onClick={() => onNavigate('coach')}>
-          <Sparkles size={14} /> AI Koça Sor
+          <Sparkles size={14} /> {t('today.askCoach')}
         </button>
       </div>
 
@@ -115,8 +124,8 @@ export default function TodayView({
               </b>
             </Ring>
             <span>
-              <b>Bu hafta</b>
-              <small>antrenman</small>
+              <b>{t('today.thisWeek')}</b>
+              <small>{t('today.workoutLabel')}</small>
             </span>
           </button>
         </div>
@@ -128,7 +137,7 @@ export default function TodayView({
               <Droplets size={18} />
               <div>
                 <b>{(water / 1000).toFixed(water % 1000 ? 2 : 1)} L</b>
-                <small>/ {(target.water / 1000).toFixed(1)} L su ({waterPct}%)</small>
+                <small>/ {(target.water / 1000).toFixed(1)} L {t('today.waterLabel')} ({waterPct}%)</small>
               </div>
             </div>
             <div className="fx-waterBar">
@@ -147,10 +156,10 @@ export default function TodayView({
           <div className="fx-commandMealBox">
             <div className="fx-commandMealHead">
               <span>
-                <Utensils size={15} /> <b>1-Tık Hızlı Beslenme</b>
+                <Utensils size={15} /> <b>{t('today.quickMealTitle')}</b>
               </span>
               <button type="button" className="fx-linkMini" onClick={() => onNavigate('nutrition')}>
-                <Camera size={13} /> AI Kamera
+                <Camera size={13} /> {t('today.aiCamera')}
               </button>
             </div>
             <div className="fx-quickProteinChips">
@@ -161,7 +170,7 @@ export default function TodayView({
                     className="fx-chip fx-chip--accent"
                     onClick={() =>
                       onQuickMealAdd({
-                        name: '1 Ölçek Whey / Protein Shake',
+                        name: '1 Scoop Whey / Protein Shake',
                         calories: 130,
                         protein: 26,
                         carbs: 3,
@@ -176,7 +185,7 @@ export default function TodayView({
                     className="fx-chip"
                     onClick={() =>
                       onQuickMealAdd({
-                        name: '200g Süzme Yoğurt + Yulaf',
+                        name: '200g Greek/Strained Yogurt + Oats',
                         calories: 240,
                         protein: 18,
                         carbs: 22,
@@ -184,12 +193,12 @@ export default function TodayView({
                       })
                     }
                   >
-                    <Plus size={13} /> +18g Yoğurt
+                    <Plus size={13} /> +18g Yogurt
                   </button>
                 </>
               )}
               <button type="button" className="fx-chip" onClick={() => onNavigate('nutrition')}>
-                <Flame size={13} /> Öğün Yaz
+                <Flame size={13} /> {t('today.logMeal')}
               </button>
             </div>
           </div>
@@ -212,14 +221,14 @@ export default function TodayView({
 
       {/* 3. Programdaki antrenman */}
       <Card
-        title={doneToday.length ? 'Antrenman Tamamlandı' : isRest ? 'Aktif Dinlenme & Mobilite Günü' : 'Günün Programlı Antrenmanı'}
+        title={doneToday.length ? t('today.workoutDone') : isRest ? t('today.restDay') : t('today.scheduledWorkout')}
         subtitle={doneToday.length ? doneToday.map((w) => w.payload?.name).join(', ') : plan?.name}
         action={
           doneToday.length ? (
             <CheckCircle2 size={22} className="fx-accentIcon" />
           ) : !isRest ? (
             <button type="button" className="fx-btn fx-btn--primary" onClick={() => onStartWorkout(plan)}>
-              <Play size={16} fill="currentColor" /> Antrenmana Başla
+              <Play size={16} fill="currentColor" /> {t('today.startWorkout')}
             </button>
           ) : (
             <Moon size={20} className="fx-mutedIcon" />
@@ -237,7 +246,7 @@ export default function TodayView({
         )}
         {!doneToday.length && isRest && plan?.tips?.length > 0 && <p className="fx-muted fx-small">{plan.tips[0]}</p>}
         <button type="button" className="fx-linkRow" onClick={() => onNavigate('training')}>
-          <Dumbbell size={15} /> Tüm haftalık programı ve özel rutinleri aç <ChevronRight size={16} />
+          <Dumbbell size={15} /> {t('today.openProgram')} <ChevronRight size={16} />
         </button>
       </Card>
 

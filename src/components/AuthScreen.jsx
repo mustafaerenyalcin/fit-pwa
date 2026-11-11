@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { signin, signup, signinWithGoogle, resetPassword, continueAsLocalUser } from '../lib/supabase.js';
 import { hasUnclaimedLegacyData } from '../lib/store.js';
+import { useI18n } from '../lib/i18n.js';
 
 const translateError = (msg = '') => {
   const m = msg.toLowerCase();
@@ -54,6 +55,7 @@ function calcPasswordStrength(pw = '') {
 }
 
 export default function AuthScreen() {
+  const { lang, setLang, t, languages } = useI18n();
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup' | 'reset'
   const [previewTab, setPreviewTab] = useState('checkin'); // 'checkin' | 'nutrition' | 'muscle'
   const [fullName, setFullName] = useState('');
@@ -138,19 +140,32 @@ export default function AuthScreen() {
               fit<span>.</span>
             </div>
             <span className="fx-proPill">
-              <Sparkles size={12} /> ELITE AI ENGINE v3.0
+              <Sparkles size={12} /> {t('auth.badge')}
             </span>
           </div>
 
+          {/* Küresel Dil Seçici Çubuğu (Global 4-Language Selector) */}
+          <div className="fx-authLangBar" role="group" aria-label="Language Selector">
+            {languages.map((l) => (
+              <button
+                key={l.code}
+                type="button"
+                className={`fx-authLangBtn ${lang === l.code ? 'active' : ''}`}
+                onClick={() => setLang(l.code)}
+              >
+                <span>{l.flag}</span> <b>{l.short}</b>
+              </button>
+            ))}
+          </div>
+
           <h1 className="fx-heroHeadline">
-            Sıradan bir takipçi değil.
+            {t('auth.heroTitle1')}
             <br />
-            <em>Seni tanıyan AI koçun.</em>
+            <em>{t('auth.heroTitle2')}</em> {t('auth.heroTitle3')}
           </h1>
 
           <p className="fx-heroLead">
-            Her sabah uykunu, enerjini ve kas yorgunluğunu analiz eder; o günün dambıl/salon
-            antrenmanını ve Türk mutfağına uygun öğünlerini saniyeler içinde yeniden kurar.
+            {t('auth.heroSub')}
           </p>
 
           {/* İnteraktif Canlı Önizleme Seçicisi */}
@@ -160,21 +175,21 @@ export default function AuthScreen() {
               className={previewTab === 'checkin' ? 'active' : ''}
               onClick={() => setPreviewTab('checkin')}
             >
-              <Activity size={14} /> Sabah AI Check-in
+              {t('auth.tabCheckin')}
             </button>
             <button
               type="button"
               className={previewTab === 'nutrition' ? 'active' : ''}
               onClick={() => setPreviewTab('nutrition')}
             >
-              <Utensils size={14} /> Türk Mutfağı AI
+              {t('auth.tabMeal')}
             </button>
             <button
               type="button"
               className={previewTab === 'muscle' ? 'active' : ''}
               onClick={() => setPreviewTab('muscle')}
             >
-              <HeartPulse size={14} /> Kas & Adonis Analizi
+              {t('auth.tabMuscle')}
             </button>
           </div>
 
@@ -312,11 +327,9 @@ export default function AuthScreen() {
                 <Play size={18} fill="currentColor" />
               </div>
               <div className="fx-legacyText">
-                <b>{hasLegacy ? 'Kayıtlı Profilinle Anında Devam Et' : 'Şifresiz Hızlı Başlangıç (Anında Aç)'}</b>
+                <b>{hasLegacy ? t('auth.instantSavedTitle') : t('auth.instantNewTitle')}</b>
                 <small>
-                  {hasLegacy
-                    ? 'Bu cihazdaki mevcut antrenman ve ölçümlerinle saniyesinde içeri gir →'
-                    : 'Hesap doğrulaması beklemeden uygulamayı hemen şimdi aç ve kullan →'}
+                  {hasLegacy ? t('auth.instantSavedSub') : t('auth.instantNewSub')}
                 </small>
               </div>
             </button>
@@ -331,7 +344,7 @@ export default function AuthScreen() {
                   className={mode === 'signin' ? 'active' : ''}
                   onClick={() => switchMode('signin')}
                 >
-                  Oturum Aç
+                  {t('auth.loginTab')}
                 </button>
                 <button
                   type="button"
@@ -340,7 +353,7 @@ export default function AuthScreen() {
                   className={mode === 'signup' ? 'active' : ''}
                   onClick={() => switchMode('signup')}
                 >
-                  Ücretsiz Kayıt Ol
+                  {t('auth.signupTab')}
                 </button>
               </div>
             )}
@@ -348,16 +361,16 @@ export default function AuthScreen() {
             <div className="fx-authCardHeader">
               <h2>
                 {mode === 'signin'
-                  ? 'Bulut Hesabına Giriş Yap'
+                  ? t('auth.welcomeBack')
                   : mode === 'signup'
-                    ? 'Yeni Sporcu Hesabı Oluştur'
-                    : 'Şifreni Sıfırla'}
+                    ? t('auth.createAccount')
+                    : t('auth.forgotTitle')}
               </h2>
               <p>
                 {mode === 'signin'
-                  ? 'Telefonun ve bilgisayarın arasında tüm kayıtların anında eşitlenir.'
+                  ? t('auth.loginSub')
                   : mode === 'signup'
-                    ? 'Bilgilerini gir; e-posta onayı beklemeden anında kişisel kurulumuna geçelim.'
+                    ? t('auth.signupSub')
                     : 'Kayıtlı e-posta adresini yaz, sıfırlama bağlantısını gönderelim.'}
               </p>
             </div>
@@ -459,12 +472,12 @@ export default function AuthScreen() {
                 disabled={busy}
               >
                 {busy
-                  ? 'Bağlanıyor…'
+                  ? '...'
                   : mode === 'signin'
-                    ? 'Hesabımla Oturum Aç'
+                    ? t('auth.submitLogin')
                     : mode === 'signup'
-                      ? 'Hesabımı Oluştur ve İçeri Gir'
-                      : 'Sıfırlama Bağlantısı Gönder'}
+                      ? t('auth.submitSignup')
+                      : t('auth.submitForgot')}
                 {!busy && <ArrowRight size={18} />}
               </button>
             </form>

@@ -152,11 +152,19 @@ Kurallar:
 
 const MOVE_SCHEMA = `{"name":"Hareket adı (Türkçe/İngilizce yaygın ad)","muscle":"Çalışan kas","sets":"3 × 10-12","defaultSets":3,"restSeconds":60,"suggestedKg":"8","tip":"Tek cümlelik form ipucu","alternatives":["Alternatif 1","Alternatif 2"]}`;
 
+const LANG_RULES = {
+  tr: 'DİL KURALI: Tüm yanıtlarını ve JSON içindeki tüm metinleri Türkçe yaz. Beslenmede ulaşılabilir Türk mutfağı örnekleri ver.',
+  en: 'LANGUAGE RULE: Write ALL responses and ALL text values inside JSON in English. Suggest realistic, accessible high-protein meals.',
+  de: 'SPRACHREGEL: Schreibe ALLE Antworten und ALLE Textwerte im JSON auf Deutsch. Schlage realistische, proteinreiche Mahlzeiten vor.',
+  es: 'REGLA DE IDIOMA: Escribe TODAS las respuestas y TODOS los textos dentro del JSON en Español. Sugiere comidas ricas en proteínas y accesibles.'
+};
+
 function buildPrompt(mode, body) {
   const p = body.profile || {};
+  const lang = ['tr', 'en', 'de', 'es'].includes(body.lang) ? body.lang : 'tr';
   const ctx = clean(body.context, 4000);
   const q = clean(body.question, 2000);
-  const header = `${BASE_RULES}\n\nKullanıcı profili:\n${profileBlock(p)}\n\nKullanıcının güncel verileri:\n${ctx || 'Henüz kayıt yok.'}`;
+  const header = `${BASE_RULES}\n${LANG_RULES[lang]}\n\nKullanıcı profili:\n${profileBlock(p)}\n\nKullanıcının güncel verileri:\n${ctx || 'Henüz kayıt yok.'}`;
 
   switch (mode) {
     case 'chat':

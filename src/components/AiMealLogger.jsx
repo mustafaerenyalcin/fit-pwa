@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Camera, Sparkles, Loader2, Trash2, Check, X, Mic, MicOff } from 'lucide-react';
 import { callAI, compressImage } from '../lib/api.js';
+import { useI18n } from '../lib/i18n.js';
 
 const CATEGORIES = ['Kahvaltı', 'Öğle', 'Akşam', 'Ara Öğün'];
 
@@ -19,6 +20,7 @@ const toInt = (v) => Math.max(0, Math.round(Number(v) || 0));
  * AI sonucu kullanıcı onaylamadan kaydedilmez.
  */
 export default function AiMealLogger({ profile, onAddMeal }) {
+  const { t, speechLang } = useI18n();
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const [listening, setListening] = useState(false);
@@ -42,7 +44,7 @@ export default function AiMealLogger({ profile, onAddMeal }) {
 
     setError('');
     const rec = new SpeechRecognition();
-    rec.lang = 'tr-TR';
+    rec.lang = speechLang || 'tr-TR';
     rec.interimResults = false;
     rec.maxAlternatives = 1;
 
@@ -207,7 +209,7 @@ export default function AiMealLogger({ profile, onAddMeal }) {
         </div>
 
         <button type="button" className="fx-btn fx-btn--primary fx-btn--block" onClick={save} disabled={!result.items.length}>
-          <Check size={18} /> Kaydet
+          <Check size={18} /> {t('meal.saveBtn')}
         </button>
       </section>
     );
@@ -218,9 +220,9 @@ export default function AiMealLogger({ profile, onAddMeal }) {
       <header className="fx-cardHead">
         <div>
           <h3>
-            <Sparkles size={16} className="fx-accentIcon" /> Ne yedin? (Yaz, Konuş veya Çek)
+            <Sparkles size={16} className="fx-accentIcon" /> {t('meal.title')}
           </h3>
-          <p>Türkçe sesle anlat, yaz ya da tabağının fotoğrafını çek; makroları AI hesaplasın.</p>
+          <p>{t('meal.subtitle')}</p>
         </div>
       </header>
 
@@ -229,7 +231,7 @@ export default function AiMealLogger({ profile, onAddMeal }) {
           rows={2}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Örn: 1 tabak kuru fasulye, yarım tabak bulgur pilavı ve 1 kase cacık"
+          placeholder={t('meal.placeholder')}
           disabled={busy}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -242,7 +244,7 @@ export default function AiMealLogger({ profile, onAddMeal }) {
 
       {listening && (
         <div className="fx-voiceActiveBanner">
-          <span className="liveDot" /> Dinleniyor… Yediğin öğünü Türkçe söyleyebilirsin.
+          <span className="liveDot" /> {t('meal.listening')}
         </div>
       )}
 
@@ -254,17 +256,17 @@ export default function AiMealLogger({ profile, onAddMeal }) {
           className={`fx-btn fx-btn--ghost ${listening ? 'fx-btn--listening' : ''}`}
           onClick={toggleVoiceInput}
           disabled={busy}
-          title="Sesle öğün anlat (Türkçe)"
+          title={t('meal.voiceBtn')}
         >
           {listening ? <MicOff size={18} /> : <Mic size={18} />}
-          {listening ? 'Durdur' : 'Sesle Anlat'}
+          {listening ? t('meal.stopVoice') : t('meal.voiceBtn')}
         </button>
         <button type="button" className="fx-btn fx-btn--ghost" onClick={() => fileRef.current?.click()} disabled={busy}>
-          <Camera size={18} /> Fotoğraf
+          <Camera size={18} /> {t('meal.photoBtn')}
         </button>
         <button type="button" className="fx-btn fx-btn--primary fx-grow" onClick={analyzeText} disabled={busy || !text.trim()}>
           {busy ? <Loader2 size={18} className="fx-spin" /> : <Sparkles size={18} />}
-          {busy ? 'Analiz ediliyor…' : 'Hesapla'}
+          {busy ? t('meal.analyzing') : t('meal.calcBtn')}
         </button>
         <input
           ref={fileRef}
