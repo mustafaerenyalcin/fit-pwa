@@ -3024,6 +3024,846 @@ main.fx-content .chatContainer {
   background: var(--fx-accent-soft);
 }
 
+/* =====================================================================
+   FIT SPATIAL AI OS v5.0 — AVANT-GARDE BENTO COCKPIT & FLOATING GLASS UI
+   ===================================================================== */
+
+:root {
+  --fx-bg: #05070c;
+  --fx-bg-2: #0a0e17;
+  --fx-surface: rgba(14, 20, 32, 0.74);
+  --fx-surface-2: rgba(22, 31, 48, 0.72);
+  --fx-border: rgba(255, 255, 255, 0.08);
+  --fx-border-strong: rgba(255, 255, 255, 0.15);
+  --fx-accent: #c8ff00;
+  --fx-accent-ink: #050800;
+  --fx-accent-soft: rgba(200, 255, 0, 0.13);
+  --fx-cyan: #00f0ff;
+  --fx-violet: #a855f7;
+  --fx-radius: 24px;
+  --fx-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--fx-bg);
+}
+
+h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpHeadline {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Uzamsal Arka Plan (Spatial Aurora & Dot Telemetry Mesh) */
+.fx-spatialShell {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.fx-spatialAmbient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.fx-auroraOrb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.45;
+  animation: fx-floatOrb 16s ease-in-out infinite alternate;
+}
+
+.fx-auroraOrb--volt {
+  width: 480px;
+  height: 480px;
+  top: -160px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(200, 255, 0, 0.24), transparent 70%);
+}
+
+.fx-auroraOrb--cyan {
+  width: 520px;
+  height: 520px;
+  top: 20%;
+  right: -180px;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.2), transparent 70%);
+  animation-delay: -5s;
+}
+
+.fx-auroraOrb--violet {
+  width: 460px;
+  height: 460px;
+  bottom: -140px;
+  left: 25%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.18), transparent 70%);
+  animation-delay: -10s;
+}
+
+:root[data-theme="light"] .fx-auroraOrb {
+  opacity: 0.25;
+}
+
+@keyframes fx-floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(28px, -24px) scale(1.08); }
+}
+
+.fx-spatialDotMesh {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at 50% 35%, black, transparent 85%);
+}
+:root[data-theme="light"] .fx-spatialDotMesh {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.07) 1px, transparent 1px);
+}
+
+/* Yüzen Cam Komuta Kapsülü (Floating Spatial Command Header) */
+.fx-spatialHeaderWrap {
+  position: sticky;
+  top: 14px;
+  z-index: 90;
+  padding: 0 20px;
+  margin-top: 14px;
+}
+
+.fx-spatialHeader {
+  max-width: 1180px;
+  margin: 0 auto;
+  height: 62px;
+  padding: 0 16px 0 20px;
+  border-radius: 999px;
+  background: rgba(11, 16, 26, 0.78);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+:root[data-theme="light"] .fx-spatialHeader {
+  background: rgba(255, 255, 255, 0.86);
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.fx-spatialLogoBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.fx-osBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(200, 255, 0, 0.12);
+  border: 1px solid rgba(200, 255, 0, 0.35);
+  color: var(--fx-accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.fx-osPulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fx-accent);
+  box-shadow: 0 0 10px var(--fx-accent);
+  animation: fx-pulseDot 1.8s infinite;
+}
+
+@keyframes fx-pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.8); }
+}
+
+/* Masaüstü Yüzen Kapsül Sekmeler */
+.fx-spatialTopNav {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+@media (min-width: 920px) {
+  .fx-spatialTopNav {
+    display: flex;
+  }
+}
+
+.fx-spatialNavPill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--fx-muted);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.fx-spatialNavPill:hover {
+  color: var(--fx-text);
+}
+
+.fx-spatialNavPill.active {
+  background: rgba(200, 255, 0, 0.14);
+  color: var(--fx-accent);
+  box-shadow: inset 0 0 0 1px rgba(200, 255, 0, 0.35);
+}
+
+:root[data-theme="light"] .fx-spatialNavPill.active {
+  background: var(--fx-accent-soft);
+  color: #2f5e00;
+}
+
+.fx-navGlowBar {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--fx-accent);
+  box-shadow: 0 0 10px var(--fx-accent);
+}
+
+.fx-spatialControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fx-dateNav--spatial {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.fx-spatialOrbBtn {
+  border-radius: 50%;
+}
+
+.fx-spatialUserPod {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--fx-text);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.fx-spatialUserPod:hover,
+.fx-spatialUserPod.active {
+  border-color: var(--fx-accent);
+}
+.fx-spatialUserName {
+  font-size: 12.5px;
+  font-weight: 700;
+  max-width: 96px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .fx-spatialUserName,
+  .fx-osBadge {
+    display: none;
+  }
+  .fx-spatialUserPod {
+    padding: 3px;
+  }
+  .fx-spatialUserPod svg {
+    display: none;
+  }
+}
+
+/* Ana Uzamsal Sahne (Spatial Stage) */
+.fx-spatialStage {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px 20px calc(104px + var(--fx-safe-bottom));
+  animation: fx-fade 0.22s ease;
+}
+
+@media (min-width: 920px) {
+  .fx-spatialStage {
+    padding: 28px 24px 56px;
+  }
+}
+
+/* Mobil / Tablet Yüzen Cam Ada Dock (Floating Island Dock) */
+.fx-floatingDockWrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(14px + var(--fx-safe-bottom));
+  z-index: 95;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+@media (min-width: 920px) {
+  .fx-floatingDockWrap {
+    display: none;
+  }
+}
+
+.fx-floatingDock {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 460px;
+  height: 66px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(10, 15, 24, 0.86);
+  backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+
+:root[data-theme="light"] .fx-floatingDock {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+.fx-dockItem {
+  border: none;
+  background: transparent;
+  color: var(--fx-muted);
+  border-radius: 999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.fx-dockIconBox {
+  width: 36px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  transition: all 0.18s ease;
+}
+
+.fx-dockItem.active {
+  color: var(--fx-accent);
+}
+
+.fx-dockItem.active .fx-dockIconBox {
+  background: rgba(200, 255, 0, 0.16);
+  box-shadow: 0 0 16px rgba(200, 255, 0, 0.25);
+}
+
+/* =====================================================================
+   TODAY VIEW: ASYMMETRIC BIOMETRIC BENTO COCKPIT
+   ===================================================================== */
+.fx-cockpit {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fx-cockpitHeroBar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 4px 4px 6px;
+}
+
+.fx-telemetryTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  color: var(--fx-accent);
+  margin-bottom: 6px;
+}
+
+.fx-cockpitGreeting {
+  margin: 0;
+  font-size: clamp(26px, 3.2vw, 36px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.fx-cockpitGreeting span {
+  background: linear-gradient(135deg, #ffffff 20%, #c8ff00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+:root[data-theme="light"] .fx-cockpitGreeting span {
+  background: linear-gradient(135deg, #0f172a 20%, #3a7500 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.fx-cockpitSub {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--fx-muted);
+}
+
+.fx-cockpitQuickTriggers {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fx-neonActionBtn {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #c8ff00, #8eff00);
+  color: #050800;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(200, 255, 0, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fx-neonActionBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(200, 255, 0, 0.42);
+}
+
+.fx-spatialCoachBtn {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  color: #00f0ff;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+:root[data-theme="light"] .fx-spatialCoachBtn {
+  color: #007799;
+  border-color: rgba(0, 119, 153, 0.35);
+}
+
+/* 12-Sütun Asimetrik Bento Izgarası */
+.fx-bentoMatrix {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.fx-bentoCell--span7 { grid-column: span 7; }
+.fx-bentoCell--span5 { grid-column: span 5; }
+.fx-bentoCell--span6 { grid-column: span 6; }
+
+@media (max-width: 960px) {
+  .fx-bentoCell--span7,
+  .fx-bentoCell--span5,
+  .fx-bentoCell--span6 {
+    grid-column: span 12;
+  }
+}
+
+.fx-glassModule,
+.fx-card {
+  position: relative;
+  border-radius: 26px;
+  background: var(--fx-surface);
+  backdrop-filter: blur(26px) saturate(170%);
+  border: 1px solid var(--fx-border-strong);
+  box-shadow: var(--fx-shadow);
+  padding: 22px;
+}
+
+.fx-moduleTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.fx-moduleEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--fx-muted);
+}
+.fx-moduleEyebrow svg {
+  color: var(--fx-accent);
+}
+
+/* 3'lü Biyometrik Gösterge (Gauges) */
+.fx-telemetryGauges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 580px) {
+  .fx-telemetryGauges {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fx-gaugePod {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--fx-border);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+.fx-gaugePod:hover {
+  transform: translateY(-2px);
+  border-color: rgba(200, 255, 0, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.fx-gaugeMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fx-gaugeMeta small {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--fx-muted);
+}
+
+.fx-monoBig {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1.1;
+}
+
+.fx-gaugeMeta span {
+  font-size: 11.5px;
+  color: var(--fx-muted);
+}
+
+/* Hidrasyon ve Hızlı Protein Dock'u */
+.fx-fuelDock {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--fx-border);
+}
+
+@media (max-width: 620px) {
+  .fx-fuelDock {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fx-hydrationPod,
+.fx-quickProteinPod {
+  padding: 13px 15px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--fx-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fx-hydrationTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.fx-miniPillPair {
+  display: flex;
+  gap: 5px;
+}
+
+.fx-miniPillPair button {
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.1);
+  color: #00f0ff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+:root[data-theme="light"] .fx-miniPillPair button {
+  color: #006688;
+}
+
+.fx-cyberProgress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--fx-track);
+  overflow: hidden;
+}
+
+.fx-cyberProgress span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #00f0ff, #c8ff00);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+  transition: width 0.35s ease;
+}
+
+.fx-podLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--fx-muted);
+}
+
+.fx-quickActionPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fx-cyberChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fx-border-strong);
+  color: var(--fx-text);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.fx-cyberChip:hover {
+  border-color: var(--fx-accent);
+}
+
+.fx-cyberChip--volt {
+  background: rgba(200, 255, 0, 0.14);
+  border-color: rgba(200, 255, 0, 0.4);
+  color: var(--fx-accent);
+}
+:root[data-theme="light"] .fx-cyberChip--volt {
+  color: #2f5e00;
+}
+
+/* Antrenman Fırlatma Rampası (Workout Launchpad) */
+.fx-workoutLaunchpad {
+  background: linear-gradient(155deg, rgba(200, 255, 0, 0.09), rgba(14, 20, 32, 0.85) 60%);
+  border-color: rgba(200, 255, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.fx-statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10.5px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fx-muted);
+}
+
+.fx-statusPill--ready {
+  background: rgba(200, 255, 0, 0.16);
+  color: var(--fx-accent);
+  border: 1px solid rgba(200, 255, 0, 0.4);
+}
+
+.fx-statusPill--done {
+  background: rgba(74, 222, 128, 0.16);
+  color: #4ade80;
+}
+
+.fx-launchpadTitle {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+
+.fx-launchpadSub {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--fx-muted);
+}
+
+.fx-launchpadMoves {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.fx-launchpadMoveRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--fx-border);
+  font-size: 12.5px;
+}
+
+.fx-moveIndex {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--fx-accent);
+}
+
+.fx-launchpadMoveRow b {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fx-launchpadMoveRow small {
+  font-family: 'Space Grotesk', monospace;
+  color: var(--fx-muted);
+  font-size: 11.5px;
+}
+
+/* AuthScreen Hologram Telemetri Kartı */
+.fx-hologramStage {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 4px 0;
+}
+
+@media (max-width: 520px) {
+  .fx-hologramStage {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fx-holoMetric {
+  padding: 16px 14px;
+  border-radius: 18px;
+  background: rgba(14, 20, 32, 0.78);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fx-holoMetric small {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--fx-muted);
+}
+
+.fx-holoMetric strong {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+}
+
+.fx-holoMetric span {
+  font-size: 11.5px;
+  color: var(--fx-muted);
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

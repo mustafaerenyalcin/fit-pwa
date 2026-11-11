@@ -11,12 +11,13 @@ import {
   Flame,
   Zap,
   Sparkles,
-  Camera
+  Camera,
+  Activity
 } from 'lucide-react';
 import DailyCheckin from '../components/DailyCheckin.jsx';
 import StreakBar from '../components/StreakBar.jsx';
 import MuscleRecoveryMap from '../components/MuscleRecoveryMap.jsx';
-import { Card, Ring } from '../components/ui.jsx';
+import { Ring } from '../components/ui.jsx';
 import { getWorkoutForDay } from '../lib/workoutPlans.js';
 import { calculateCalories, today } from '../lib/calculations.js';
 import { useI18n } from '../lib/i18n.js';
@@ -73,185 +74,274 @@ export default function TodayView({
           : t('today.greetEvening');
 
   return (
-    <div className="fx-today">
-      {/* Üst Karşılama & Hedef Rozeti */}
-      <div className="fx-todayHeader">
-        <div>
-          <p className="fx-greeting">
-            {greeting}, <b>{profile.name || t('today.champ')}</b> 👋
-          </p>
-          <span className="fx-todaySub">
+    <div className="fx-cockpit">
+      {/* Üst Biyometrik Durum & Karşılama Kapsülü */}
+      <section className="fx-cockpitHeroBar">
+        <div className="fx-cockpitGreetCol">
+          <div className="fx-telemetryTag">
+            <span className="fx-osPulse" /> BIOMETRIC TELEMETRY · LIVE
+          </div>
+          <h2 className="fx-cockpitGreeting">
+            {greeting}, <span>{profile.name || t('today.champ')}</span>
+          </h2>
+          <p className="fx-cockpitSub">
             {remProtein > 0
               ? t('today.remSub', { pro: remProtein, cal: remCalories })
               : t('today.doneSub')}
-          </span>
-        </div>
-        <button type="button" className="fx-coachShortcut" onClick={() => onNavigate('coach')}>
-          <Sparkles size={14} /> {t('today.askCoach')}
-        </button>
-      </div>
-
-      {/* 0. Seri (Streak), Seviye ve Rozet Çubuğu */}
-      <StreakBar entries={entries} target={target} />
-
-      {/* 1. Komuta Merkezi (Apple Fitness + MacroFactor Bento Kartı) */}
-      <div className="fx-commandHero">
-        <div className="fx-commandRingsRow">
-          <button type="button" className="fx-summaryItem" onClick={() => onNavigate('nutrition')}>
-            <Ring value={totals.calories} max={targetCalories} size={64} stroke={6}>
-              <b>{calPct}%</b>
-            </Ring>
-            <span>
-              <b>{totals.calories}</b>
-              <small>/ {targetCalories} kcal</small>
-            </span>
-          </button>
-
-          <button type="button" className="fx-summaryItem" onClick={() => onNavigate('nutrition')}>
-            <Ring value={totals.protein} max={target.protein} size={64} stroke={6} color="#7ee0ff">
-              <b>{proPct}%</b>
-            </Ring>
-            <span>
-              <b>{totals.protein} g</b>
-              <small>/ {target.protein} g protein</small>
-            </span>
-          </button>
-
-          <button type="button" className="fx-summaryItem" onClick={() => onNavigate('training')}>
-            <Ring value={weekDone} max={weekGoal} size={64} stroke={6} color="#ffb86b">
-              <b>
-                {weekDone}/{weekGoal}
-              </b>
-            </Ring>
-            <span>
-              <b>{t('today.thisWeek')}</b>
-              <small>{t('today.workoutLabel')}</small>
-            </span>
-          </button>
+          </p>
         </div>
 
-        {/* Canlı Hidrasyon & Hızlı Aksiyon Barı */}
-        <div className="fx-commandQuickGrid">
-          <div className="fx-commandWaterBox">
-            <div className="fx-waterHead">
-              <Droplets size={18} />
-              <div>
-                <b>{(water / 1000).toFixed(water % 1000 ? 2 : 1)} L</b>
-                <small>/ {(target.water / 1000).toFixed(1)} L {t('today.waterLabel')} ({waterPct}%)</small>
+        <div className="fx-cockpitQuickTriggers">
+          {!doneToday.length && !isRest && (
+            <button
+              type="button"
+              className="fx-neonActionBtn"
+              onClick={() => onStartWorkout(plan)}
+            >
+              <Play size={15} fill="currentColor" /> {t('today.startWorkout')}
+            </button>
+          )}
+          <button
+            type="button"
+            className="fx-spatialCoachBtn"
+            onClick={() => onNavigate('coach')}
+          >
+            <Sparkles size={15} /> {t('today.askCoach')}
+          </button>
+        </div>
+      </section>
+
+      {/* Asimetrik Uzamsal Bento Matrisi (Spatial Bento Grid) */}
+      <div className="fx-bentoMatrix">
+        {/* KART 1 (SOL GENİŞ): BİYOMETRİK ENERJİ, MAKRO & HİDRASYON KOKPİTİ */}
+        <section className="fx-bentoCell fx-bentoCell--span7 fx-glassModule">
+          <div className="fx-moduleTopRow">
+            <span className="fx-moduleEyebrow">
+              <Activity size={13} /> METABOLIC ENGINE & MACROS
+            </span>
+            <button type="button" className="fx-linkMini" onClick={() => onNavigate('nutrition')}>
+              <Camera size={12} /> {t('today.aiCamera')} →
+            </button>
+          </div>
+
+          <div className="fx-telemetryGauges">
+            <button
+              type="button"
+              className="fx-gaugePod"
+              onClick={() => onNavigate('nutrition')}
+            >
+              <Ring value={totals.calories} max={targetCalories} size={78} stroke={7} color="#c8ff00">
+                <b className="fx-monoVal">{calPct}%</b>
+              </Ring>
+              <div className="fx-gaugeMeta">
+                <small>ENERJİ (KCAL)</small>
+                <strong className="fx-monoBig">{totals.calories}</strong>
+                <span>/ {targetCalories} kcal</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className="fx-gaugePod"
+              onClick={() => onNavigate('nutrition')}
+            >
+              <Ring value={totals.protein} max={target.protein} size={78} stroke={7} color="#00f0ff">
+                <b className="fx-monoVal">{proPct}%</b>
+              </Ring>
+              <div className="fx-gaugeMeta">
+                <small>PROTEİN SENTEZİ</small>
+                <strong className="fx-monoBig" style={{ color: '#00f0ff' }}>
+                  {totals.protein}g
+                </strong>
+                <span>/ {target.protein}g hedef</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className="fx-gaugePod"
+              onClick={() => onNavigate('training')}
+            >
+              <Ring value={weekDone} max={weekGoal} size={78} stroke={7} color="#a855f7">
+                <b className="fx-monoVal">
+                  {weekDone}/{weekGoal}
+                </b>
+              </Ring>
+              <div className="fx-gaugeMeta">
+                <small>{t('today.thisWeek').toUpperCase()}</small>
+                <strong className="fx-monoBig" style={{ color: '#c084fc' }}>
+                  {weekDone} Seans
+                </strong>
+                <span>Hedef: {weekGoal} gün</span>
+              </div>
+            </button>
+          </div>
+
+          {/* Hızlı Yakıt & Hidrasyon Dock'u */}
+          <div className="fx-fuelDock">
+            <div className="fx-hydrationPod">
+              <div className="fx-hydrationTop">
+                <span>
+                  <Droplets size={15} style={{ color: '#00f0ff' }} />{' '}
+                  <b className="fx-monoVal">
+                    {(water / 1000).toFixed(water % 1000 ? 2 : 1)}L
+                  </b>{' '}
+                  <small>/ {(target.water / 1000).toFixed(1)}L</small>
+                </span>
+                <div className="fx-miniPillPair">
+                  <button type="button" onClick={() => onQuickWaterAdd(250)}>
+                    +250ml
+                  </button>
+                  <button type="button" onClick={() => onQuickWaterAdd(500)}>
+                    +500ml
+                  </button>
+                </div>
+              </div>
+              <div className="fx-cyberProgress">
+                <span style={{ width: `${waterPct}%` }} />
               </div>
             </div>
-            <div className="fx-waterBar">
-              <span style={{ width: `${waterPct}%` }} />
+
+            <div className="fx-quickProteinPod">
+              <small className="fx-podLabel">
+                <Utensils size={12} /> {t('today.quickMealTitle')}
+              </small>
+              <div className="fx-quickActionPills">
+                {onQuickMealAdd && (
+                  <>
+                    <button
+                      type="button"
+                      className="fx-cyberChip fx-cyberChip--volt"
+                      onClick={() =>
+                        onQuickMealAdd({
+                          name: '1 Ölçek Whey / Protein Shake',
+                          calories: 130,
+                          protein: 26,
+                          carbs: 3,
+                          fat: 2
+                        })
+                      }
+                    >
+                      <Zap size={12} /> +26g Whey
+                    </button>
+                    <button
+                      type="button"
+                      className="fx-cyberChip"
+                      onClick={() =>
+                        onQuickMealAdd({
+                          name: '200g Süzme Yoğurt + Yulaf',
+                          calories: 240,
+                          protein: 18,
+                          carbs: 22,
+                          fat: 8
+                        })
+                      }
+                    >
+                      <Plus size={12} /> +18g Yoğurt
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  className="fx-cyberChip"
+                  onClick={() => onNavigate('nutrition')}
+                >
+                  <Flame size={12} /> {t('today.logMeal')}
+                </button>
+              </div>
             </div>
-            <div className="fx-waterBtns">
-              <button type="button" className="fx-chip" onClick={() => onQuickWaterAdd(250)}>
-                <Plus size={13} /> 250 ml
-              </button>
-              <button type="button" className="fx-chip" onClick={() => onQuickWaterAdd(500)}>
-                <Plus size={13} /> 500 ml
-              </button>
-            </div>
+          </div>
+        </section>
+
+        {/* KART 2 (SAĞ 5 SÜTUN): ANTRENMAN FIRLATMA RAMPASI (LAUNCHPAD) */}
+        <section className="fx-bentoCell fx-bentoCell--span5 fx-glassModule fx-workoutLaunchpad">
+          <div className="fx-moduleTopRow">
+            <span className="fx-moduleEyebrow">
+              <Dumbbell size={13} /> WORKOUT LAUNCHPAD
+            </span>
+            {doneToday.length ? (
+              <span className="fx-statusPill fx-statusPill--done">
+                <CheckCircle2 size={13} /> TAMAMLANDI
+              </span>
+            ) : isRest ? (
+              <span className="fx-statusPill">
+                <Moon size={13} /> RECOVERY
+              </span>
+            ) : (
+              <span className="fx-statusPill fx-statusPill--ready">HAZIR</span>
+            )}
           </div>
 
-          <div className="fx-commandMealBox">
-            <div className="fx-commandMealHead">
-              <span>
-                <Utensils size={15} /> <b>{t('today.quickMealTitle')}</b>
-              </span>
-              <button type="button" className="fx-linkMini" onClick={() => onNavigate('nutrition')}>
-                <Camera size={13} /> {t('today.aiCamera')}
-              </button>
-            </div>
-            <div className="fx-quickProteinChips">
-              {onQuickMealAdd && (
-                <>
-                  <button
-                    type="button"
-                    className="fx-chip fx-chip--accent"
-                    onClick={() =>
-                      onQuickMealAdd({
-                        name: '1 Scoop Whey / Protein Shake',
-                        calories: 130,
-                        protein: 26,
-                        carbs: 3,
-                        fat: 2
-                      })
-                    }
-                  >
-                    <Zap size={13} /> +26g Whey
-                  </button>
-                  <button
-                    type="button"
-                    className="fx-chip"
-                    onClick={() =>
-                      onQuickMealAdd({
-                        name: '200g Greek/Strained Yogurt + Oats',
-                        calories: 240,
-                        protein: 18,
-                        carbs: 22,
-                        fat: 8
-                      })
-                    }
-                  >
-                    <Plus size={13} /> +18g Yogurt
-                  </button>
-                </>
-              )}
-              <button type="button" className="fx-chip" onClick={() => onNavigate('nutrition')}>
-                <Flame size={13} /> {t('today.logMeal')}
-              </button>
-            </div>
+          <div className="fx-launchpadBody">
+            <h3 className="fx-launchpadTitle">
+              {doneToday.length
+                ? doneToday.map((w) => w.payload?.name).join(', ')
+                : plan?.name || t('today.scheduledWorkout')}
+            </h3>
+            <p className="fx-launchpadSub">
+              {doneToday.length
+                ? t('today.workoutDone')
+                : isRest
+                  ? plan?.tips?.[0] || t('today.restDay')
+                  : `${plan?.moves?.length || 0} biyomekanik hareket · Otomatik 1RM & dinlenme sayacı`}
+            </p>
+
+            {!doneToday.length && !isRest && (
+              <div className="fx-launchpadMoves">
+                {plan.moves.slice(0, 5).map((m, idx) => (
+                  <div key={m.name} className="fx-launchpadMoveRow">
+                    <span className="fx-moveIndex">0{idx + 1}</span>
+                    <b>{m.name}</b>
+                    <small>{m.sets || '3 × 10'}</small>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+
+          <div className="fx-launchpadFooter">
+            {!doneToday.length && !isRest ? (
+              <button
+                type="button"
+                className="fx-neonActionBtn fx-btn--block"
+                onClick={() => onStartWorkout(plan)}
+              >
+                <Play size={16} fill="currentColor" /> {t('today.startWorkout')}
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="fx-btn fx-btn--ghost fx-btn--block"
+                onClick={() => onNavigate('training')}
+              >
+                <Dumbbell size={15} /> {t('today.openProgram')} <ChevronRight size={15} />
+              </button>
+            )}
+          </div>
+        </section>
+
+        {/* KART 3 (SOL 6 SÜTUN): SABAH AI CHECK-IN & GAMIFICATION SERİ */}
+        <div className="fx-bentoCell fx-bentoCell--span6 fx-stack">
+          <StreakBar entries={entries} target={target} />
+          {isToday && (
+            <DailyCheckin
+              day={day}
+              profile={profile}
+              entries={entries}
+              target={target}
+              todayPlan={plan}
+              onStartWorkout={onStartWorkout}
+              onSave={onSaveCheckin}
+              onRemove={onRemoveCheckin}
+            />
+          )}
+        </div>
+
+        {/* KART 4 (SAĞ 6 SÜTUN): İNTERAKTİF ANATOMİK KAS TOPARLANMA RADARI */}
+        <div className="fx-bentoCell fx-bentoCell--span6">
+          <MuscleRecoveryMap entries={entries} day={day} />
         </div>
       </div>
-
-      {/* 2. AI check-in (sadece bugün için) */}
-      {isToday && (
-        <DailyCheckin
-          day={day}
-          profile={profile}
-          entries={entries}
-          target={target}
-          todayPlan={plan}
-          onStartWorkout={onStartWorkout}
-          onSave={onSaveCheckin}
-          onRemove={onRemoveCheckin}
-        />
-      )}
-
-      {/* 3. Programdaki antrenman */}
-      <Card
-        title={doneToday.length ? t('today.workoutDone') : isRest ? t('today.restDay') : t('today.scheduledWorkout')}
-        subtitle={doneToday.length ? doneToday.map((w) => w.payload?.name).join(', ') : plan?.name}
-        action={
-          doneToday.length ? (
-            <CheckCircle2 size={22} className="fx-accentIcon" />
-          ) : !isRest ? (
-            <button type="button" className="fx-btn fx-btn--primary" onClick={() => onStartWorkout(plan)}>
-              <Play size={16} fill="currentColor" /> {t('today.startWorkout')}
-            </button>
-          ) : (
-            <Moon size={20} className="fx-mutedIcon" />
-          )
-        }
-      >
-        {!doneToday.length && !isRest && (
-          <div className="fx-chipsInline">
-            {plan.moves.slice(0, 6).map((m) => (
-              <span key={m.name} className="fx-tag">
-                {m.name} {m.sets ? `· ${m.sets}` : ''}
-              </span>
-            ))}
-          </div>
-        )}
-        {!doneToday.length && isRest && plan?.tips?.length > 0 && <p className="fx-muted fx-small">{plan.tips[0]}</p>}
-        <button type="button" className="fx-linkRow" onClick={() => onNavigate('training')}>
-          <Dumbbell size={15} /> {t('today.openProgram')} <ChevronRight size={16} />
-        </button>
-      </Card>
-
-      {/* 4. İnteraktif Kas Toparlanma Haritası */}
-      <MuscleRecoveryMap entries={entries} day={day} />
     </div>
   );
 }

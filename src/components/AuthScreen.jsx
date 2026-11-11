@@ -230,6 +230,13 @@ export default function AuthScreen() {
 
   return (
     <div className="fx-corpAuth">
+      <div className="fx-spatialAmbient" aria-hidden="true">
+        <div className="fx-auroraOrb fx-auroraOrb--volt" />
+        <div className="fx-auroraOrb fx-auroraOrb--cyan" />
+        <div className="fx-auroraOrb fx-auroraOrb--violet" />
+        <div className="fx-spatialDotMesh" />
+      </div>
+
       {/* Üst Kurumsal Bar */}
       <header className="fx-corpTopbar">
         <div className="fx-corpBrand">
@@ -260,12 +267,33 @@ export default function AuthScreen() {
       </header>
 
       <div className="fx-corpMainGrid">
-        {/* SOL PANEL: KURUMSAL PLATFORM MİMARİSİ */}
+        {/* SOL PANEL: UZAMSAL BİYOMETRİK SAHNE & KURUMSAL PLATFORM MİMARİSİ */}
         <section className="fx-corpInfoCol">
           <div className="fx-corpInfoInner">
-            <span className="fx-corpVersionTag">FIT ENTERPRISE PLATFORM · v4.0</span>
+            <span className="fx-corpVersionTag">
+              <span className="fx-osPulse" /> FIT SPATIAL AI OS · v5.0
+            </span>
             <h1 className="fx-corpHeadline">{c.heroTitle}</h1>
             <p className="fx-corpLead">{c.heroLead}</p>
+
+            {/* Canlı Biyometrik Telemetri Hologram Kartı */}
+            <div className="fx-hologramStage">
+              <div className="fx-holoMetric">
+                <small>READINESS INDEX</small>
+                <strong style={{ color: '#c8ff00' }}>94%</strong>
+                <span>Optimal CNS Recovery</span>
+              </div>
+              <div className="fx-holoMetric">
+                <small>ADAPTIVE TDEE</small>
+                <strong style={{ color: '#00f0ff' }}>2,480</strong>
+                <span>kcal · 185g Protein</span>
+              </div>
+              <div className="fx-holoMetric">
+                <small>ADONIS RATIO</small>
+                <strong style={{ color: '#c084fc' }}>1.618</strong>
+                <span>1RM Overload Active</span>
+              </div>
+            </div>
 
             <div className="fx-corpPillars">
               <div className="fx-corpPillarItem">
