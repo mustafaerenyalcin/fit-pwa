@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Cloud, RefreshCw, Download, Upload, LogOut, Trash2, Smartphone, Shield, FileText, Sun, Moon, Bell, Globe } from 'lucide-react';
 import ProfileView from './ProfileView.jsx';
+import AvatarPicker from '../components/AvatarPicker.jsx';
 import { Segmented, Card } from '../components/ui.jsx';
 import { getAuthState, getSyncState, sync, signout, deleteAccount } from '../lib/supabase.js';
 import { exportBackup, importBackup } from '../lib/store.js';
@@ -97,7 +98,19 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
         ]}
       />
 
-      {section === 'profile' && <ProfileView profile={profile} onSaveProfile={onSaveProfile} />}
+      {section === 'profile' && (
+        <div className="fx-stack">
+          <AvatarPicker
+            avatarUrl={profile?.avatarUrl}
+            userName={profile?.name || 'Sporcu'}
+            onSelectAvatar={(url) => {
+              onSaveProfile({ avatarUrl: url });
+              setMessage?.(url ? 'Profil resmi güncellendi.' : 'Profil resmi kaldırıldı.');
+            }}
+          />
+          <ProfileView profile={profile} onSaveProfile={onSaveProfile} />
+        </div>
+      )}
 
       {section === 'account' && (
         <>

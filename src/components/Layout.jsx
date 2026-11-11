@@ -11,18 +11,22 @@ import {
   WifiOff,
   Settings,
   Globe,
-  Activity
+  Activity,
+  Layers
 } from 'lucide-react';
 import { today } from '../lib/calculations.js';
 import { getTheme, setTheme } from '../lib/notifications.js';
 import { useI18n } from '../lib/i18n.js';
+import LanguageDropdown from './LanguageDropdown.jsx';
+import UserAvatar from './UserAvatar.jsx';
 
 export const TABS = [
   ['today', 'nav.today', Activity, '01'],
   ['training', 'nav.training', Dumbbell, '02'],
   ['nutrition', 'nav.nutrition', Utensils, '03'],
-  ['progress', 'nav.progress', LineChart, '04'],
-  ['coach', 'nav.coach', Bot, '05']
+  ['tools', 'nav.tools', Layers, '04'],
+  ['progress', 'nav.progress', LineChart, '05'],
+  ['coach', 'nav.coach', Bot, '06']
 ];
 
 const shiftDay = (iso, delta) => {
@@ -126,18 +130,7 @@ export default function Layout({ tab, setTab, day, setDay, profile, online = tru
               </div>
             )}
 
-            <button
-              type="button"
-              className="fx-langPill"
-              onClick={cycleLang}
-              title={t('settings.langTitle')}
-              aria-label="Language"
-            >
-              <Globe size={13} />
-              <span>
-                {currentLangMeta.flag} {currentLangMeta.short}
-              </span>
-            </button>
+            <LanguageDropdown />
 
             <button
               type="button"
@@ -155,7 +148,7 @@ export default function Layout({ tab, setTab, day, setDay, profile, online = tru
               onClick={() => setTab('settings')}
               aria-label={t('nav.settings')}
             >
-              <span className="fx-avatar">{userName.charAt(0).toUpperCase()}</span>
+              <UserAvatar avatarUrl={profile?.avatarUrl} name={userName} size={28} />
               <span className="fx-spatialUserName">{userName}</span>
               <Settings size={14} className="fx-mutedIcon" />
             </button>

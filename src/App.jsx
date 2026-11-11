@@ -18,6 +18,7 @@ const StrengthOverloadCard = lazy(() => import('./components/StrengthOverloadCar
 const FastingTimer = lazy(() => import('./components/FastingTimer.jsx'));
 const BeforeAfterSlider = lazy(() => import('./components/BeforeAfterSlider.jsx'));
 const SmartReminders = lazy(() => import('./components/SmartReminders.jsx'));
+const ToolsView = lazy(() => import('./views/ToolsView.jsx'));
 
 const CalendarView = lazy(() => import('./views/CalendarView.jsx'));
 const TrainingView = lazy(() => import('./views/TrainingView.jsx'));
@@ -36,7 +37,7 @@ import { initTheme } from './lib/notifications.js';
 import { useI18n } from './lib/i18n.js';
 
 const CATEGORIES = ['workout', 'meal', 'habit', 'weight', 'supplement', 'checkin', 'report'];
-const VALID_TABS = ['today', 'training', 'nutrition', 'progress', 'coach', 'settings'];
+const VALID_TABS = ['today', 'training', 'nutrition', 'tools', 'progress', 'coach', 'settings'];
 
 const readTabFromHash = () => {
   const h = (typeof window !== 'undefined' ? window.location.hash : '').replace('#', '');
@@ -103,7 +104,9 @@ function MainApp() {
   const [syncState, setSyncState] = useState(getSyncState());
   const [waitedForSync, setWaitedForSync] = useState(false);
 
-  const [trainingSection, setTrainingSection] = useState('program');
+  const [trainingSection, setTrainingSection] = useState('session');
+  const [builderMode, setBuilderMode] = useState('ai');
+  const [nutritionSection, setNutritionSection] = useState('log');
   const [progressSection, setProgressSection] = useState('report');
 
   const [toast, setToast] = useState('');
@@ -294,26 +297,38 @@ function MainApp() {
             value={trainingSection}
             onChange={setTrainingSection}
             options={[
-              ['program', t('sub.program')],
+              ['session', 'Günün Seansı'],
+              ['builder', 'Program Mimarisi'],
               ['week', t('sub.week')]
             ]}
           />
-          {trainingSection === 'program' && (
-            <>
-              <ProgramGenerator profile={profile} program={program} onDone={() => showToast('✓')} />
-              <StrengthOverloadCard entries={entries} />
-              <RecoveryStudio />
-              <CustomWorkoutBuilder onStartWorkout={(plan) => setActiveWorkoutPlan(plan)} />
-              <TrainingView
-                key={program?.createdAt || 'default'}
-                day={day}
-                profile={profile}
-                entries={entries}
-                onStartActiveWorkout={(plan) => setActiveWorkoutPlan(plan)}
-                onAddWorkout={(payload) => handleAddEntry('workout', payload)}
-                onRemoveWorkout={(id) => handleRemoveEntry(id)}
+          {trainingSection === 'session' && (
+            <TrainingView
+              key={program?.createdAt || 'default'}
+              day={day}
+              profile={profile}
+              entries={entries}
+              onStartActiveWorkout={(plan) => setActiveWorkoutPlan(plan)}
+              onAddWorkout={(payload) => handleAddEntry('workout', payload)}
+              onRemoveWorkout={(id) => handleRemoveEntry(id)}
+            />
+          )}
+          {trainingSection === 'builder' && (
+            <div className="fx-stack">
+              <Segmented
+                value={builderMode}
+                onChange={setBuilderMode}
+                options={[
+                  ['ai', '⚡ AI Otonom Program'],
+                  ['custom', '🛠️ Özel Rutin Oluşturucu']
+                ]}
               />
-            </>
+              {builderMode === 'ai' ? (
+                <ProgramGenerator profile={profile} program={program} onDone={() => showToast('✓')} />
+              ) : (
+                <CustomWorkoutBuilder onStartWorkout={(plan) => setActiveWorkoutPlan(plan)} />
+              )}
+            </div>
           )}
           {trainingSection === 'week' && (
             <CalendarView
@@ -321,7 +336,7 @@ function MainApp() {
               setDay={setDay}
               profile={profile}
               entries={entries}
-              onNavigateToTraining={() => setTrainingSection('program')}
+              onNavigateToTraining={() => setTrainingSection('session')}
             />
           )}
         </div>
@@ -329,27 +344,52 @@ function MainApp() {
 
       {tab === 'nutrition' && (
         <div className="fx-stack">
-          <AiMealLogger profile={profile} onAddMeal={(payload) => handleAddEntry('meal', payload)} />
-          <FastingTimer />
-          <SmartMealRecommender
-            totals={totals}
-            target={target}
-            targetCalories={calculateCalories(profile) || 2200}
-            onAddMeal={(payload) => handleAddEntry('meal', payload)}
+          <Segmented
+            value={nutritionSection}
+            onChange={setNutritionSection}
+            options={[
+              ['log', 'Günlük Öğün & Makro'],
+              ['ai', '🍲 Akıllı AI Şef & Fotoğraf'],
+              ['coach', '🧬 Adaptif Makro Koçu']
+            ]}
           />
-          <AdaptiveMacroCoach profile={profile} entries={entries} target={target} />
-          <NutritionView
-            day={day}
-            profile={profile}
-            entries={entries}
-            target={target}
-            totals={totals}
-            onAddMeal={(payload) => handleAddEntry('meal', payload)}
-            onRemoveMeal={(id) => handleRemoveEntry(id)}
-            onAddSupplement={(payload) => handleAddEntry('supplement', payload)}
-            onRemoveSupplement={(id) => handleRemoveEntry(id)}
-          />
+          {nutritionSection === 'log' && (
+            <NutritionView
+              day={day}
+              profile={profile}
+              entries={entries}
+              target={target}
+              totals={totals}
+              onAddMeal={(payload) => handleAddEntry('meal', payload)}
+              onRemoveMeal={(id) => handleRemoveEntry(id)}
+              onAddSupplement={(payload) => handleAddEntry('supplement', payload)}
+              onRemoveSupplement={(id) => handleRemoveEntry(id)}
+            />
+          )}
+          {nutritionSection === 'ai' && (
+            <div className="fx-stack">
+              <AiMealLogger profile={profile} onAddMeal={(payload) => handleAddEntry('meal', payload)} />
+              <SmartMealRecommender
+                totals={totals}
+                target={target}
+                targetCalories={calculateCalories(profile) || 2200}
+                onAddMeal={(payload) => handleAddEntry('meal', payload)}
+              />
+            </div>
+          )}
+          {nutritionSection === 'coach' && (
+            <AdaptiveMacroCoach profile={profile} entries={entries} target={target} />
+          )}
         </div>
+      )}
+
+      {tab === 'tools' && (
+        <ToolsView
+          profile={profile}
+          entries={entries}
+          target={target}
+          onStartWorkout={(plan) => setActiveWorkoutPlan(plan)}
+        />
       )}
 
       {tab === 'progress' && (

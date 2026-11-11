@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Play,
   CheckCircle2,
@@ -12,11 +12,13 @@ import {
   Zap,
   Sparkles,
   Camera,
-  Activity
+  Activity,
+  Users
 } from 'lucide-react';
 import DailyCheckin from '../components/DailyCheckin.jsx';
 import StreakBar from '../components/StreakBar.jsx';
 import MuscleRecoveryMap from '../components/MuscleRecoveryMap.jsx';
+import UserAvatar from '../components/UserAvatar.jsx';
 import { Ring } from '../components/ui.jsx';
 import { getWorkoutForDay } from '../lib/workoutPlans.js';
 import { calculateCalories, today } from '../lib/calculations.js';
@@ -81,14 +83,19 @@ export default function TodayView({
           <div className="fx-atelierEyebrow">
             <span>[ATELIER EDITION // 01]</span> · GÜNLÜK PERFORMANS ÖZETİ
           </div>
-          <h2 className="fx-cockpitGreeting fx-atelierDisplay">
-            {greeting}, <span>{profile.name || t('today.champ')}</span>.
-          </h2>
-          <p className="fx-cockpitSub">
-            {remProtein > 0
-              ? t('today.remSub', { pro: remProtein, cal: remCalories })
-              : t('today.doneSub')}
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <UserAvatar avatarUrl={profile?.avatarUrl} name={profile?.name || t('today.champ')} size={48} />
+            <div>
+              <h2 className="fx-cockpitGreeting fx-atelierDisplay" style={{ margin: 0 }}>
+                {greeting}, <span>{profile.name || t('today.champ')}</span>.
+              </h2>
+              <p className="fx-cockpitSub" style={{ margin: 0 }}>
+                {remProtein > 0
+                  ? t('today.remSub', { pro: remProtein, cal: remCalories })
+                  : t('today.doneSub')}
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="fx-cockpitQuickTriggers">
