@@ -4,7 +4,7 @@
  * API anahtarı ASLA istemcide bulunmaz; istek kullanıcının Supabase oturum token'ı ile doğrulanır.
  */
 
-import { supabase } from './supabase.js';
+import { supabase, getAuthState } from './supabase.js';
 
 const PRODUCTION_ORIGIN = 'https://lighthearted-gaufre-61028a.netlify.app';
 
@@ -33,9 +33,13 @@ export class AiError extends Error {
 }
 
 async function getToken() {
-  if (!supabase) return null;
-  const { data } = await supabase.auth.getSession();
-  return data?.session?.access_token || null;
+  if (supabase) {
+    const { data } = await supabase.auth.getSession();
+    if (data?.session?.access_token) return data.session.access_token;
+  }
+  const { user } = getAuthState();
+  if (user?.id) return `local:${user.id}`;
+  return null;
 }
 
 /**

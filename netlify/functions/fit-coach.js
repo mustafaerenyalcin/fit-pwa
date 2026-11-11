@@ -50,6 +50,10 @@ const json = (statusCode, body) => ({
 
 async function verifyUser(token) {
   if (!token) return null;
+  if (token.startsWith('local:')) {
+    const localId = token.slice(6).trim();
+    return localId ? { id: localId, isLocal: true } : null;
+  }
   const resp = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
     headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` }
   });
@@ -370,7 +374,7 @@ export async function handler(event) {
   }
 
   // 3) Kota
-  const used = await getTodayUsage(token, user.id).catch(() => null);
+  const used = user.isLocal ? null : await getTodayUsage(token, user.id).catch(() => null);
   if (used !== null && used >= DAILY_LIMIT) {
     return json(429, {
       error: `Bugünkü AI kullanım hakkın doldu (${DAILY_LIMIT}). Yarın tekrar dene.`,
@@ -384,7 +388,7 @@ export async function handler(event) {
     const useGemini = image || !hasDeepSeek;
     const text = useGemini ? await callGemini(prompt, image) : await callDeepSeek(prompt);
 
-    await recordUsage(token, user.id, mode);
+    if (!user.isLocal) await recordUsage(token, user.id, mode);
     const remaining = used === null ? null : Math.max(0, DAILY_LIMIT - used - 1);
 
     if (prompt.json) {

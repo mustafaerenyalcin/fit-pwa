@@ -82,7 +82,7 @@ export const dispatchSyncChange = () => {
  * Uses tombstone-based deletion and timestamp comparison (latest timestamp wins).
  */
 export async function sync() {
-  if (!supabase || !currentUser) {
+  if (!supabase || !currentUser || currentUser.isLocal) {
     return;
   }
 
@@ -257,7 +257,7 @@ export async function getUser() {
  * @param {string} password
  * @returns {Promise<string>}
  */
-export async function signup(email, password) {
+export async function signup(email, password, fullName = '') {
   if (!supabase) {
     throw new Error('Önce Supabase yapılandırılmalı (.env dosyasını kontrol edin).');
   }
@@ -265,20 +265,49 @@ export async function signup(email, password) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : undefined }
+    options: {
+      data: fullName ? { full_name: fullName } : undefined,
+      emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : undefined
+    }
   });
   if (error) {
     throw error;
   }
 
+  const saveInitialName = () => {
+    if (!fullName) return;
+    const store = getStore();
+    const existing = store.settings?.profile?.value || {};
+    store.settings.profile = {
+      value: { ...existing, name: fullName },
+      modified: new Date().toISOString()
+    };
+    persist();
+  };
+
   if (data?.session?.user) {
     currentUser = data.session.user;
     setStoreUser(currentUser.id);
+    saveInitialName();
     dispatchSyncChange();
     await sync().catch(console.error);
-    return 'Hesabın oluşturuldu. Hoş geldin!';
+    return { loggedIn: true, message: 'Hesabın oluşturuldu. Hoş geldin!' };
   }
-  return 'Hesabın oluşturuldu. E-posta adresine gelen onay bağlantısına tıkla, sonra giriş yap.';
+
+  // Supabase e-posta onayı bekliyorsa bile kullanıcıyı kapıda bekletme; anında içeri al!
+  if (data?.user?.id) {
+    const tempUser = { ...data.user, isLocal: true };
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('fit-local-session-user', JSON.stringify(tempUser));
+    }
+    currentUser = tempUser;
+    setStoreUser(tempUser.id);
+    saveInitialName();
+    dispatchSyncChange();
+    return { loggedIn: true, message: 'Hesabın açıldı ve giriş yapıldı!' };
+  }
+
+  return { loggedIn: false, message: 'Hesabın oluşturuldu. E-posta adresine gelen onay bağlantısına tıkla.' };
 }
 
 /**
@@ -306,8 +335,11 @@ export async function signin(email, password) {
  * Signs out current user
  */
 export async function signout() {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('fit-local-session-user');
+  }
   if (supabase) {
-    await supabase.auth.signOut();
+    await supabase.auth.signOut().catch(() => {});
   }
   currentUser = null;
   setStoreUser(null);
@@ -341,8 +373,50 @@ export async function aiAsk(profile, summary, question) {
   return data.answer;
 }
 
+const LOCAL_USER_KEY = 'fit-local-session-user';
+
+function getSavedLocalUser() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(LOCAL_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function continueAsLocalUser(name = '') {
+  const localUser = {
+    id: 'local-primary',
+    email: 'yerel@fit.app',
+    user_metadata: { name: name || 'Sporcu' },
+    isLocal: true
+  };
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(localUser));
+  }
+  currentUser = localUser;
+  setStoreUser(localUser.id);
+  if (name) {
+    const existing = getStore().settings?.profile?.value || {};
+    getStore().settings.profile = {
+      value: { ...existing, name },
+      modified: new Date().toISOString()
+    };
+    persist();
+  }
+  authReady = true;
+  dispatchSyncChange();
+  return localUser;
+}
+
 export function setupAuthListener() {
   if (!supabase) {
+    const local = getSavedLocalUser();
+    if (local) {
+      currentUser = local;
+      setStoreUser(local.id);
+    }
     authReady = true;
     dispatchSyncChange();
     return;
@@ -350,27 +424,41 @@ export function setupAuthListener() {
 
   // getSession() yerel oturumu okur: çevrimdışıyken de uygulama açılır.
   supabase.auth.getSession().then(async ({ data }) => {
-    currentUser = data?.session?.user || null;
-    setStoreUser(currentUser?.id || null);
-    authReady = true;
-    dispatchSyncChange();
-    if (currentUser) {
+    const supaUser = data?.session?.user || null;
+    if (supaUser) {
+      currentUser = supaUser;
+      setStoreUser(currentUser.id);
+      authReady = true;
+      dispatchSyncChange();
       await sync().catch(console.error);
+    } else {
+      const local = getSavedLocalUser();
+      if (local) {
+        currentUser = local;
+        setStoreUser(local.id);
+      }
+      authReady = true;
+      dispatchSyncChange();
     }
   }).catch((err) => {
     console.error(err);
+    const local = getSavedLocalUser();
+    if (local) {
+      currentUser = local;
+      setStoreUser(local.id);
+    }
     authReady = true;
     dispatchSyncChange();
   });
 
   supabase.auth.onAuthStateChange((_event, session) => {
-    const nextUser = session?.user || null;
+    const nextUser = session?.user || getSavedLocalUser() || null;
     const changed = (nextUser?.id || null) !== (currentUser?.id || null);
     currentUser = nextUser;
     if (changed) setStoreUser(currentUser?.id || null);
     authReady = true;
     dispatchSyncChange();
-    if (currentUser && changed) {
+    if (currentUser && !currentUser.isLocal && changed) {
       setTimeout(scheduleSync, 0);
     }
   });
