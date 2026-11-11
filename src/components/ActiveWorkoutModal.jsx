@@ -20,6 +20,7 @@ import {
 import ExerciseVisual from './ExerciseVisual.jsx';
 import WorkoutSummaryCard from './WorkoutSummaryCard.jsx';
 import { getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
+import { getDetailedExerciseGuide } from '../lib/exerciseGuide.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
 import { sounds } from '../lib/audio.js';
 
@@ -306,6 +307,11 @@ export default function ActiveWorkoutModal({
   const overloadAdvice = prevData
     ? getProgressiveOverloadAdvice(prevData, currentExercise?.targetReps)
     : null;
+  const detailedGuide = getDetailedExerciseGuide(
+    currentExercise?.name,
+    currentExercise?.muscle,
+    currentExercise?.tip
+  );
 
   if (minimized) {
     return (
@@ -316,7 +322,7 @@ export default function ActiveWorkoutModal({
             <b>{plan.name}</b>
             <small>
               {formatTime(elapsed)} · {totalCompletedSets} set tamamlandı
-              {restRemaining > 0 ? ` · Dinlenme: ${restRemaining}s` : ''}
+              {restActive && restSeconds > 0 ? ` · Dinlenme: ${restSeconds}s` : ''}
             </small>
           </div>
         </div>
@@ -525,16 +531,32 @@ export default function ActiveWorkoutModal({
                 </div>
               )}
 
-              {/* Form Guide */}
+              {/* Form & Anatomy Guide */}
               {showGuide && (
-                <div className="activeGuideBox">
-                  <ExerciseVisual name={currentExercise.name} />
-                  <div className="guideDetails">
-                    <b>Doğru Uygulama:</b>
-                    <p>{currentExercise.tip}</p>
-                    <small>
-                      Son sette tükenişe gitmek yerine 1–2 tekrar rezervde (RIR) bırak; formu asla bozma.
-                    </small>
+                <div className="activeGuideBox fx-proGuideBox">
+                  <div className="fx-proGuideVisualCol">
+                    <ExerciseVisual name={currentExercise.name} />
+                    <div className="fx-proGuideMuscles">
+                      <span><b>Birincil:</b> {detailedGuide.primary}</span>
+                      <span><b>İkincil:</b> {detailedGuide.secondary}</span>
+                    </div>
+                  </div>
+                  <div className="guideDetails fx-proGuideDetails">
+                    <div className="fx-guideBreathPill">
+                      <b>🌬️ Nefes Ritmi:</b> {detailedGuide.breathing}
+                    </div>
+                    <b>✅ 3 Adımda Kusursuz Form:</b>
+                    <ul className="fx-guideStepList">
+                      {detailedGuide.steps.map((st, idx) => (
+                        <li key={idx}>{st}</li>
+                      ))}
+                    </ul>
+                    <b>⚠️ En Sık Yapılan Hatalar:</b>
+                    <ul className="fx-guideMistakeList">
+                      {detailedGuide.mistakes.map((ms, idx) => (
+                        <li key={idx}>{ms}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               )}

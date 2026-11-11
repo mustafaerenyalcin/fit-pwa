@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Bot,
   Send,
   Sparkles,
-  Lock,
   User,
-  Check,
-  AlertCircle,
-  HelpCircle,
   Lightbulb,
-  ArrowRight,
   ChefHat,
-  RotateCcw
+  RotateCcw,
+  Mic,
+  MicOff
 } from 'lucide-react';
-import Panel from '../components/Panel.jsx';
 import { RichText } from '../components/ui.jsx';
 import { askCoach } from '../lib/aiCoach.js';
 import { buildContext } from '../lib/api.js';
@@ -22,18 +18,18 @@ export default function CoachView({
   profile,
   entries,
   target,
-  totals,
-  onApplyProfileRecommendation
+  totals
 }) {
   const [messages, setMessages] = useState([
     {
       sender: 'coach',
-      text: `Merhaba${profile.name ? ` ${profile.name}` : ''}! Ben Fit Koç. Profilini, ekipmanını ve son kayıtlarını görebiliyorum. Antrenman, form, beslenme ya da evdeki malzemelerle tarif — ne istersen sor.`
+      text: `Merhaba${profile.name ? ` ${profile.name}` : ''}! Ben Fit Koç. Profilini, ekipmanını ve son kayıtlarını görebiliyorum. Antrenman, form, beslenme ya da evdeki malzemelerle tarif — yazarak ya da mikrofona konuşarak sorabilirsin.`
     }
   ]);
   const [inputQuestion, setInputQuestion] = useState('');
   const [busy, setBusy] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [listening, setListening] = useState(false);
+  const recRef = useRef(null);
 
   // Recipe Wizard state
   const [selectedIngredients, setSelectedIngredients] = useState([]);
@@ -57,6 +53,33 @@ export default function CoachView({
     'Bu haftaki gidişatımı değerlendir.'
   ];
 
+  const toggleVoice = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    if (listening && recRef.current) {
+      recRef.current.stop();
+      setListening(false);
+      return;
+    }
+
+    const rec = new SpeechRecognition();
+    rec.lang = 'tr-TR';
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+    rec.onstart = () => setListening(true);
+    rec.onend = () => setListening(false);
+    rec.onerror = () => setListening(false);
+    rec.onresult = (e) => {
+      const transcript = e.results?.[0]?.[0]?.transcript || '';
+      if (transcript) {
+        setInputQuestion((prev) => (prev ? `${prev} ${transcript}` : transcript));
+      }
+    };
+    recRef.current = rec;
+    rec.start();
+  };
+
   const toggleIngredient = (ing) => {
     if (selectedIngredients.includes(ing)) {
       setSelectedIngredients(selectedIngredients.filter((i) => i !== ing));
@@ -69,7 +92,6 @@ export default function CoachView({
     const q = questionText || inputQuestion;
     if (!q.trim() || busy) return;
 
-    setErrorMsg('');
     const userMsg = { sender: 'user', text: q.trim() };
     setMessages((prev) => [...prev, userMsg]);
     setInputQuestion('');
@@ -81,7 +103,6 @@ export default function CoachView({
       setMessages((prev) => [...prev, { sender: 'coach', text: answer }]);
     } catch (err) {
       const msg = err.message || 'İstek başarısız oldu.';
-      setErrorMsg(msg);
       setMessages((prev) => [...prev, { sender: 'coach', text: `⚠️ ${msg}` }]);
     } finally {
       setBusy(false);
@@ -217,9 +238,21 @@ export default function CoachView({
             handleAsk();
           }}
         >
+          <button
+            type="button"
+            className={`fx-iconBtn ${listening ? 'fx-btn--listening' : ''}`}
+            onClick={toggleVoice}
+            title="Sesle sor (Türkçe)"
+          >
+            {listening ? <MicOff size={18} /> : <Mic size={18} />}
+          </button>
           <input
             type="text"
-            placeholder="Koçuna bir şey sor… (Örn: Omuz antrenmanımda dambıl ağırlığını ne zaman artırmalıyım?)"
+            placeholder={
+              listening
+                ? 'Dinleniyor… Sorunu Türkçe söyleyebilirsin'
+                : 'Koçuna bir şey sor… (Örn: Omuz antrenmanımda ağırlığı ne zaman artırmalıyım?)'
+            }
             value={inputQuestion}
             onChange={(e) => setInputQuestion(e.target.value)}
             disabled={busy}

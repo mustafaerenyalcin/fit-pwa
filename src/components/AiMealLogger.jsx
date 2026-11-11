@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Camera, Sparkles, Loader2, Trash2, Check, X } from 'lucide-react';
+import { Camera, Sparkles, Loader2, Trash2, Check, X, Mic, MicOff } from 'lucide-react';
 import { callAI, compressImage } from '../lib/api.js';
 
 const CATEGORIES = ['Kahvaltı', 'Öğle', 'Akşam', 'Ara Öğün'];
@@ -15,15 +15,53 @@ const guessCategory = () => {
 const toInt = (v) => Math.max(0, Math.round(Number(v) || 0));
 
 /**
- * AI yemek kaydı: serbest metin ya da fotoğraf -> düzenlenebilir öğe listesi -> onayla ve kaydet.
+ * AI yemek kaydı: serbest metin, sesli dikte (tr-TR) ya da fotoğraf -> düzenlenebilir öğe listesi -> onayla ve kaydet.
  * AI sonucu kullanıcı onaylamadan kaydedilmez.
  */
 export default function AiMealLogger({ profile, onAddMeal }) {
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
+  const [listening, setListening] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null); // { items, category, note, photo }
   const fileRef = useRef(null);
+  const recRef = useRef(null);
+
+  const toggleVoiceInput = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setError('Tarayıcın sesli dikteyi desteklemiyor. Chrome, Edge veya Safari kullanabilirsin.');
+      return;
+    }
+
+    if (listening && recRef.current) {
+      recRef.current.stop();
+      setListening(false);
+      return;
+    }
+
+    setError('');
+    const rec = new SpeechRecognition();
+    rec.lang = 'tr-TR';
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+
+    rec.onstart = () => setListening(true);
+    rec.onend = () => setListening(false);
+    rec.onerror = () => {
+      setListening(false);
+      setError('Mikrofon erişimi alınamadı veya ses duyulamadı.');
+    };
+    rec.onresult = (event) => {
+      const transcript = event.results?.[0]?.[0]?.transcript || '';
+      if (transcript) {
+        setText((prev) => (prev ? `${prev}, ${transcript}` : transcript));
+      }
+    };
+
+    recRef.current = rec;
+    rec.start();
+  };
 
   const analyzeText = async () => {
     if (!text.trim()) return;
@@ -180,9 +218,9 @@ export default function AiMealLogger({ profile, onAddMeal }) {
       <header className="fx-cardHead">
         <div>
           <h3>
-            <Sparkles size={16} className="fx-accentIcon" /> Ne yedin?
+            <Sparkles size={16} className="fx-accentIcon" /> Ne yedin? (Yaz, Konuş veya Çek)
           </h3>
-          <p>Yaz ya da fotoğrafını çek; kaloriyi ve proteini AI hesaplasın.</p>
+          <p>Türkçe sesle anlat, yaz ya da tabağının fotoğrafını çek; makroları AI hesaplasın.</p>
         </div>
       </header>
 
@@ -191,7 +229,7 @@ export default function AiMealLogger({ profile, onAddMeal }) {
           rows={2}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Örn: 1 tabak kuru fasulye, yarım tabak pilav, 1 kase cacık"
+          placeholder="Örn: 1 tabak kuru fasulye, yarım tabak bulgur pilavı ve 1 kase cacık"
           disabled={busy}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -202,9 +240,25 @@ export default function AiMealLogger({ profile, onAddMeal }) {
         />
       </div>
 
+      {listening && (
+        <div className="fx-voiceActiveBanner">
+          <span className="liveDot" /> Dinleniyor… Yediğin öğünü Türkçe söyleyebilirsin.
+        </div>
+      )}
+
       {error && <div className="fx-alert fx-alert--error">{error}</div>}
 
       <div className="fx-mealActions">
+        <button
+          type="button"
+          className={`fx-btn fx-btn--ghost ${listening ? 'fx-btn--listening' : ''}`}
+          onClick={toggleVoiceInput}
+          disabled={busy}
+          title="Sesle öğün anlat (Türkçe)"
+        >
+          {listening ? <MicOff size={18} /> : <Mic size={18} />}
+          {listening ? 'Durdur' : 'Sesle Anlat'}
+        </button>
         <button type="button" className="fx-btn fx-btn--ghost" onClick={() => fileRef.current?.click()} disabled={busy}>
           <Camera size={18} /> Fotoğraf
         </button>

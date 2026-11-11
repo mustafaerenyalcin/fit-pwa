@@ -11,6 +11,10 @@ import RecoveryStudio from './components/RecoveryStudio.jsx';
 import WeeklyReport from './components/WeeklyReport.jsx';
 import ProgramGenerator from './components/ProgramGenerator.jsx';
 import CustomWorkoutBuilder from './components/CustomWorkoutBuilder.jsx';
+import StrengthOverloadCard from './components/StrengthOverloadCard.jsx';
+import FastingTimer from './components/FastingTimer.jsx';
+import BeforeAfterSlider from './components/BeforeAfterSlider.jsx';
+import SmartReminders from './components/SmartReminders.jsx';
 import { Segmented, Skeleton } from './components/ui.jsx';
 
 import TodayView from './views/TodayView.jsx';
@@ -293,6 +297,7 @@ function MainApp() {
           {trainingSection === 'program' && (
             <>
               <ProgramGenerator profile={profile} program={program} onDone={() => showToast('Yeni programın hazır!')} />
+              <StrengthOverloadCard entries={entries} />
               <RecoveryStudio />
               <CustomWorkoutBuilder onStartWorkout={(plan) => setActiveWorkoutPlan(plan)} />
               <TrainingView
@@ -321,6 +326,7 @@ function MainApp() {
       {tab === 'nutrition' && (
         <div className="fx-stack">
           <AiMealLogger profile={profile} onAddMeal={(payload) => handleAddEntry('meal', payload)} />
+          <FastingTimer />
           <SmartMealRecommender
             totals={totals}
             target={target}
@@ -349,8 +355,8 @@ function MainApp() {
             onChange={setProgressSection}
             options={[
               ['report', 'Haftalık rapor'],
-              ['body', 'Ölçümler'],
-              ['habits', 'Alışkanlıklar']
+              ['body', 'Ölçümler & Değişim'],
+              ['habits', 'Alışkanlıklar & Bildirim']
             ]}
           />
           {progressSection === 'report' && (
@@ -359,6 +365,7 @@ function MainApp() {
           {progressSection === 'body' && (
             <>
               <BodyCompositionPro profile={profile} entries={entries} />
+              <BeforeAfterSlider profile={profile} entries={entries} />
               <ProgressView
                 day={day}
                 profile={profile}
@@ -369,15 +376,18 @@ function MainApp() {
             </>
           )}
           {progressSection === 'habits' && (
-            <HabitsView
-              day={day}
-              profile={profile}
-              entries={entries}
-              target={target}
-              onAddHabit={(payload) => handleAddEntry('habit', payload)}
-              onRemoveHabit={(id) => handleRemoveEntry(id)}
-              onQuickWaterAdd={handleQuickWaterAdd}
-            />
+            <>
+              <SmartReminders totals={totals} target={target} setMessage={showToast} />
+              <HabitsView
+                day={day}
+                profile={profile}
+                entries={entries}
+                target={target}
+                onAddHabit={(payload) => handleAddEntry('habit', payload)}
+                onRemoveHabit={(id) => handleRemoveEntry(id)}
+                onQuickWaterAdd={handleQuickWaterAdd}
+              />
+            </>
           )}
         </div>
       )}
@@ -385,7 +395,10 @@ function MainApp() {
       {tab === 'coach' && <CoachView profile={profile} entries={entries} target={target} totals={totals} />}
 
       {tab === 'settings' && (
-        <SettingsView profile={profile} onSaveProfile={handleSaveProfile} installed={installed} setMessage={showToast} />
+        <div className="fx-stack">
+          <SmartReminders totals={totals} target={target} setMessage={showToast} />
+          <SettingsView profile={profile} onSaveProfile={handleSaveProfile} installed={installed} setMessage={showToast} />
+        </div>
       )}
       </Suspense>
 
