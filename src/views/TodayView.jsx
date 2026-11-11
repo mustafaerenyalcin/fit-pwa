@@ -19,6 +19,7 @@ import DailyCheckin from '../components/DailyCheckin.jsx';
 import StreakBar from '../components/StreakBar.jsx';
 import MuscleRecoveryMap from '../components/MuscleRecoveryMap.jsx';
 import UserAvatar from '../components/UserAvatar.jsx';
+import ReadinessCockpitCard from '../components/ReadinessCockpitCard.jsx';
 import { Ring } from '../components/ui.jsx';
 import { getWorkoutForDay } from '../lib/workoutPlans.js';
 import { calculateCalories, today } from '../lib/calculations.js';
@@ -117,6 +118,14 @@ export default function TodayView({
           </button>
         </div>
       </section>
+
+      {/* GÜNLÜK ATLETİK HAZIRLIK TELEMETRİSİ (WHOOP & MACROFACTOR KÖPRÜSÜ) */}
+      <ReadinessCockpitCard
+        entries={entries}
+        profile={profile}
+        target={target}
+        doneToday={doneToday}
+      />
 
       {/* Asimetrik Uzamsal Bento Matrisi (Spatial Bento Grid) */}
       <div className="fx-bentoMatrix">

@@ -6333,6 +6333,152 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   color: var(--fx-muted);
 }
 
+/* =====================================================================
+   GÜNLÜK ATLETİK HAZIRLIK TELEMETRİSİ (WHOOP / ATHLYTIC / HEVY KÖPRÜSÜ)
+   ===================================================================== */
+.fx-readinessCockpitCard {
+  border-radius: 20px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(255, 77, 28, 0.04) 50%, #10141f 100%);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.fx-readinessTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.fx-readinessBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--fx-muted);
+}
+.fx-readinessTierPill {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+}
+.fx-readinessMainGrid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+@media (max-width: 680px) {
+  .fx-readinessMainGrid {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.fx-readinessRingPod {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.fx-readinessRingMeta small {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  letter-spacing: 0.6px;
+}
+.fx-readinessRingMeta span {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+.fx-readinessFactorsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  flex: 1;
+}
+@media (max-width: 780px) {
+  .fx-readinessFactorsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.fx-factorPill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.fx-factorPill small {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--fx-muted);
+}
+.fx-factorPill b {
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #fff;
+}
+.fx-readinessAdviceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--fx-text);
+  line-height: 1.45;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.fx-readinessAdviceRow p {
+  margin: 0;
+}
+
+.fx-metabolicBridgeBanner {
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255, 77, 28, 0.16), rgba(0, 240, 255, 0.06));
+  border: 1px solid rgba(255, 77, 28, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fx-bridgeHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fx-bridgeHead b {
+  font-size: 13px;
+  color: #ff7a50;
+}
+.fx-bridgeTag {
+  font-size: 9px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #ff4d1c;
+  color: #fff;
+  letter-spacing: 0.6px;
+}
+.fx-metabolicBridgeBanner p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--fx-muted);
+  line-height: 1.45;
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
