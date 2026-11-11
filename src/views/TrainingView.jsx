@@ -18,7 +18,7 @@ import Panel from '../components/Panel.jsx';
 import ExerciseVisual from '../components/ExerciseVisual.jsx';
 import RestTimer from '../components/RestTimer.jsx';
 import EmptyState from '../components/EmptyState.jsx';
-import { homePlans, gymPlans } from '../lib/workoutPlans.js';
+import { homePlans, gymPlans, getCustomTrainingDays } from '../lib/workoutPlans.js';
 import {
   calculatePersonalRecords,
   getProgressiveOverloadAdvice
@@ -36,13 +36,17 @@ export default function TrainingView({
   const [guide, setGuide] = useState(null);
   const [session, setSession] = useState({});
   const [workoutNote, setWorkoutNote] = useState('');
-  const [planMode, setPlanMode] = useState(profile.training || 'home');
+  const [planMode, setPlanMode] = useState(() =>
+    getCustomTrainingDays().length ? 'ai' : profile.training || 'home'
+  );
 
   // 1RM Calculator State
   const [calcWeight, setCalcWeight] = useState(15);
   const [calcReps, setCalcReps] = useState(10);
 
-  const currentPlans = planMode === 'gym' ? gymPlans : homePlans;
+  const customDays = getCustomTrainingDays();
+  const effectiveMode = planMode === 'ai' && !customDays.length ? profile.training || 'home' : planMode;
+  const currentPlans = effectiveMode === 'ai' ? customDays : effectiveMode === 'gym' ? gymPlans : homePlans;
   const personalRecords = calculatePersonalRecords(entries.workout);
   const prEntries = Object.entries(personalRecords).filter(([_, data]) => data.maxWeight > 0);
 
@@ -53,25 +57,33 @@ export default function TrainingView({
       <div className="intro">
         <div className="introHeaderRow">
           <div>
-            <h2>Akıllı Antrenman Sistemi</h2>
+            <h2>Programlar</h2>
             <p>
-              Evde dambılla 5 günlük, omuz genişliği ve belirgin karın kasları öncelikli bilimsel
-              hipertrofi programı. Canlı antrenman modunu başlatabilir veya setlerini elle
-              kaydedebilirsin.
+              Canlı antrenman modunu başlat ya da setlerini elle kaydet. Kişisel AI programın
+              varsa ilk sekmede görünür.
             </p>
           </div>
 
           <div className="planSwitcher">
+            {customDays.length > 0 && (
+              <button
+                type="button"
+                className={`planSwitchBtn ${effectiveMode === 'ai' ? 'active' : ''}`}
+                onClick={() => setPlanMode('ai')}
+              >
+                Kişisel Programım · {customDays.length} Gün
+              </button>
+            )}
             <button
               type="button"
-              className={`planSwitchBtn ${planMode === 'home' ? 'active' : ''}`}
+              className={`planSwitchBtn ${effectiveMode === 'home' ? 'active' : ''}`}
               onClick={() => setPlanMode('home')}
             >
               Ev (Dambıl) · 5 Gün
             </button>
             <button
               type="button"
-              className={`planSwitchBtn ${planMode === 'gym' ? 'active' : ''}`}
+              className={`planSwitchBtn ${effectiveMode === 'gym' ? 'active' : ''}`}
               onClick={() => setPlanMode('gym')}
             >
               Spor Salonu · 3 Gün

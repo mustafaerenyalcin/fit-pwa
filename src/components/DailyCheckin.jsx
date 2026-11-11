@@ -1,289 +1,284 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Sparkles,
-  Flame,
-  BatteryCharging,
-  BatteryMedium,
-  BatteryLow,
-  Clock,
-  Target,
-  Shield,
-  Play,
-  RotateCcw,
-  CheckCircle2,
-  ChevronDown,
-  ChevronUp,
-  Zap,
-  HeartPulse
-} from 'lucide-react';
-import { askCoach } from '../lib/aiCoach.js';
+import React, { useMemo, useState } from 'react';
+import { Sparkles, Play, RotateCcw, Loader2, Clock, Utensils, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
+import { Choice, Ring, Skeleton } from './ui.jsx';
+import { callAI, buildContext } from '../lib/api.js';
 
-export default function DailyCheckin({
-  day,
-  profile,
-  entries,
-  todayWorkout,
-  onStartWorkout
-}) {
-  const storageKey = `fit_checkin_${day}`;
+const ENERGY = [
+  { id: 'high', icon: '🔥', label: 'Zindeyim' },
+  { id: 'normal', icon: '🙂', label: 'Normal' },
+  { id: 'low', icon: '🥱', label: 'Yorgunum' },
+  { id: 'stressed', icon: '😵‍💫', label: 'Stresliyim' }
+];
+const SLEEP = [
+  { id: 5, label: '≤5 sa' },
+  { id: 6, label: '6 sa' },
+  { id: 7, label: '7 sa' },
+  { id: 8, label: '8 sa' },
+  { id: 9, label: '9+ sa' }
+];
+const SORE = [
+  ['none', 'Ağrı yok'],
+  ['shoulders', 'Omuz'],
+  ['chest', 'Göğüs'],
+  ['back', 'Sırt'],
+  ['lowerback', 'Bel'],
+  ['arms', 'Kol'],
+  ['legs', 'Bacak']
+];
+const TIME = [
+  { id: 'full', label: '45+ dk' },
+  { id: 'medium', label: '30 dk' },
+  { id: 'short', label: '15 dk' },
+  { id: 'rest', label: 'Dinlenmek istiyorum' }
+];
 
-  // Load existing checkin for today if any
-  const [data, setData] = useState(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      return saved ? JSON.parse(saved) : null;
-    } catch (_e) {
-      return null;
-    }
-  });
+const labelOf = (list, id) => list.find((x) => (x.id ?? x[0]) === id)?.label ?? id;
 
-  const [energy, setEnergy] = useState(data?.energy || 'normal');
-  const [time, setTime] = useState(data?.time || 'full');
-  const [focus, setFocus] = useState(data?.focus || 'program');
-  const [analysis, setAnalysis] = useState(data?.analysis || '');
+/**
+ * Günlük check-in kartı: 4 hızlı soru -> AI günün planını kurar.
+ * Sonuç 'checkin' kaydı olarak saklanır ve cihazlar arası senkronize olur.
+ */
+export default function DailyCheckin({ day, profile, entries, target, todayPlan, onStartWorkout, onSave, onRemove }) {
+  const existing = useMemo(() => (entries.checkin || []).find((c) => c.day === day), [entries.checkin, day]);
+  const plan = existing?.payload?.plan;
+
+  const [energy, setEnergy] = useState('normal');
+  const [sleep, setSleep] = useState(7);
+  const [sore, setSore] = useState(['none']);
+  const [time, setTime] = useState('full');
+  const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [isExpanded, setIsExpanded] = useState(!data?.analysis);
+  const [showMeals, setShowMeals] = useState(false);
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(`fit_checkin_${day}`);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setData(parsed);
-        setEnergy(parsed.energy || 'normal');
-        setTime(parsed.time || 'full');
-        setFocus(parsed.focus || 'program');
-        setAnalysis(parsed.analysis || '');
-        setIsExpanded(false);
-      } else {
-        setData(null);
-        setAnalysis('');
-        setIsExpanded(true);
-      }
-    } catch (_e) {}
-  }, [day]);
+  const toggleSore = (id) => {
+    if (id === 'none') return setSore(['none']);
+    const next = sore.filter((x) => x !== 'none');
+    const updated = next.includes(id) ? next.filter((x) => x !== id) : [...next, id];
+    setSore(updated.length ? updated : ['none']);
+  };
 
-  const energyOptions = [
-    { id: 'high', label: 'Zindeyim & Yüksek', icon: '🔥', desc: 'Ağırlıkları zorlamaya hazırım' },
-    { id: 'normal', label: 'Normal / Dengeli', icon: '💪', desc: 'Rutin tempomda gidebilirim' },
-    { id: 'low', label: 'Yorgun / Az Uyudum', icon: '🥱', desc: 'Daha kontrollü olmalıyım' },
-    { id: 'sore', label: 'Kas Hamlığı / Ağrı', icon: '🩹', desc: 'Belli bölgelerimde ağrı var' }
-  ];
-
-  const timeOptions = [
-    { id: 'full', label: 'Tam Süre (45-60 dk)', desc: 'Tüm hareketler ve setler' },
-    { id: 'quick', label: 'Hızlı Seans (25-30 dk)', desc: 'Süpersetler & kısa dinlenme' },
-    { id: 'recovery', label: 'Karın & Esneme (15 dk)', desc: 'Hafif toparlanma seansı' },
-    { id: 'rest', label: 'Tam Dinlenme (Off)', desc: 'Sadece beslenme & uyku' }
-  ];
-
-  const focusOptions = [
-    { id: 'program', label: '🎯 Programı Birebir Uygula', desc: 'Günün planını eksiksiz yap' },
-    { id: 'shoulders', label: '🛡️ Omuz Odaklı (Lateral Vurgu)', desc: 'Yan & arka omuzda drop set' },
-    { id: 'abs', label: '🍫 Karın / Core Ekstra', desc: 'Antrenman sonuna 3 tur karın' },
-    { id: 'form', label: '⚖️ Form & Kontrollü Tempo', desc: 'Ağırlık yerine 3 sn negatif iniş' }
-  ];
-
-  const handleAnalyze = async () => {
+  const analyze = async () => {
     setBusy(true);
     setError('');
+    const soreLabels = sore.includes('none') ? 'Yok' : sore.map((s) => SORE.find(([id]) => id === s)?.[1]).join(', ');
+    const planText = todayPlan && !todayPlan.rest && todayPlan.moves
+      ? `${todayPlan.name} (${todayPlan.moves.map((m) => m.name).join(', ')})`
+      : 'Bugün programda dinlenme günü';
 
-    const energyText = energyOptions.find((e) => e.id === energy)?.label || energy;
-    const timeText = timeOptions.find((t) => t.id === time)?.label || time;
-    const focusText = focusOptions.find((f) => f.id === focus)?.label || focus;
-
-    const workoutName = todayWorkout ? todayWorkout.name : 'Dinlenme Günü';
-    const recentWorkouts = (entries.workout || []).slice(0, 3).map((w) => w.payload?.name).join(', ') || 'Yok';
-
-    const prompt = `Bugün uygulamayı açtım ve günlük durumumu bildirdim:
-- Enerji & Mod Durumum: ${energyText}
-- Bugün Ayırabileceğim Süre: ${timeText}
-- Bugünün Özel Odak Tercihi: ${focusText}
-- Bugünkü Planlanmış Program: ${workoutName}
-- Son Günlerdeki Antrenmanlar: ${recentWorkouts}
-
-Bana bugünkü antrenmanım ve günüm için 3-4 maddelik, motive edici, çok net ve uygulanabilir bir "Günün Stratejisi" oluştur.
-Eğer yorgunsam veya vaktim kısıtlıysa programı nasıl optimize edeceğimi söyle. Omuz ve karın hedeflerimi unutma.`;
+    const question = `Bugünkü check-in'im:
+- Enerji/mod: ${labelOf(ENERGY, energy)}
+- Dün gece uyku: ${labelOf(SLEEP, sleep)}
+- Ağrıyan/yorgun bölgeler: ${soreLabels}
+- Ayırabileceğim süre: ${labelOf(TIME, time)}
+- Programdaki bugünkü antrenman: ${planText}
+${note.trim() ? `- Not: ${note.trim()}` : ''}
+Günlük protein hedefim: ${target?.protein || '?'} g.`;
 
     try {
-      const summary = `Profil: ${profile.height || 180}cm, ${profile.weight || 77}kg. Evde dambıl.`;
-      const reply = await askCoach(profile, summary, prompt);
-
-      setAnalysis(reply);
-      setIsExpanded(false);
-
-      const checkinPayload = { energy, time, focus, analysis: reply, day };
-      localStorage.setItem(storageKey, JSON.stringify(checkinPayload));
-      setData(checkinPayload);
+      const res = await callAI('checkin', {
+        profile,
+        context: buildContext({ entries, target }),
+        question
+      });
+      const data = res.data || {};
+      onSave({
+        energy,
+        energyLabel: labelOf(ENERGY, energy),
+        sleep,
+        sore,
+        time,
+        note: note.trim(),
+        plan: {
+          headline: data.headline || 'Günün planı hazır',
+          readiness: Math.max(0, Math.min(100, Number(data.readiness) || 70)),
+          message: data.message || '',
+          workout: data.workout && Array.isArray(data.workout.moves) && data.workout.moves.length ? data.workout : null,
+          meals: Array.isArray(data.meals) ? data.meals.slice(0, 5) : [],
+          tips: Array.isArray(data.tips) ? data.tips.slice(0, 4) : []
+        }
+      });
     } catch (err) {
-      setError(err.message || 'Yapay zeka analizi alınamadı.');
+      setError(err.message);
     } finally {
       setBusy(false);
     }
   };
 
-  const handleReset = () => {
-    localStorage.removeItem(storageKey);
-    setData(null);
-    setAnalysis('');
-    setIsExpanded(true);
+  const startAiWorkout = () => {
+    const w = plan.workout;
+    onStartWorkout({
+      name: w.name || 'Günün Antrenmanı',
+      focus: w.focus || '',
+      custom: true,
+      moves: w.moves.map((m) => ({
+        name: m.name,
+        muscle: m.muscle || 'Kas',
+        sets: m.sets || '3 × 10-12',
+        defaultSets: Number(m.defaultSets) || 3,
+        restSeconds: Number(m.restSeconds) || 75,
+        suggestedKg: m.suggestedKg ?? '',
+        tip: m.tip || '',
+        alternatives: Array.isArray(m.alternatives) ? m.alternatives : []
+      }))
+    });
   };
 
-  return (
-    <div className="dailyCheckinCard">
-      <div className="dailyCheckinHeader" onClick={() => setIsExpanded(!isExpanded)}>
-        <div className="checkinHeaderLeft">
-          <div className="checkinPulseIcon">
-            <Sparkles size={18} />
-          </div>
-          <div>
-            <h3>Günün Durum Analizi & Akıllı Mod</h3>
-            <p className="mutedText">
-              {analysis
-                ? 'Bugünkü stratejin hazır · Tıklayarak detayları veya tercihleri değiştir'
-                : 'Bugünkü enerji ve vaktine göre antrenmanını yapay zekaya optimize ettir'}
-            </p>
-          </div>
-        </div>
-
-        <div className="checkinHeaderRight">
-          {analysis && !isExpanded && (
-            <span className="checkinBadge ready">
-              <CheckCircle2 size={13} /> Analiz Hazır
+  /* ---------- Sonuç ---------- */
+  if (plan) {
+    const readinessColor = plan.readiness >= 75 ? 'var(--fx-accent)' : plan.readiness >= 50 ? '#f5c451' : '#ff8a65';
+    return (
+      <section className="fx-card fx-plan">
+        <div className="fx-planHead">
+          <Ring value={plan.readiness} size={68} stroke={7} color={readinessColor}>
+            <b>{plan.readiness}</b>
+            <small>hazır</small>
+          </Ring>
+          <div className="fx-planTitle">
+            <span className="fx-eyebrow">
+              <Sparkles size={12} /> BUGÜNÜN PLANI
             </span>
-          )}
-          <button type="button" className="iconBtn">
-            {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </button>
-        </div>
-      </div>
-
-      {isExpanded && (
-        <div className="checkinBody">
-          {/* Question 1: Energy */}
-          <div className="checkinSection">
-            <label className="checkinLabel">
-              <span className="stepNum">1</span> Bugün Enerji & Modun Nasıl?
-            </label>
-            <div className="optionGrid">
-              {energyOptions.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  className={`optionChip ${energy === opt.id ? 'active' : ''}`}
-                  onClick={() => setEnergy(opt.id)}
-                >
-                  <span className="chipIcon">{opt.icon}</span>
-                  <div className="chipText">
-                    <b>{opt.label}</b>
-                    <small>{opt.desc}</small>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Question 2: Time */}
-          <div className="checkinSection">
-            <label className="checkinLabel">
-              <span className="stepNum">2</span> Bugün Ne Kadar Vaktin Var?
-            </label>
-            <div className="optionGrid cols2">
-              {timeOptions.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  className={`optionChip ${time === opt.id ? 'active' : ''}`}
-                  onClick={() => setTime(opt.id)}
-                >
-                  <div className="chipText">
-                    <b>{opt.label}</b>
-                    <small>{opt.desc}</small>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Question 3: Focus */}
-          <div className="checkinSection">
-            <label className="checkinLabel">
-              <span className="stepNum">3</span> Bugün Özel Bir Vurgu İstiyor Musun?
-            </label>
-            <div className="optionGrid cols2">
-              {focusOptions.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  className={`optionChip ${focus === opt.id ? 'active' : ''}`}
-                  onClick={() => setFocus(opt.id)}
-                >
-                  <div className="chipText">
-                    <b>{opt.label}</b>
-                    <small>{opt.desc}</small>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {error && <div className="callout warning">{error}</div>}
-
-          <div className="checkinActions">
-            <button
-              type="button"
-              className="primary checkinSubmitBtn"
-              disabled={busy}
-              onClick={handleAnalyze}
-            >
-              <Sparkles size={16} />
-              {busy ? 'Yapay Zeka Analiz Ediyor…' : 'Moduma Göre Günümü Analiz Et & Planla'}
-            </button>
+            <h2>{plan.headline}</h2>
+            {plan.message && <p>{plan.message}</p>}
           </div>
         </div>
-      )}
 
-      {/* Render AI Result if available */}
-      {analysis && (
-        <div className="checkinResultBox">
-          <div className="resultHeader">
-            <div className="resultTag">
-              <Zap size={14} /> BUGÜNÜN AI STRATEJİSİ
-            </div>
-            <button
-              type="button"
-              className="textLink small"
-              onClick={handleReset}
-            >
-              <RotateCcw size={12} /> Tercihleri Sıfırla
-            </button>
-          </div>
-
-          <div className="resultContent">
-            {analysis.split('\n').map((line, idx) => {
-              if (!line.trim()) return <div key={idx} className="lineBreak" />;
-              return (
-                <p key={idx} className="resultLine">
-                  {line}
-                </p>
-              );
-            })}
-          </div>
-
-          {todayWorkout && (
-            <div className="resultFooterAction">
-              <button
-                type="button"
-                className="primary startWithAdviceBtn"
-                onClick={() => onStartWorkout(todayWorkout)}
-              >
-                <Play size={16} fill="currentColor" /> Bu Stratejiyle Antrenmana Başla
+        {plan.workout ? (
+          <div className="fx-planWorkout">
+            <div className="fx-planWorkoutHead">
+              <div>
+                <b>{plan.workout.name}</b>
+                <small>
+                  <Clock size={12} /> ~{plan.workout.durationMin || 30} dk · {plan.workout.moves.length} hareket
+                </small>
+              </div>
+              <button type="button" className="fx-btn fx-btn--primary" onClick={startAiWorkout}>
+                <Play size={16} fill="currentColor" /> Başla
               </button>
             </div>
-          )}
+            <ol className="fx-moveList">
+              {plan.workout.moves.map((m, i) => (
+                <li key={i}>
+                  <span>{m.name}</span>
+                  <small>
+                    {m.sets}
+                    {m.suggestedKg && m.suggestedKg !== '0' ? ` · ${m.suggestedKg} kg` : ''}
+                  </small>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ) : (
+          <div className="fx-alert fx-alert--info">Bugün toparlanma günü. Hafif yürüyüş ve esneme yeterli.</div>
+        )}
+
+        {plan.meals?.length > 0 && (
+          <div className="fx-planSection">
+            <button type="button" className="fx-collapse" onClick={() => setShowMeals((v) => !v)}>
+              <Utensils size={15} /> Bugünün öğün önerileri
+              {showMeals ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            </button>
+            {showMeals && (
+              <ul className="fx-mealIdeas">
+                {plan.meals.map((m, i) => (
+                  <li key={i}>
+                    <b>{m.title}</b>
+                    <span>{m.idea}</span>
+                    {m.protein ? <em>{m.protein} g protein</em> : null}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        {plan.tips?.length > 0 && (
+          <ul className="fx-tips">
+            {plan.tips.map((t, i) => (
+              <li key={i}>
+                <Lightbulb size={14} /> {t}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <button type="button" className="fx-btn fx-btn--text fx-btn--sm" onClick={() => onRemove(existing.id)}>
+          <RotateCcw size={14} /> Check-in'i yenile
+        </button>
+      </section>
+    );
+  }
+
+  /* ---------- Sorular ---------- */
+  return (
+    <section className="fx-card fx-checkin">
+      <div className="fx-checkinHead">
+        <span className="fx-eyebrow">
+          <Sparkles size={12} /> GÜNLÜK CHECK-IN · 20 SANİYE
+        </span>
+        <h2>Bugün nasılsın, {profile.name || 'şampiyon'}?</h2>
+        <p className="fx-muted">Cevaplarına göre bugünkü antrenmanını ve öğünlerini yeniden kuracağım.</p>
+      </div>
+
+      {busy ? (
+        <div className="fx-thinking">
+          <Loader2 size={20} className="fx-spin" />
+          <span>Verilerini inceliyorum ve planını hazırlıyorum…</span>
+          <Skeleton lines={4} />
         </div>
+      ) : (
+        <>
+          <div className="fx-q">
+            <span className="fx-qLabel">Enerjin</span>
+            <div className="fx-choiceRow">
+              {ENERGY.map((o) => (
+                <Choice key={o.id} compact active={energy === o.id} onClick={() => setEnergy(o.id)} icon={o.icon} title={o.label} />
+              ))}
+            </div>
+          </div>
+
+          <div className="fx-q">
+            <span className="fx-qLabel">Dün gece uyku</span>
+            <div className="fx-choiceRow">
+              {SLEEP.map((o) => (
+                <Choice key={o.id} compact active={sleep === o.id} onClick={() => setSleep(o.id)} title={o.label} />
+              ))}
+            </div>
+          </div>
+
+          <div className="fx-q">
+            <span className="fx-qLabel">Ağrı / yorgunluk</span>
+            <div className="fx-choiceRow wrap">
+              {SORE.map(([id, label]) => (
+                <Choice key={id} compact active={sore.includes(id)} onClick={() => toggleSore(id)} title={label} />
+              ))}
+            </div>
+          </div>
+
+          <div className="fx-q">
+            <span className="fx-qLabel">Bugün ne kadar vaktin var?</span>
+            <div className="fx-choiceRow wrap">
+              {TIME.map((o) => (
+                <Choice key={o.id} compact active={time === o.id} onClick={() => setTime(o.id)} title={o.label} />
+              ))}
+            </div>
+          </div>
+
+          <input
+            className="fx-noteInput"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Eklemek istediğin bir şey var mı? (opsiyonel)"
+            maxLength={200}
+          />
+
+          {error && <div className="fx-alert fx-alert--error">{error}</div>}
+
+          <button type="button" className="fx-btn fx-btn--primary fx-btn--block fx-btn--lg" onClick={analyze}>
+            <Sparkles size={18} /> Günümü planla
+          </button>
+        </>
       )}
-    </div>
+    </section>
   );
 }

@@ -4,11 +4,13 @@
  * and network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-pwa-v0.6.0';
+const CACHE_NAME = 'fit-pwa-v1.0.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
+  '/gizlilik.html',
+  '/kosullar.html',
   '/icons/icon-192.png',
   '/icons/icon-512.png'
 ];

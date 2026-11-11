@@ -1,104 +1,159 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Layout from './components/Layout.jsx';
 import ActiveWorkoutModal from './components/ActiveWorkoutModal.jsx';
+import AuthScreen from './components/AuthScreen.jsx';
+import Onboarding from './components/Onboarding.jsx';
+import AiMealLogger from './components/AiMealLogger.jsx';
+import WeeklyReport from './components/WeeklyReport.jsx';
+import ProgramGenerator from './components/ProgramGenerator.jsx';
+import { Segmented } from './components/ui.jsx';
 
-// Modular Views
-import DashboardView from './views/DashboardView.jsx';
+import TodayView from './views/TodayView.jsx';
 import CalendarView from './views/CalendarView.jsx';
 import TrainingView from './views/TrainingView.jsx';
 import NutritionView from './views/NutritionView.jsx';
 import ProgressView from './views/ProgressView.jsx';
 import HabitsView from './views/HabitsView.jsx';
-import ProfileView from './views/ProfileView.jsx';
 import CoachView from './views/CoachView.jsx';
-import SyncView from './views/SyncView.jsx';
+import SettingsView from './views/SettingsView.jsx';
 
 import { targets, today } from './lib/calculations.js';
 import { DEFAULT_PROFILE } from './lib/constants.js';
 import { getSetting, setSetting, list, add, remove, subscribe } from './lib/store.js';
-import { scheduleSync } from './lib/supabase.js';
+import { scheduleSync, getAuthState, getSyncState } from './lib/supabase.js';
+import { getCustomProgram } from './lib/workoutPlans.js';
+
+const CATEGORIES = ['workout', 'meal', 'habit', 'weight', 'supplement', 'checkin', 'report'];
+const VALID_TABS = ['today', 'training', 'nutrition', 'progress', 'coach', 'settings'];
+
+const readTabFromHash = () => {
+  const h = (typeof window !== 'undefined' ? window.location.hash : '').replace('#', '');
+  if (h === 'dashboard') return 'today';
+  return VALID_TABS.includes(h) ? h : 'today';
+};
+
+/* ================================================================== */
+/* Kök: oturum durumuna göre ekran seçer                               */
+/* ================================================================== */
 
 export default function App() {
-  const [tab, setTab] = useState('dashboard');
-  const [day, setDay] = useState(today());
-  const [profile, setProfile] = useState(DEFAULT_PROFILE);
-  const [entries, setEntries] = useState({
-    workout: [],
-    meal: [],
-    habit: [],
-    weight: [],
-    supplement: []
-  });
-  const [ready, setReady] = useState(false);
-  const [message, setMessage] = useState('');
-  const [online, setOnline] = useState(
-    typeof navigator !== 'undefined' ? navigator.onLine : true
-  );
-  const [installed, setInstalled] = useState(
-    typeof window !== 'undefined'
-      ? window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true
-      : false
-  );
-
-  // Active Live Workout Modal
-  const [activeWorkoutPlan, setActiveWorkoutPlan] = useState(null);
-
-  // Load data from store
-  const loadData = async () => {
-    try {
-      const rawProfile = getSetting('profile');
-      if (rawProfile) {
-        const parsed = typeof rawProfile === 'string' ? JSON.parse(rawProfile) : rawProfile;
-        setProfile((prev) => ({ ...DEFAULT_PROFILE, ...prev, ...parsed }));
-      }
-
-      setEntries({
-        workout: list('workout'),
-        meal: list('meal'),
-        habit: list('habit'),
-        weight: list('weight'),
-        supplement: list('supplement')
-      });
-      setReady(true);
-    } catch (e) {
-      console.error('Data load error:', e);
-      setMessage('Yerel veriler okunamadı: ' + e.message);
-      setReady(true);
-    }
-  };
+  const [auth, setAuth] = useState(getAuthState());
 
   useEffect(() => {
-    loadData();
+    const h = () => setAuth(getAuthState());
+    window.addEventListener('fit-sync-change', h);
+    h();
+    return () => window.removeEventListener('fit-sync-change', h);
+  }, []);
 
-    // Subscribe to store mutations
-    const unsubscribe = subscribe(() => {
-      loadData();
-    });
+  if (!auth.ready) return <Splash />;
+  if (!auth.user) return <AuthScreen />;
+  return <MainApp key={auth.user.id} />;
+}
 
-    const handleOnline = () => setOnline(true);
-    const handleOffline = () => setOnline(false);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+function Splash({ text }) {
+  return (
+    <div className="fx-splash">
+      <div className="fx-logo fx-logo--xl">
+        fit<span>.</span>
+      </div>
+      {text && <p className="fx-muted">{text}</p>}
+    </div>
+  );
+}
 
-    // Check if there is an active session in localStorage to restore
-    try {
-      const saved = localStorage.getItem('fit-active-session-v1');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed?.planName) {
-          setMessage(`Devam eden bir antrenman oturumun var: ${parsed.planName}`);
-        }
-      }
-    } catch {}
+/* ================================================================== */
+/* Giriş yapılmış uygulama                                             */
+/* ================================================================== */
+
+function readProfile() {
+  const raw = getSetting('profile');
+  if (!raw) return null;
+  try {
+    return typeof raw === 'string' ? JSON.parse(raw) : raw;
+  } catch {
+    return null;
+  }
+}
+
+function readEntries() {
+  return Object.fromEntries(CATEGORIES.map((c) => [c, list(c)]));
+}
+
+function MainApp() {
+  const [tab, setTabState] = useState(readTabFromHash);
+  const [day, setDay] = useState(today());
+  const [storedProfile, setStoredProfile] = useState(readProfile);
+  const [entries, setEntries] = useState(readEntries);
+  const [program, setProgram] = useState(getCustomProgram);
+  const [syncState, setSyncState] = useState(getSyncState());
+  const [waitedForSync, setWaitedForSync] = useState(false);
+
+  const [trainingSection, setTrainingSection] = useState('program');
+  const [progressSection, setProgressSection] = useState('report');
+
+  const [toast, setToast] = useState('');
+  const toastTimer = useRef(null);
+  const [online, setOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const installed =
+    typeof window !== 'undefined' &&
+    (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true);
+
+  const [activeWorkoutPlan, setActiveWorkoutPlan] = useState(null);
+
+  const profile = useMemo(() => ({ ...DEFAULT_PROFILE, ...(storedProfile || {}) }), [storedProfile]);
+
+  const showToast = useCallback((msg, ms = 2800) => {
+    setToast(msg);
+    clearTimeout(toastTimer.current);
+    if (msg) toastTimer.current = setTimeout(() => setToast(''), ms);
+  }, []);
+
+  const setTab = useCallback((t) => {
+    setTabState(t);
+    if (window.location.hash !== `#${t}`) {
+      window.history.replaceState(null, '', t === 'today' ? window.location.pathname : `#${t}`);
+    }
+    window.scrollTo({ top: 0 });
+  }, []);
+
+  // Store ve senkronizasyon dinleyicileri
+  useEffect(() => {
+    const reload = () => {
+      setStoredProfile(readProfile());
+      setEntries(readEntries());
+      setProgram(getCustomProgram());
+    };
+    const unsubscribe = subscribe(reload);
+    const onSync = () => setSyncState(getSyncState());
+    const onOnline = () => {
+      setOnline(true);
+      scheduleSync();
+    };
+    const onOffline = () => setOnline(false);
+    const onHash = () => setTabState(readTabFromHash());
+    const onVisible = () => document.visibilityState === 'visible' && scheduleSync();
+
+    window.addEventListener('fit-sync-change', onSync);
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
+    window.addEventListener('hashchange', onHash);
+    document.addEventListener('visibilitychange', onVisible);
+
+    // Yeni cihazda ilk senkronizasyon gecikirse onboarding'e takılmamak için üst sınır
+    const t = setTimeout(() => setWaitedForSync(true), 8000);
 
     return () => {
       unsubscribe();
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('fit-sync-change', onSync);
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+      window.removeEventListener('hashchange', onHash);
+      document.removeEventListener('visibilitychange', onVisible);
+      clearTimeout(t);
     };
   }, []);
 
-  // Targets and Today's Nutrition totals
   const target = useMemo(() => targets(profile), [profile]);
   const todayMeals = useMemo(() => entries.meal.filter((x) => x.day === day), [entries.meal, day]);
   const totals = useMemo(
@@ -115,203 +170,200 @@ export default function App() {
     [todayMeals]
   );
 
-  // Profile save handler
-  const handleSaveProfile = async (newProfile) => {
+  /* ---------------- Handlers ---------------- */
+
+  const handleSaveProfile = async (next) => {
     try {
-      setProfile(newProfile);
-      setSetting('profile', newProfile);
+      const merged = { ...(storedProfile || {}), ...next };
+      setSetting('profile', merged);
       scheduleSync();
-      setMessage('Profil başarıyla kaydedildi.');
-      setTimeout(() => setMessage(''), 3500);
+      showToast('Profil kaydedildi.');
       return true;
     } catch (e) {
-      setMessage('Profil kaydedilemedi: ' + e.message);
+      showToast('Profil kaydedilemedi: ' + e.message);
       return false;
     }
   };
 
-  // Generic entry handlers
-  const handleAddEntry = (category, payload, customDay = null) => {
+  const handleAddEntry = (category, payload, customDay = null, silent = false) => {
     try {
-      const targetDay = customDay || day;
-      const id = add(category, targetDay, payload);
+      const id = add(category, customDay || day, payload);
       scheduleSync();
-      setMessage('Kayıt başarıyla eklendi.');
-      setTimeout(() => setMessage(''), 3000);
+      if (!silent) showToast('Kaydedildi.');
       return id;
     } catch (e) {
-      setMessage('Kayıt ekleme hatası: ' + e.message);
+      showToast('Kayıt eklenemedi: ' + e.message);
       return null;
     }
   };
 
-  const handleRemoveEntry = (id) => {
+  const handleRemoveEntry = (id, silent = false) => {
     try {
       remove(id);
       scheduleSync();
-      setMessage('Kayıt silindi.');
-      setTimeout(() => setMessage(''), 2500);
+      if (!silent) showToast('Silindi.');
     } catch (e) {
-      setMessage('Kayıt silinemedi: ' + e.message);
+      showToast('Silinemedi: ' + e.message);
     }
   };
 
-  // Quick Water Addition
   const handleQuickWaterAdd = (amount) => {
     const todayHabit = entries.habit.find((e) => e.day === day);
-    const prevWater = Number(todayHabit?.payload?.water || 0);
-    const newWater = prevWater + amount;
-
-    if (todayHabit) {
-      remove(todayHabit.id);
-      add('habit', day, {
-        ...todayHabit.payload,
-        water: newWater
-      });
-    } else {
-      add('habit', day, {
-        sleep: 0,
-        water: newWater,
-        steps: 0
-      });
-    }
+    const newWater = Number(todayHabit?.payload?.water || 0) + amount;
+    if (todayHabit) remove(todayHabit.id);
+    add('habit', day, { ...(todayHabit?.payload || { sleep: 0, steps: 0 }), water: newWater });
     scheduleSync();
-    setMessage(`+${amount} ml su eklendi (${newWater} ml).`);
-    setTimeout(() => setMessage(''), 3000);
+    if (navigator.vibrate) navigator.vibrate(10);
+    showToast(`+${amount} ml su · toplam ${newWater} ml`);
   };
 
-  // Finish Live Workout Session
-  const handleFinishActiveWorkout = (workoutResult) => {
-    handleAddEntry('workout', workoutResult);
-    setActiveWorkoutPlan(null);
-    setMessage(`${workoutResult.name} başarıyla tamamlandı ve kaydedildi!`);
+  const handleSaveCheckin = (payload) => {
+    const existing = entries.checkin.find((c) => c.day === day);
+    if (existing) remove(existing.id);
+    handleAddEntry('checkin', payload, today(), true);
   };
+
+  const handleSaveReport = (payload) => {
+    handleAddEntry('report', payload, today(), true);
+    showToast('Haftalık raporun hazır.');
+  };
+
+  const handleFinishActiveWorkout = (workoutResult) => {
+    handleAddEntry('workout', workoutResult, null, true);
+    setActiveWorkoutPlan(null);
+    if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+    showToast(`💪 ${workoutResult.name} tamamlandı!`, 4000);
+  };
+
+  /* ---------------- Onboarding kapısı ---------------- */
+
+  const firstSyncSettled = !!syncState.lastSyncAt || !!syncState.error || !online || waitedForSync;
+  // Eski sürümden gelen profil (boy+kilo dolu) onboarding'i atlar.
+  const legacyComplete = !!(storedProfile && storedProfile.height && storedProfile.weight);
+  const needsOnboarding = !storedProfile?.onboarded && !legacyComplete;
+
+  if (needsOnboarding && !firstSyncSettled) {
+    return <Splash text="Verilerin yükleniyor…" />;
+  }
+  if (needsOnboarding) {
+    return <Onboarding initialProfile={storedProfile || {}} onComplete={handleSaveProfile} />;
+  }
+
+  /* ---------------- Ana ekranlar ---------------- */
 
   return (
-    <Layout
-      tab={tab}
-      setTab={setTab}
-      day={day}
-      setDay={setDay}
-      profile={profile}
-      online={online}
-      installed={installed}
-    >
-      {/* Top Notification */}
-      {message && (
-        <div className="notice" role="status">
-          <span>{message}</span>
-          <button type="button" onClick={() => setMessage('')}>
-            ×
-          </button>
-        </div>
-      )}
-
-      {/* DASHBOARD TAB */}
-      {tab === 'dashboard' && (
-        <DashboardView
+    <Layout tab={tab} setTab={setTab} day={day} setDay={setDay} profile={profile} online={online}>
+      {tab === 'today' && (
+        <TodayView
           day={day}
           profile={profile}
           entries={entries}
           target={target}
           totals={totals}
           onStartWorkout={(plan) => setActiveWorkoutPlan(plan)}
-          onNavigate={(targetTab) => setTab(targetTab)}
+          onNavigate={setTab}
           onQuickWaterAdd={handleQuickWaterAdd}
+          onSaveCheckin={handleSaveCheckin}
+          onRemoveCheckin={(id) => handleRemoveEntry(id, true)}
         />
       )}
 
-      {/* CALENDAR TAB */}
-      {tab === 'calendar' && (
-        <CalendarView
-          day={day}
-          setDay={setDay}
-          profile={profile}
-          entries={entries}
-          onNavigateToTraining={() => setTab('training')}
-        />
-      )}
-
-      {/* TRAINING TAB */}
       {tab === 'training' && (
-        <TrainingView
-          day={day}
-          profile={profile}
-          entries={entries}
-          onStartActiveWorkout={(plan) => setActiveWorkoutPlan(plan)}
-          onAddWorkout={(payload) => handleAddEntry('workout', payload)}
-          onRemoveWorkout={(id) => handleRemoveEntry(id)}
-        />
+        <div className="fx-stack">
+          <Segmented
+            value={trainingSection}
+            onChange={setTrainingSection}
+            options={[
+              ['program', 'Program'],
+              ['week', 'Haftalık takvim']
+            ]}
+          />
+          {trainingSection === 'program' && (
+            <>
+              <ProgramGenerator profile={profile} program={program} onDone={() => showToast('Yeni programın hazır!')} />
+              <TrainingView
+                key={program?.createdAt || 'default'}
+                day={day}
+                profile={profile}
+                entries={entries}
+                onStartActiveWorkout={(plan) => setActiveWorkoutPlan(plan)}
+                onAddWorkout={(payload) => handleAddEntry('workout', payload)}
+                onRemoveWorkout={(id) => handleRemoveEntry(id)}
+              />
+            </>
+          )}
+          {trainingSection === 'week' && (
+            <CalendarView
+              day={day}
+              setDay={setDay}
+              profile={profile}
+              entries={entries}
+              onNavigateToTraining={() => setTrainingSection('program')}
+            />
+          )}
+        </div>
       )}
 
-      {/* NUTRITION TAB */}
       {tab === 'nutrition' && (
-        <NutritionView
-          day={day}
-          profile={profile}
-          entries={entries}
-          target={target}
-          totals={totals}
-          onAddMeal={(payload) => handleAddEntry('meal', payload)}
-          onRemoveMeal={(id) => handleRemoveEntry(id)}
-          onAddSupplement={(payload) => handleAddEntry('supplement', payload)}
-          onRemoveSupplement={(id) => handleRemoveEntry(id)}
-        />
+        <div className="fx-stack">
+          <AiMealLogger profile={profile} onAddMeal={(payload) => handleAddEntry('meal', payload)} />
+          <NutritionView
+            day={day}
+            profile={profile}
+            entries={entries}
+            target={target}
+            totals={totals}
+            onAddMeal={(payload) => handleAddEntry('meal', payload)}
+            onRemoveMeal={(id) => handleRemoveEntry(id)}
+            onAddSupplement={(payload) => handleAddEntry('supplement', payload)}
+            onRemoveSupplement={(id) => handleRemoveEntry(id)}
+          />
+        </div>
       )}
 
-      {/* PROGRESS TAB */}
       {tab === 'progress' && (
-        <ProgressView
-          day={day}
-          profile={profile}
-          entries={entries}
-          onAddWeight={(payload) => handleAddEntry('weight', payload)}
-          onRemoveWeight={(id) => handleRemoveEntry(id)}
-        />
+        <div className="fx-stack">
+          <Segmented
+            value={progressSection}
+            onChange={setProgressSection}
+            options={[
+              ['report', 'Haftalık rapor'],
+              ['body', 'Ölçümler'],
+              ['habits', 'Alışkanlıklar']
+            ]}
+          />
+          {progressSection === 'report' && (
+            <WeeklyReport profile={profile} entries={entries} target={target} onSaveReport={handleSaveReport} />
+          )}
+          {progressSection === 'body' && (
+            <ProgressView
+              day={day}
+              profile={profile}
+              entries={entries}
+              onAddWeight={(payload) => handleAddEntry('weight', payload)}
+              onRemoveWeight={(id) => handleRemoveEntry(id)}
+            />
+          )}
+          {progressSection === 'habits' && (
+            <HabitsView
+              day={day}
+              profile={profile}
+              entries={entries}
+              target={target}
+              onAddHabit={(payload) => handleAddEntry('habit', payload)}
+              onRemoveHabit={(id) => handleRemoveEntry(id)}
+              onQuickWaterAdd={handleQuickWaterAdd}
+            />
+          )}
+        </div>
       )}
 
-      {/* HABITS TAB */}
-      {tab === 'habits' && (
-        <HabitsView
-          day={day}
-          profile={profile}
-          entries={entries}
-          target={target}
-          onAddHabit={(payload) => handleAddEntry('habit', payload)}
-          onRemoveHabit={(id) => handleRemoveEntry(id)}
-          onQuickWaterAdd={handleQuickWaterAdd}
-        />
+      {tab === 'coach' && <CoachView profile={profile} entries={entries} target={target} totals={totals} />}
+
+      {tab === 'settings' && (
+        <SettingsView profile={profile} onSaveProfile={handleSaveProfile} installed={installed} setMessage={showToast} />
       )}
 
-      {/* PROFILE TAB */}
-      {tab === 'profile' && (
-        <ProfileView
-          profile={profile}
-          onSaveProfile={handleSaveProfile}
-        />
-      )}
-
-      {/* AI COACH TAB */}
-      {tab === 'coach' && (
-        <CoachView
-          profile={profile}
-          entries={entries}
-          target={target}
-          totals={totals}
-        />
-      )}
-
-      {/* SYNC TAB */}
-      {tab === 'sync' && (
-        <SyncView
-          online={online}
-          installed={installed}
-          onReload={loadData}
-          setMessage={setMessage}
-        />
-      )}
-
-      {/* Active Workout Live Session Modal */}
       {activeWorkoutPlan && (
         <ActiveWorkoutModal
           plan={activeWorkoutPlan}
@@ -321,9 +373,11 @@ export default function App() {
         />
       )}
 
-      <footer>
-        FIT · Kişisel Spor ve Sağlık Asistanı · v0.6.0 · {ready ? (installed ? 'PWA Yüklü' : 'Yerel / Çevrimdışı Hazır') : 'Yükleniyor…'}
-      </footer>
+      {toast && (
+        <div className="fx-toast" role="status" onClick={() => setToast('')}>
+          {toast}
+        </div>
+      )}
     </Layout>
   );
 }

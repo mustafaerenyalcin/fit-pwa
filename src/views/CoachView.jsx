@@ -14,6 +14,9 @@ import {
   RotateCcw
 } from 'lucide-react';
 import Panel from '../components/Panel.jsx';
+import { RichText } from '../components/ui.jsx';
+import { askCoach } from '../lib/aiCoach.js';
+import { buildContext } from '../lib/api.js';
 
 export default function CoachView({
   profile,
@@ -25,7 +28,7 @@ export default function CoachView({
   const [messages, setMessages] = useState([
     {
       sender: 'coach',
-      text: `Merhaba! Ben senin Fit AI Spor ve Beslenme Koçunum. Profilini, dambıl ekipmanını ve son kayıtlarını inceleyebilirim. Omuz genişliği, karın kası belirginliği, antrenman formu veya evdeki malzemelere göre yemek tarifleri hakkında dilediğin soruyu sorabilirsin.`
+      text: `Merhaba${profile.name ? ` ${profile.name}` : ''}! Ben Fit Koç. Profilini, ekipmanını ve son kayıtlarını görebiliyorum. Antrenman, form, beslenme ya da evdeki malzemelerle tarif — ne istersen sor.`
     }
   ]);
   const [inputQuestion, setInputQuestion] = useState('');
@@ -48,10 +51,10 @@ export default function CoachView({
   ];
 
   const quickQuestions = [
-    'Bugünkü antrenmanım için önerin ne?',
-    'Geniş omuz ve karın için programım yeterli mi?',
-    'Evde dambıllarla progressive overload nasıl uygularım?',
-    'Bu haftaki antrenman ve protein gelişimimi değerlendir.'
+    'Bugün ne yemeliyim?',
+    'Programım hedefime uygun mu?',
+    'Ağırlıkları ne zaman artırmalıyım?',
+    'Bu haftaki gidişatımı değerlendir.'
   ];
 
   const toggleIngredient = (ing) => {
@@ -73,34 +76,13 @@ export default function CoachView({
     setBusy(true);
 
     try {
-      if (!window.fit?.aiAsk) {
-        throw new Error('AI istemcisi hazır değil.');
-      }
-
-      // Prepare comprehensive, structured context
-      const recentWorkouts = entries.workout.slice(0, 5).map((w) => `${w.day}: ${w.payload?.name} (${Object.keys(w.payload?.sets || {}).length} hareket)`);
-      const recentWeights = entries.weight.slice(0, 5).map((w) => `${w.day}: ${w.payload?.weight} kg (bel: ${w.payload?.waist || '-'} cm)`);
-      const summary = `
-[Antrenman Geçmişi]: ${recentWorkouts.join('; ') || 'Henüz kayıt yok'}
-[Son Kilo Kayıtları]: ${recentWeights.join('; ') || `${profile.weight || 77} kg`}
-[Bugünkü Beslenme]: ${totals.calories} kcal, ${totals.protein} g protein (Hedef: ${target.protein} g)
-[Kullanıcı Ekipmanı]: ${profile.equipmentDumbbells || 'Dambıl'}
-[Sakatlık / Hassasiyet]: ${profile.injuries || 'Yok'}
-[Öncelik]: ${profile.focus || 'Omuz ve karın kasları'}
-      `.trim();
-
-      const answer = await window.fit.aiAsk(profile, summary, q.trim());
+      const context = buildContext({ entries, target, totals, days: 14 });
+      const answer = await askCoach(profile, context, q.trim());
       setMessages((prev) => [...prev, { sender: 'coach', text: answer }]);
     } catch (err) {
       const msg = err.message || 'İstek başarısız oldu.';
       setErrorMsg(msg);
-      setMessages((prev) => [
-        ...prev,
-        {
-          sender: 'coach',
-          text: `İstek gerçekleştirilemedi: ${msg}\n\n(Not: AI Koç, Supabase Edge Function üzerinden çalışır. Bulut hesabına giriş yapıldığından ve sunucu secret'larında OPENAI_API_KEY tanımlandığından emin olun.)`
-        }
-      ]);
+      setMessages((prev) => [...prev, { sender: 'coach', text: `⚠️ ${msg}` }]);
     } finally {
       setBusy(false);
     }
@@ -115,49 +97,24 @@ export default function CoachView({
 
   return (
     <div className="coachView">
-      <div className="intro">
-        <div className="introHeaderRow">
-          <div>
-            <h2>Fit AI Kişisel Koç</h2>
-            <p>
-              Senin fiziksel özelliklerini, antrenman sıklığını ve beslenme verilerini analiz eden
-              yapay zekâ asistanın. Sorular sor, haftalık karneni incelet veya evdeki malzemelere göre
-              yemek önerisi al.
-            </p>
-          </div>
-
-          {messages.length > 1 && (
-            <button
-              type="button"
-              className="secondary iconTextBtn"
-              onClick={() =>
-                setMessages([
-                  {
-                    sender: 'coach',
-                    text: 'Sohbet sıfırlandı. Yeni bir soru veya konuyla devam edebiliriz.'
-                  }
-                ])
-              }
-              title="Sohbeti Temizle"
-            >
-              <RotateCcw size={14} /> Temizle
-            </button>
-          )}
+      {messages.length > 1 && (
+        <div className="fx-rowEnd">
+          <button
+            type="button"
+            className="fx-btn fx-btn--text fx-btn--sm"
+            onClick={() =>
+              setMessages([
+                {
+                  sender: 'coach',
+                  text: 'Sohbet sıfırlandı. Yeni bir soru veya konuyla devam edebiliriz.'
+                }
+              ])
+            }
+          >
+            <RotateCcw size={14} /> Sohbeti temizle
+          </button>
         </div>
-      </div>
-
-      {/* Security & Architecture Banner */}
-      <div className="securityNotice" style={{ marginBottom: 18 }}>
-        <Lock size={16} />
-        <div>
-          <b>Maksimum Güvenlik: </b>
-          <span>
-            API anahtarları hiçbir zaman tarayıcıda veya telefonda saklanmaz; yalnızca güvenli Supabase
-            Edge Function üzerinde çalışır. Koçun önerileri doğrudan veritabanına yazılmaz, daima
-            senin onayına sunulur. Tıbbi teşhis niteliği taşımaz.
-          </span>
-        </div>
-      </div>
+      )}
 
       {/* Pantry Recipe Assistant Card */}
       <div className="recipeWizardCard">
@@ -228,7 +185,9 @@ export default function CoachView({
                 <div className="chatBubbleHeader">
                   <b>{m.sender === 'user' ? (profile.name || 'Sporcu') : 'Fit AI Koç'}</b>
                 </div>
-                <div className="chatBubbleBody">{m.text}</div>
+                <div className="chatBubbleBody">
+                  {m.sender === 'coach' ? <RichText text={m.text} /> : m.text}
+                </div>
               </div>
             </div>
           ))}

@@ -5,7 +5,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { getStore, persist } from './store.js';
+import { getStore, persist, setStoreUser } from './store.js';
 
 const DEFAULT_URL = 'https://igxwxfowdabiyvbcgjjp.supabase.co';
 const DEFAULT_KEY = 'sb_publishable_QJM6xxpDpS49JTlq7OVl9A_MVLZLiJC';
@@ -59,6 +59,14 @@ export function configureSupabase(newUrl, newKey) {
 let syncInProgress = false;
 let syncQueued = false;
 let currentUser = null;
+let authReady = false;
+let lastSyncAt = null;
+let lastSyncError = null;
+
+/** @returns {{ inProgress: boolean, lastSyncAt: string|null, error: string|null }} */
+export function getSyncState() {
+  return { inProgress: syncInProgress, lastSyncAt, error: lastSyncError };
+}
 
 /**
  * Dispatches a custom window event to notify UI components of sync / auth changes
@@ -184,8 +192,11 @@ export async function sync() {
     mergedState.records = mergedState.records.filter(r => !tombstoneIds.has(r.id));
 
     persist(mergedState);
+    lastSyncAt = new Date().toISOString();
+    lastSyncError = null;
   } catch (err) {
     console.error('[Fit Supabase] Sync failed:', err);
+    lastSyncError = err?.message || String(err);
     throw err;
   } finally {
     syncInProgress = false;
@@ -251,12 +262,23 @@ export async function signup(email, password) {
     throw new Error('Önce Supabase yapılandırılmalı (.env dosyasını kontrol edin).');
   }
 
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : undefined }
+  });
   if (error) {
     throw error;
   }
 
-  return 'Hesabın açıldı. E-posta onayı gerekiyorsa gelen kutunu kontrol et.';
+  if (data?.session?.user) {
+    currentUser = data.session.user;
+    setStoreUser(currentUser.id);
+    dispatchSyncChange();
+    await sync().catch(console.error);
+    return 'Hesabın oluşturuldu. Hoş geldin!';
+  }
+  return 'Hesabın oluşturuldu. E-posta adresine gelen onay bağlantısına tıkla, sonra giriş yap.';
 }
 
 /**
@@ -275,8 +297,9 @@ export async function signin(email, password) {
   }
 
   currentUser = data.user;
+  setStoreUser(currentUser.id);
   dispatchSyncChange();
-  await sync();
+  await sync().catch(console.error);
 }
 
 /**
@@ -287,6 +310,7 @@ export async function signout() {
     await supabase.auth.signOut();
   }
   currentUser = null;
+  setStoreUser(null);
   dispatchSyncChange();
 }
 
@@ -318,22 +342,90 @@ export async function aiAsk(profile, summary, question) {
 }
 
 export function setupAuthListener() {
-  if (!supabase) return;
-  supabase.auth.getUser().then(async ({ data }) => {
-    currentUser = data?.user || null;
+  if (!supabase) {
+    authReady = true;
+    dispatchSyncChange();
+    return;
+  }
+
+  // getSession() yerel oturumu okur: çevrimdışıyken de uygulama açılır.
+  supabase.auth.getSession().then(async ({ data }) => {
+    currentUser = data?.session?.user || null;
+    setStoreUser(currentUser?.id || null);
+    authReady = true;
+    dispatchSyncChange();
     if (currentUser) {
       await sync().catch(console.error);
     }
+  }).catch((err) => {
+    console.error(err);
+    authReady = true;
     dispatchSyncChange();
-  }).catch(console.error);
+  });
 
   supabase.auth.onAuthStateChange((_event, session) => {
-    currentUser = session?.user || null;
+    const nextUser = session?.user || null;
+    const changed = (nextUser?.id || null) !== (currentUser?.id || null);
+    currentUser = nextUser;
+    if (changed) setStoreUser(currentUser?.id || null);
+    authReady = true;
     dispatchSyncChange();
-    if (currentUser) {
+    if (currentUser && changed) {
       setTimeout(scheduleSync, 0);
     }
   });
+}
+
+/**
+ * Oturum durumu (senkron). App bileşeni 'fit-sync-change' olayında bunu okur.
+ * @returns {{ ready: boolean, user: object|null }}
+ */
+export function getAuthState() {
+  return { ready: authReady, user: currentUser };
+}
+
+/**
+ * Google ile giriş (Supabase panelinde Google sağlayıcısı açık olmalı).
+ */
+export async function signinWithGoogle() {
+  if (!supabase) throw new Error('Supabase yapılandırılmamış.');
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin }
+  });
+  if (error) throw error;
+}
+
+/**
+ * Şifre sıfırlama e-postası gönderir.
+ */
+export async function resetPassword(email) {
+  if (!supabase) throw new Error('Supabase yapılandırılmamış.');
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin
+  });
+  if (error) throw error;
+}
+
+/**
+ * Hesabı ve buluttaki tüm verileri kalıcı olarak siler (schema.sql -> delete_my_account).
+ * Bu cihazdaki yerel kopya da temizlenir.
+ */
+export async function deleteAccount() {
+  if (!supabase || !currentUser) throw new Error('Önce giriş yapmalısın.');
+  const uid = currentUser.id;
+  const { error } = await supabase.rpc('delete_my_account');
+  if (error) throw new Error('Hesap silinemedi: ' + error.message);
+  try {
+    localStorage.removeItem(`fit-pwa-local-v1:${uid}`);
+    if (localStorage.getItem('fit-legacy-owner') === uid) {
+      localStorage.removeItem('fit-pwa-local-v1');
+    }
+  } catch {}
+  await supabase.auth.signOut().catch(() => {});
+  currentUser = null;
+  setStoreUser(null);
+  dispatchSyncChange();
 }
 
 setupAuthListener();

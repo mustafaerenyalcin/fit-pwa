@@ -16,18 +16,18 @@ import Panel from '../components/Panel.jsx';
 export default function ProfileView({ profile, onSaveProfile }) {
   const [formData, setFormData] = useState({
     name: profile.name || '',
-    height: profile.height || 180,
-    weight: profile.weight || 77,
+    height: profile.height || '',
+    weight: profile.weight || '',
     age: profile.age || '',
-    sex: profile.sex || 'male',
+    sex: profile.sex || '',
     activity: profile.activity || 'medium',
     training: profile.training || 'home',
-    experience: profile.experience || 'returning',
+    experience: profile.experience || 'beginner',
     goal: profile.goal || 'recomp',
-    focus: profile.focus || 'shoulders-abs',
-    trainingFrequency: profile.trainingFrequency || 5,
-    equipmentDumbbells: profile.equipmentDumbbells || 'Ayarlanabilir dambıl seti (2×5kg, 2×10kg)',
-    injuries: profile.injuries || 'Belirli bir sakatlık yok',
+    focus: profile.focus || 'balanced',
+    trainingFrequency: profile.trainingFrequency || 4,
+    equipmentDumbbells: profile.equipmentDumbbells || '',
+    injuries: profile.injuries || '',
     water: profile.water || 2500,
     steps: profile.steps || 8000
   });
@@ -49,10 +49,9 @@ export default function ProfileView({ profile, onSaveProfile }) {
   return (
     <div className="profileView">
       <div className="intro">
-        <h2>Profil ve Kişisel Hedefler</h2>
         <p>
-          Uygulama tamamen senin hedeflerine göre çalışır. Boy, kilo, antrenman sıklığı, dambıl
-          ekipmanların ve sakatlık durumun antrenman ve kalori hesaplamalarına anında yansır.
+          Boy, kilo, hedef, ekipman ve sakatlık bilgilerin kalori hesabına ve AI koçun önerilerine
+          anında yansır. Ekipmanını değiştirirsen Antrenman sekmesinden programını yeniden oluştur.
         </p>
       </div>
 
@@ -183,8 +182,9 @@ export default function ProfileView({ profile, onSaveProfile }) {
               value={formData.focus}
               onChange={(e) => handleChange('focus', e.target.value)}
             >
-              <option value="shoulders-abs">Omuz ve Karın (Geniş omuz & belirgin core)</option>
+              <option value="shoulders-abs">Omuz ve Karın (Geniş omuz &amp; belirgin core)</option>
               <option value="upper-body">Tüm Üst Vücut (Göğüs, Sırt, Omuz, Kol)</option>
+              <option value="glutes-legs">Bacak ve Kalça</option>
               <option value="balanced">Tüm Vücut Dengeli Gelişim</option>
             </select>
           </label>
@@ -195,9 +195,10 @@ export default function ProfileView({ profile, onSaveProfile }) {
               value={formData.trainingFrequency}
               onChange={(e) => handleChange('trainingFrequency', Number(e.target.value))}
             >
+              <option value={2}>Haftada 2 Gün</option>
               <option value={3}>Haftada 3 Gün</option>
               <option value={4}>Haftada 4 Gün</option>
-              <option value={5}>Haftada 5 Gün (Önerilen Program)</option>
+              <option value={5}>Haftada 5 Gün</option>
               <option value={6}>Haftada 6 Gün</option>
             </select>
           </label>

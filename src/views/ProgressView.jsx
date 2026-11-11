@@ -22,6 +22,7 @@ import EmptyState from '../components/EmptyState.jsx';
 import PhotoCompareModal from '../components/PhotoCompareModal.jsx';
 import { getExerciseHistory } from '../lib/exerciseStats.js';
 import { calculateBMI, calculateWaistToHeightRatio } from '../lib/calculations.js';
+import { getStoreUser } from '../lib/store.js';
 
 export default function ProgressView({
   day,
@@ -42,10 +43,14 @@ export default function ProgressView({
   const [shoulders, setShoulders] = useState('');
   const [legs, setLegs] = useState('');
 
-  // Private Photos stored in localStorage (base64)
+  // Private Photos stored in localStorage per user (base64)
+  const photoKey = `fit-private-photos:${getStoreUser() || 'anon'}`;
   const [photos, setPhotos] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('fit-private-photos')) || [];
+      const own = localStorage.getItem(photoKey);
+      if (own) return JSON.parse(own) || [];
+      const legacy = localStorage.getItem('fit-private-photos');
+      return legacy ? JSON.parse(legacy) || [] : [];
     } catch {
       return [];
     }
@@ -73,7 +78,7 @@ export default function ProgressView({
         const updated = [newPhoto, ...photos];
         setPhotos(updated);
         try {
-          localStorage.setItem('fit-private-photos', JSON.stringify(updated));
+          localStorage.setItem(photoKey, JSON.stringify(updated));
         } catch (err) {
           alert('Cihaz depolama alanı yetersiz olabilir.');
         }
@@ -87,7 +92,7 @@ export default function ProgressView({
     const updated = photos.filter((p) => p.id !== id);
     setPhotos(updated);
     try {
-      localStorage.setItem('fit-private-photos', JSON.stringify(updated));
+      localStorage.setItem(photoKey, JSON.stringify(updated));
     } catch {}
   };
 

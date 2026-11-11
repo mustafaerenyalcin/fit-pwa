@@ -10,7 +10,7 @@ import {
   Activity
 } from 'lucide-react';
 import Panel from '../components/Panel.jsx';
-import { homePlans, gymPlans, restDayInfo } from '../lib/workoutPlans.js';
+import { getWorkoutForDay } from '../lib/workoutPlans.js';
 import { getWeekDates } from '../lib/calculations.js';
 import { calculateWorkoutVolume } from '../lib/exerciseStats.js';
 
@@ -22,7 +22,6 @@ export default function CalendarView({
   onNavigateToTraining
 }) {
   const weekDates = getWeekDates(day);
-  const currentPlans = profile.training === 'gym' ? gymPlans : homePlans;
 
   // Calculate week stats
   let completedWorkouts = 0;
@@ -55,21 +54,10 @@ export default function CalendarView({
           const dayWorkouts = entries.workout.filter((e) => e.day === item.date);
           const isDone = dayWorkouts.length > 0;
 
-          // Determine plan for that day
-          let dayPlanName = '';
-          let dayFocus = '';
-
-          if (idx < 5) {
-            const plan = currentPlans[idx];
-            dayPlanName = plan?.name || 'Antrenman';
-            dayFocus = plan?.focus || '';
-          } else if (idx === 5) {
-            dayPlanName = restDayInfo.saturday.name;
-            dayFocus = restDayInfo.saturday.focus;
-          } else {
-            dayPlanName = restDayInfo.sunday.name;
-            dayFocus = restDayInfo.sunday.focus;
-          }
+          // Determine plan for that day (AI programı varsa o kullanılır)
+          const plan = getWorkoutForDay(profile.training || 'home', idx);
+          const dayPlanName = plan?.name || (idx < 5 ? 'Antrenman' : 'Dinlenme');
+          const dayFocus = plan?.focus || '';
 
           return (
             <button

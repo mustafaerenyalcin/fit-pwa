@@ -1,3 +1,5 @@
+import { getSetting } from './store.js';
+
 /**
  * Scientifically-structured Workout Programs
  * Features:
@@ -659,9 +661,73 @@ export const restDayInfo = Object.freeze({
 });
 
 /**
- * Helper to get workout plan by training mode and day index
+ * AI tarafından kullanıcıya özel üretilen program (settings -> 'customProgram').
+ * Biçim: { name, summary, createdAt, days: [{ dayIndex, rest, name, focus, moves?, tips? }] }
+ * @returns {object|null}
+ */
+export function getCustomProgram() {
+  try {
+    const program = getSetting('customProgram');
+    if (program && Array.isArray(program.days) && program.days.length) return program;
+  } catch {}
+  return null;
+}
+
+/**
+ * Bir program gününü uygulamanın plan biçimine dönüştürür.
+ */
+function normalizeCustomDay(day) {
+  if (!day) return null;
+  if (day.rest || !Array.isArray(day.moves) || !day.moves.length) {
+    return {
+      day: day.dayIndex,
+      rest: true,
+      name: day.name || 'Dinlenme',
+      focus: day.focus || 'Toparlanma',
+      tips: Array.isArray(day.tips) && day.tips.length ? day.tips : ['Hafif yürüyüş ve esneme ile toparlan.']
+    };
+  }
+  return {
+    day: day.dayIndex,
+    name: day.name,
+    focus: day.focus || '',
+    custom: true,
+    moves: day.moves.map((m) => ({
+      name: m.name,
+      muscle: m.muscle || 'Kas',
+      sets: m.sets || `${m.defaultSets || 3} × 10-12`,
+      defaultSets: Number(m.defaultSets) || 3,
+      restSeconds: Number(m.restSeconds) || 75,
+      suggestedKg: m.suggestedKg ?? '',
+      tip: m.tip || '',
+      alternatives: Array.isArray(m.alternatives) ? m.alternatives : []
+    }))
+  };
+}
+
+/**
+ * AI programındaki antrenman günlerini (dinlenme hariç) döndürür.
+ */
+export function getCustomTrainingDays() {
+  const program = getCustomProgram();
+  if (!program) return [];
+  return program.days
+    .map(normalizeCustomDay)
+    .filter((d) => d && !d.rest)
+    .sort((a, b) => a.day - b.day);
+}
+
+/**
+ * Helper to get workout plan by training mode and day index.
+ * Kullanıcının AI programı varsa öncelik onundur.
  */
 export function getWorkoutForDay(trainingMode = 'home', dayIndex = 0) {
+  const program = getCustomProgram();
+  if (program) {
+    const custom = program.days.find((d) => Number(d.dayIndex) === Number(dayIndex));
+    return normalizeCustomDay(custom) || { day: dayIndex, rest: true, name: 'Dinlenme', focus: 'Toparlanma', tips: [] };
+  }
+
   if (dayIndex === 5) return restDayInfo.saturday;
   if (dayIndex === 6) return restDayInfo.sunday;
 

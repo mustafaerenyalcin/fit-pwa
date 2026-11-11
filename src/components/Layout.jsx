@@ -1,143 +1,114 @@
 import React from 'react';
-import {
-  Activity,
-  LayoutDashboard,
-  Dumbbell,
-  Utensils,
-  ChartNoAxesCombined,
-  Settings2,
-  HeartPulse,
-  CalendarDays,
-  Bot,
-  KeyRound,
-  ArrowRight,
-  Wifi,
-  WifiOff
-} from 'lucide-react';
+import { Sun, Dumbbell, Utensils, LineChart, Bot, ChevronLeft, ChevronRight, WifiOff, Settings } from 'lucide-react';
+import { today } from '../lib/calculations.js';
 
-const menus = [
-  ['dashboard', 'Genel Bakış', LayoutDashboard],
-  ['calendar', 'Haftalık Plan', CalendarDays],
+export const TABS = [
+  ['today', 'Bugün', Sun],
   ['training', 'Antrenman', Dumbbell],
   ['nutrition', 'Beslenme', Utensils],
-  ['progress', 'Gelişim', ChartNoAxesCombined],
-  ['habits', 'Sağlıklı Yaşam', HeartPulse],
-  ['profile', 'Profil ve Hedefler', Settings2],
-  ['coach', 'Fit AI Koç', Bot],
-  ['sync', 'Senkronizasyon', KeyRound]
+  ['progress', 'Gelişim', LineChart],
+  ['coach', 'Koç', Bot]
 ];
 
-export default function Layout({
-  tab,
-  setTab,
-  day,
-  setDay,
-  profile,
-  online = true,
-  installed = false,
-  children
-}) {
-  const userName = profile?.name || profile?.username || 'Sporcu';
+const TITLES = {
+  today: 'Bugün',
+  training: 'Antrenman',
+  nutrition: 'Beslenme',
+  progress: 'Gelişim',
+  coach: 'AI Koç',
+  settings: 'Ayarlar'
+};
+
+const shiftDay = (iso, delta) => {
+  const d = new Date(iso + 'T12:00:00');
+  d.setDate(d.getDate() + delta);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+const formatDay = (iso) => {
+  const t = today();
+  if (iso === t) return 'Bugün';
+  if (iso === shiftDay(t, -1)) return 'Dün';
+  return new Date(iso + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', weekday: 'short' });
+};
+
+export default function Layout({ tab, setTab, day, setDay, profile, online = true, children }) {
+  const userName = profile?.name || 'Sporcu';
+  const showDate = ['today', 'training', 'nutrition'].includes(tab);
+  const isToday = day === today();
 
   return (
-    <div className="appLayout">
-      {/* Desktop Sidebar */}
-      <aside className="sidebar">
-        <div className="sidebarHeader">
-          <div className="brandLogo">
-            fit<span className="brandDot">.</span>
-          </div>
-          <div className={`statusIndicator ${online ? 'online' : 'offline'}`} title={online ? 'Çevrimiçi' : 'Çevrimdışı'}>
-            {online ? <Wifi size={14} /> : <WifiOff size={14} />}
-            <span>{online ? 'Çevrimiçi' : 'Çevrimdışı'}</span>
-          </div>
+    <div className="fx-app">
+      {/* Masaüstü yan menü */}
+      <aside className="fx-sidebar">
+        <div className="fx-logo">
+          fit<span>.</span>
         </div>
-
-        <nav className="sidebarNav">
-          {menus.map(([id, label, Icon]) => {
-            const isActive = tab === id;
-            return (
-              <button
-                key={id}
-                type="button"
-                className={`navItem ${isActive ? 'active' : ''}`}
-                onClick={() => setTab(id)}
-              >
-                <Icon size={18} className="navIcon" />
-                <span className="navLabel">{label}</span>
-                {isActive && <span className="navActivePip" />}
-              </button>
-            );
-          })}
+        <nav>
+          {TABS.map(([id, label, Icon]) => (
+            <button key={id} type="button" className={tab === id ? 'active' : ''} onClick={() => setTab(id)}>
+              <Icon size={19} />
+              <span>{label}</span>
+            </button>
+          ))}
         </nav>
-
-        <div className="sidebarFooter">
-          <div className="userBadge">
-            <div className="userAvatar">
-              {userName.charAt(0).toUpperCase()}
-            </div>
-            <div className="userMeta">
-              <span className="userName">{userName}</span>
-              <span className="userRole">{profile?.level || 'Standart Plan'}</span>
-            </div>
-          </div>
-        </div>
+        <button type="button" className={`fx-sideUser ${tab === 'settings' ? 'active' : ''}`} onClick={() => setTab('settings')}>
+          <span className="fx-avatar">{userName.charAt(0).toUpperCase()}</span>
+          <span className="fx-sideUserMeta">
+            <b>{userName}</b>
+            <small>Profil ve ayarlar</small>
+          </span>
+          <Settings size={16} />
+        </button>
       </aside>
 
-      {/* Main Content Area */}
-      <div className="mainWrapper">
-        {/* Top Header */}
-        <header className="appHeader">
-          <div className="mobileBrand">
-            <span className="brandLogo">
-              fit<span className="brandDot">.</span>
-            </span>
-          </div>
-
-          <div className="headerControls">
-            {setDay && (
-              <div className="datePickerWrapper">
-                <CalendarDays size={16} className="dateIcon" />
-                <input
-                  type="date"
-                  className="dateInput"
-                  value={day || ''}
-                  onChange={(e) => setDay(e.target.value)}
-                  aria-label="Tarih seçin"
-                />
+      <div className="fx-main">
+        <header className="fx-header">
+          <h1>{TITLES[tab] || ''}</h1>
+          <div className="fx-headerRight">
+            {!online && (
+              <span className="fx-offline" title="Çevrimdışı: veriler cihazda saklanıyor">
+                <WifiOff size={14} /> Çevrimdışı
+              </span>
+            )}
+            {showDate && (
+              <div className="fx-dateNav">
+                <button type="button" onClick={() => setDay(shiftDay(day, -1))} aria-label="Önceki gün">
+                  <ChevronLeft size={18} />
+                </button>
+                <button type="button" className="fx-dateLabel" onClick={() => setDay(today())} disabled={isToday}>
+                  {formatDay(day)}
+                </button>
+                <button type="button" onClick={() => setDay(shiftDay(day, 1))} disabled={isToday} aria-label="Sonraki gün">
+                  <ChevronRight size={18} />
+                </button>
               </div>
             )}
-
-            <div className={`mobileStatus ${online ? 'online' : 'offline'}`}>
-              {online ? <Wifi size={16} /> : <WifiOff size={16} />}
-            </div>
+            <button type="button" className="fx-avatarBtn" onClick={() => setTab('settings')} aria-label="Profil ve ayarlar">
+              <span className="fx-avatar">{userName.charAt(0).toUpperCase()}</span>
+            </button>
           </div>
         </header>
 
-        {/* Content Body */}
-        <main className="contentArea">
+        <main className="fx-content" key={tab}>
           {children}
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="mobileBottomNav">
-        <div className="mobileNavScroll">
-          {menus.map(([id, label, Icon]) => {
-            const isActive = tab === id;
-            return (
-              <button
-                key={id}
-                type="button"
-                className={`mobileNavItem ${isActive ? 'active' : ''}`}
-                onClick={() => setTab(id)}
-              >
-                <Icon size={20} className="mobileNavIcon" />
-                <span className="mobileNavLabel">{label}</span>
-              </button>
-            );
-          })}
-        </div>
+      {/* Mobil alt sekme çubuğu */}
+      <nav className="fx-tabbar" aria-label="Ana menü">
+        {TABS.map(([id, label, Icon]) => (
+          <button
+            key={id}
+            type="button"
+            className={tab === id ? 'active' : ''}
+            onClick={() => setTab(id)}
+            aria-current={tab === id ? 'page' : undefined}
+          >
+            <Icon size={22} strokeWidth={tab === id ? 2.4 : 1.8} />
+            <span>{label}</span>
+          </button>
+        ))}
       </nav>
     </div>
   );

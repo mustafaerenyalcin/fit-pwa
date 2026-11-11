@@ -50,6 +50,9 @@ export default function ActiveWorkoutModal({
       const alternatives = move.alternatives || [];
 
       const prev = previousWorkout?.payload?.sets?.[name];
+      // AI planlarında önerilen ağırlık ve set sayısı gelir; önceki kayıt varsa o önceliklidir.
+      const startKg = prev?.kg || (move.suggestedKg && move.suggestedKg !== '0' ? String(move.suggestedKg) : '');
+      const setCount = Math.min(6, Math.max(1, Number(move.defaultSets) || 3));
       return {
         name,
         targetReps: reps,
@@ -58,11 +61,13 @@ export default function ActiveWorkoutModal({
         alternatives,
         previousKg: prev?.kg || '',
         previousReps: prev?.reps || '',
-        sets: [
-          { type: 'normal', kg: prev?.kg || '', reps: prev?.reps || '', rpe: 8, done: false },
-          { type: 'normal', kg: prev?.kg || '', reps: prev?.reps || '', rpe: 8, done: false },
-          { type: 'normal', kg: prev?.kg || '', reps: prev?.reps || '', rpe: 8, done: false }
-        ]
+        sets: Array.from({ length: setCount }, () => ({
+          type: 'normal',
+          kg: startKg,
+          reps: prev?.reps || '',
+          rpe: 8,
+          done: false
+        }))
       };
     });
 

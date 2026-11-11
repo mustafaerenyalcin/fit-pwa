@@ -15,7 +15,9 @@ export const CATEGORIES = Object.freeze([
   'meal',
   'habit',
   'weight',
-  'supplement'
+  'supplement',
+  'checkin',
+  'report'
 ]);
 
 /**
@@ -30,6 +32,61 @@ const DEFAULT_STATE = {
 // In-memory cache and subscriber listeners
 let db = null;
 const listeners = new Set();
+
+/**
+ * Per-user storage
+ * Her hesabın verisi ayrı bir localStorage anahtarında tutulur: `fit-pwa-local-v1:<userId>`.
+ * Böylece aynı cihazda farklı hesaplar açıldığında veriler birbirine karışmaz.
+ *
+ * Eski (tek kullanıcılı) sürümden kalan veri `fit-pwa-local-v1` anahtarındadır.
+ * Bu cihazda giriş yapan İLK hesap bu veriyi devralır (LEGACY_OWNER_KEY ile işaretlenir);
+ * eski veri silinmez, yedek olarak yerinde kalır.
+ */
+const LEGACY_OWNER_KEY = 'fit-legacy-owner';
+let activeKey = null;
+let activeUserId = null;
+
+const userKey = (uid) => `${STORE_KEY}:${uid}`;
+
+/**
+ * Aktif kullanıcıyı ayarlar ve o kullanıcının yerel verisini yükler.
+ * @param {string|null} uid - Supabase kullanıcı ID'si (çıkışta null)
+ */
+export function setStoreUser(uid) {
+  if (uid === activeUserId && db) return;
+  activeUserId = uid || null;
+  activeKey = uid ? userKey(uid) : null;
+
+  if (uid && typeof window !== 'undefined' && window.localStorage) {
+    try {
+      const hasOwn = localStorage.getItem(activeKey) !== null;
+      const legacy = localStorage.getItem(STORE_KEY);
+      const owner = localStorage.getItem(LEGACY_OWNER_KEY);
+      if (!hasOwn && legacy && !owner) {
+        localStorage.setItem(activeKey, legacy);
+        localStorage.setItem(LEGACY_OWNER_KEY, uid);
+      }
+    } catch (err) {
+      console.error('[Fit Store] Legacy migration failed:', err);
+    }
+  }
+
+  db = read();
+  notify();
+}
+
+/** @returns {string|null} */
+export function getStoreUser() {
+  return activeUserId;
+}
+
+/**
+ * Bu cihazda eski (hesapsız) sürümden kalan veri var mı ve henüz sahiplenilmedi mi?
+ */
+export function hasUnclaimedLegacyData() {
+  if (typeof window === 'undefined' || !window.localStorage) return false;
+  return !!localStorage.getItem(STORE_KEY) && !localStorage.getItem(LEGACY_OWNER_KEY);
+}
 
 /**
  * Generates ISO 8601 timestamp string
@@ -66,12 +123,12 @@ const notify = () => {
  * @returns {{ settings: Record<string, any>, records: Array<any>, deleted: Array<any> }}
  */
 export function read() {
-  if (typeof window === 'undefined' || !window.localStorage) {
-    return { ...DEFAULT_STATE };
+  if (typeof window === 'undefined' || !window.localStorage || !activeKey) {
+    return { settings: {}, records: [], deleted: [] };
   }
 
   try {
-    const raw = localStorage.getItem(STORE_KEY);
+    const raw = localStorage.getItem(activeKey);
     if (!raw) {
       return { settings: {}, records: [], deleted: [] };
     }
@@ -110,9 +167,9 @@ export function persist(customDb) {
     db = read();
   }
 
-  if (typeof window !== 'undefined' && window.localStorage) {
+  if (typeof window !== 'undefined' && window.localStorage && activeKey) {
     try {
-      localStorage.setItem(STORE_KEY, JSON.stringify(db));
+      localStorage.setItem(activeKey, JSON.stringify(db));
     } catch (error) {
       console.error('[Fit Store] Failed to persist data to localStorage:', error);
       throw new Error('Yerel hafızaya kaydedilemedi. Depolama alanı dolu olabilir.');
