@@ -3,109 +3,330 @@ import {
   Clock,
   Users,
   Calculator,
+  Zap,
+  Droplets,
+  Award,
+  Flame,
   HeartPulse,
   Scale,
+  ArrowLeft,
   Sparkles,
   Layers,
-  Flame,
-  Activity
+  ChevronRight
 } from 'lucide-react';
 import FastingTimer from '../components/FastingTimer.jsx';
 import GymBuddyStudio from '../components/GymBuddyStudio.jsx';
 import OneRepMaxCalc from '../components/OneRepMaxCalc.jsx';
+import TabataIntervalTimer from '../components/TabataIntervalTimer.jsx';
+import HydrationSmartLab from '../components/HydrationSmartLab.jsx';
+import AdonisRatioCalc from '../components/AdonisRatioCalc.jsx';
+import MetabolicEngineCalc from '../components/MetabolicEngineCalc.jsx';
 import RecoveryStudio from '../components/RecoveryStudio.jsx';
 import StrengthOverloadCard from '../components/StrengthOverloadCard.jsx';
 import BodyCompositionPro from '../components/BodyCompositionPro.jsx';
 import BeforeAfterSlider from '../components/BeforeAfterSlider.jsx';
-import { Segmented } from '../components/ui.jsx';
-import { useI18n } from '../lib/i18n.js';
 import { sounds } from '../lib/audio.js';
 
-export default function ToolsView({ profile, entries, target, onStartWorkout }) {
-  const { t } = useI18n();
-  const [activeTool, setActiveTool] = useState('fasting');
+export const TOOLS_CONFIG = [
+  {
+    id: 'fasting',
+    title: 'Aralıklı Oruç & Otofaji',
+    subtitle: '16:8, 18:6 protokolleri ve anlık metabolik yağ yakım evreleri',
+    symbol: '⏳',
+    category: 'nutrition',
+    badge: '16:8 Fazı',
+    color: '#00f0ff',
+    bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(0, 240, 255, 0.02))'
+  },
+  {
+    id: 'buddy',
+    title: 'Gym Buddy Partner',
+    subtitle: 'Ortak seri, canlı durum, dürtme ve motivasyon telemetrisi',
+    symbol: '👥',
+    category: 'training',
+    badge: 'Ortak Seri',
+    color: '#ff4d1c',
+    bg: 'linear-gradient(135deg, rgba(255, 77, 28, 0.18), rgba(255, 77, 28, 0.02))'
+  },
+  {
+    id: '1rm',
+    title: '1RM & Barbell Plaka',
+    subtitle: 'Tahmini tek tekrar maksimumu ve bara takılacak renkli plakalar',
+    symbol: '⚡',
+    category: 'training',
+    badge: 'Olimpik Bar',
+    color: '#f5c451',
+    bg: 'linear-gradient(135deg, rgba(245, 196, 81, 0.16), rgba(245, 196, 81, 0.02))'
+  },
+  {
+    id: 'tabata',
+    title: 'HIIT & Tabata Sayacı',
+    subtitle: 'Sesli geri sayımlı yüksek yoğunluklu interval kondisyon sayacı',
+    symbol: '⏱️',
+    category: 'training',
+    badge: '8 Tur · 4 Dk',
+    color: '#c8ff00',
+    bg: 'linear-gradient(135deg, rgba(200, 255, 0, 0.16), rgba(200, 255, 0, 0.02))'
+  },
+  {
+    id: 'hydration',
+    title: 'Akıllı Hidrasyon & Su',
+    subtitle: 'Kilo ve terleme faktörüne göre su hedefi ve elektrolit dengesi',
+    symbol: '💧',
+    category: 'nutrition',
+    badge: 'Canlı Dalga',
+    color: '#00b4d8',
+    bg: 'linear-gradient(135deg, rgba(0, 180, 216, 0.16), rgba(0, 180, 216, 0.02))'
+  },
+  {
+    id: 'adonis',
+    title: 'Adonis 1.618 Altın Oran',
+    subtitle: 'Omuz ve bel çevresiyle Antik Yunan heykeli V-Taper form skoru',
+    symbol: '🏛️',
+    category: 'biometrics',
+    badge: 'Altın Oran',
+    color: '#eab308',
+    bg: 'linear-gradient(135deg, rgba(234, 179, 8, 0.16), rgba(234, 179, 8, 0.02))'
+  },
+  {
+    id: 'metabolic',
+    title: 'Metabolik Motor & TDEE',
+    subtitle: 'Mifflin-St Jeor standardıyla BMR, TDEE ve hedef makro hesaplayıcı',
+    symbol: '🔥',
+    category: 'nutrition',
+    badge: 'BMR & TDEE',
+    color: '#ff4d1c',
+    bg: 'linear-gradient(135deg, rgba(255, 77, 28, 0.16), rgba(255, 77, 28, 0.02))'
+  },
+  {
+    id: 'recovery',
+    title: 'İyileşme & HRV Stüdyosu',
+    subtitle: 'Toparlanma puanı, kas yorgunluğu ve progresif yüklenme takibi',
+    symbol: '🧬',
+    category: 'biometrics',
+    badge: 'HRV Telemetri',
+    color: '#a855f7',
+    bg: 'linear-gradient(135deg, rgba(168, 85, 247, 0.16), rgba(168, 85, 247, 0.02))'
+  },
+  {
+    id: 'body',
+    title: 'Vücut Formu & Değişim',
+    subtitle: 'Vücut kompozisyonu, yağ oranı ve Before/After fotoğraf kaydırıcı',
+    symbol: '📐',
+    category: 'biometrics',
+    badge: 'Before / After',
+    color: '#94a3b8',
+    bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.16), rgba(148, 163, 184, 0.02))'
+  }
+];
 
-  const toolsList = [
-    { id: 'fasting', label: 'Aralıklı Oruç', icon: Clock },
-    { id: 'buddy', label: 'Gym Buddy', icon: Users },
-    { id: '1rm', label: '1RM & Plaka', icon: Calculator },
-    { id: 'recovery', label: 'İyileşme & HRV', icon: HeartPulse },
-    { id: 'body', label: 'Vücut & Form', icon: Scale }
-  ];
+export default function ToolsView({ profile, entries, target, onStartWorkout }) {
+  const [selectedToolId, setSelectedToolId] = useState(null); // null = launchpad grid, string = active tool
+  const [categoryFilter, setCategoryFilter] = useState('all');
+
+  const filteredTools = TOOLS_CONFIG.filter((t) => {
+    if (categoryFilter === 'all') return true;
+    return t.category === categoryFilter;
+  });
+
+  const activeTool = TOOLS_CONFIG.find((t) => t.id === selectedToolId);
+
+  const openTool = (id) => {
+    sounds.tap();
+    setSelectedToolId(id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const closeTool = () => {
+    sounds.tap();
+    setSelectedToolId(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div className="fx-stack fx-toolsStudio">
-      {/* ÜST EDİTORYAL BAŞLIK */}
-      <section className="fx-cockpitHeroBar fx-atelierHeroBar">
-        <div className="fx-cockpitGreetCol">
-          <div className="fx-atelierEyebrow">
-            <span>[LABORATORY // 04]</span> · ÖZEL BİYOMETRİK VE PERFORMANS ARAÇLARI
-          </div>
-          <h2 className="fx-cockpitGreeting fx-atelierDisplay">
-            Araçlar <span>&amp; Stüdyo Laboratuvarı</span>
-          </h2>
-          <p className="fx-cockpitSub">
-            Aralıklı oruç zamanlayıcısı, Gym Buddy partner yönetimi, 1RM hesaplayıcı ve toparlanma telemetrileri tek merkezde.
-          </p>
-        </div>
-      </section>
+    <div className="fx-stack fx-toolsStudioRoot">
+      {/* 1. EKRAN: EĞER BİR ARAÇ SEÇİLİ DEĞİLSE TÜM KARE BENTO IZGARASINI GÖSTER (LAUNCHPAD) */}
+      {!selectedToolId ? (
+        <div className="fx-stack animate-fade-in">
+          {/* ÜST EDİTORYAL BAŞLIK */}
+          <section className="fx-cockpitHeroBar fx-atelierHeroBar">
+            <div className="fx-cockpitGreetCol">
+              <div className="fx-atelierEyebrow">
+                <span>[LABORATORY // 04]</span> · BİYOMETRİK VE PERFORMANS MERKEZİ
+              </div>
+              <h2 className="fx-cockpitGreeting fx-atelierDisplay">
+                Araçlar <span>&amp; Stüdyo Launchpad</span>
+              </h2>
+              <p className="fx-cockpitSub">
+                Performansını, biyometrik ölçümlerini ve antrenmanlarını optimize eden 9 adet özel laboratuvar aracı.
+              </p>
+            </div>
+          </section>
 
-      {/* ARAÇ SEÇİCİ SEKMELER */}
-      <div className="fx-toolPillsBar">
-        {toolsList.map((tool) => {
-          const Icon = tool.icon;
-          const active = activeTool === tool.id;
-          return (
+          {/* KATEGORİ FİLTRE BUTONLARI */}
+          <div className="fx-categoryFilterRow">
             <button
-              key={tool.id}
               type="button"
-              className={`fx-toolPillBtn ${active ? 'active' : ''}`}
+              className={`fx-categoryPill ${categoryFilter === 'all' ? 'active' : ''}`}
               onClick={() => {
                 sounds.tap();
-                setActiveTool(tool.id);
+                setCategoryFilter('all');
               }}
             >
-              <Icon size={16} />
-              <span>{tool.label}</span>
+              <span>Tüm Araçlar ({TOOLS_CONFIG.length})</span>
             </button>
-          );
-        })}
-      </div>
-
-      {/* AKTİF ARAÇ İÇERİĞİ */}
-      <div className="fx-toolContentArea">
-        {activeTool === 'fasting' && (
-          <div className="fx-stack animate-fade-in">
-            <FastingTimer />
+            <button
+              type="button"
+              className={`fx-categoryPill ${categoryFilter === 'training' ? 'active' : ''}`}
+              onClick={() => {
+                sounds.tap();
+                setCategoryFilter('training');
+              }}
+            >
+              <span>⚡ Antrenman &amp; Güç</span>
+            </button>
+            <button
+              type="button"
+              className={`fx-categoryPill ${categoryFilter === 'nutrition' ? 'active' : ''}`}
+              onClick={() => {
+                sounds.tap();
+                setCategoryFilter('nutrition');
+              }}
+            >
+              <span>⏳ Oruç &amp; Beslenme</span>
+            </button>
+            <button
+              type="button"
+              className={`fx-categoryPill ${categoryFilter === 'biometrics' ? 'active' : ''}`}
+              onClick={() => {
+                sounds.tap();
+                setCategoryFilter('biometrics');
+              }}
+            >
+              <span>🏛️ Biyometri &amp; Form</span>
+            </button>
           </div>
-        )}
 
-        {activeTool === 'buddy' && (
-          <div className="fx-stack animate-fade-in">
-            <GymBuddyStudio profile={profile} onStartWorkout={onStartWorkout} />
-          </div>
-        )}
+          {/* KARE BENTO IZGARA (SQUARE BENTO TILES GRID) */}
+          <div className="fx-toolsBentoGrid">
+            {filteredTools.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className="fx-squareToolCard"
+                onClick={() => openTool(t.id)}
+                style={{
+                  '--card-accent': t.color,
+                  '--card-bg': t.bg
+                }}
+              >
+                <div className="fx-squareToolTop">
+                  <div className="fx-squareToolSymbolBox">
+                    <span className="fx-toolSymbol">{t.symbol}</span>
+                  </div>
+                  <span className="fx-toolMicroBadge">{t.badge}</span>
+                </div>
 
-        {activeTool === '1rm' && (
-          <div className="fx-stack animate-fade-in">
-            <OneRepMaxCalc />
-          </div>
-        )}
+                <div className="fx-squareToolBody">
+                  <h3 className="fx-squareToolTitle">{t.title}</h3>
+                  <p className="fx-squareToolSub">{t.subtitle}</p>
+                </div>
 
-        {activeTool === 'recovery' && (
-          <div className="fx-stack animate-fade-in">
-            <RecoveryStudio />
-            <StrengthOverloadCard entries={entries} />
+                <div className="fx-squareToolBottom">
+                  <span className="fx-openToolLink">
+                    Aracı Aç <ChevronRight size={13} />
+                  </span>
+                </div>
+              </button>
+            ))}
           </div>
-        )}
+        </div>
+      ) : (
+        /* 2. EKRAN: BİR ARAÇ SEÇİLDİĞİNDE - ÜSTTE VE ALTTA MENÜ ÇUBUĞUYLA AKICI GEÇİŞ SAHNESİ */
+        <div className="fx-stack fx-activeToolStage animate-slide-up">
+          {/* ÜST GEÇİŞ & KONTROL ÇUBUĞU (STICKY TOOLS NAV BAR) */}
+          <div className="fx-toolsNavBar">
+            <button
+              type="button"
+              className="fx-toolsBackBtn"
+              onClick={closeTool}
+              title="Tüm Araçlara Geri Dön"
+            >
+              <ArrowLeft size={16} />
+              <span>Tüm Araçlar</span>
+            </button>
 
-        {activeTool === 'body' && (
-          <div className="fx-stack animate-fade-in">
-            <BodyCompositionPro profile={profile} entries={entries} />
-            <BeforeAfterSlider profile={profile} entries={entries} />
+            {/* DİĞER ARAÇLARA TEK TIKLA ATLAMAYI SAĞLAYAN YATAY KARE KISAYOL DOKU */}
+            <div className="fx-toolsMiniDock" aria-label="Araçlar Hızlı Geçiş">
+              {TOOLS_CONFIG.map((t) => {
+                const isActive = t.id === selectedToolId;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    className={`fx-miniToolSquare ${isActive ? 'active' : ''}`}
+                    onClick={() => openTool(t.id)}
+                    title={t.title}
+                    style={{ '--mini-accent': t.color }}
+                  >
+                    <span className="fx-miniSymbol">{t.symbol}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        )}
-      </div>
+
+          {/* AKTİF ARACIN İÇERİĞİ */}
+          <div className="fx-toolInnerContainer animate-fade-in" key={selectedToolId}>
+            {selectedToolId === 'fasting' && <FastingTimer />}
+            {selectedToolId === 'buddy' && (
+              <GymBuddyStudio profile={profile} onStartWorkout={onStartWorkout} />
+            )}
+            {selectedToolId === '1rm' && <OneRepMaxCalc />}
+            {selectedToolId === 'tabata' && <TabataIntervalTimer />}
+            {selectedToolId === 'hydration' && (
+              <HydrationSmartLab profile={profile} entries={entries} target={target} />
+            )}
+            {selectedToolId === 'adonis' && <AdonisRatioCalc profile={profile} />}
+            {selectedToolId === 'metabolic' && <MetabolicEngineCalc profile={profile} />}
+            {selectedToolId === 'recovery' && (
+              <div className="fx-stack">
+                <RecoveryStudio />
+                <StrengthOverloadCard entries={entries} />
+              </div>
+            )}
+            {selectedToolId === 'body' && (
+              <div className="fx-stack">
+                <BodyCompositionPro profile={profile} entries={entries} />
+                <BeforeAfterSlider profile={profile} entries={entries} />
+              </div>
+            )}
+          </div>
+
+          {/* ALT GEÇİŞ DOKU (MOBİLDE BAŞPARMAKLA ANINDA DİĞER ARACA GEÇİŞ İÇİN) */}
+          <div className="fx-toolsBottomDock">
+            <button type="button" className="fx-bottomDockBack" onClick={closeTool}>
+              <ArrowLeft size={15} /> Launchpad
+            </button>
+            <div className="fx-bottomDockIcons">
+              {TOOLS_CONFIG.map((t) => {
+                const isActive = t.id === selectedToolId;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    className={`fx-bottomDockTile ${isActive ? 'active' : ''}`}
+                    onClick={() => openTool(t.id)}
+                    title={t.title}
+                  >
+                    <span>{t.symbol}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
