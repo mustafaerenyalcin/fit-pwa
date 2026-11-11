@@ -18,10 +18,9 @@ export function getApiUrl() {
   if (envBase) return `${envBase.replace(/\/$/, '')}/.netlify/functions/fit-coach`;
 
   if (typeof window !== 'undefined') {
-    const { protocol, hostname } = window.location;
+    const { protocol } = window.location;
     const isWeb = protocol === 'http:' || protocol === 'https:';
-    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || /^192\.168\./.test(hostname);
-    if (isWeb && !isLocal) return '/.netlify/functions/fit-coach';
+    if (isWeb) return '/.netlify/functions/fit-coach';
   }
   return `${PRODUCTION_ORIGIN}/.netlify/functions/fit-coach`;
 }
