@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Cloud, RefreshCw, Download, Upload, LogOut, Trash2, Smartphone, Shield, FileText } from 'lucide-react';
+import { Cloud, RefreshCw, Download, Upload, LogOut, Trash2, Smartphone, Shield, FileText, Sun, Moon, Bell } from 'lucide-react';
 import ProfileView from './ProfileView.jsx';
 import { Segmented, Card } from '../components/ui.jsx';
 import { getAuthState, getSyncState, sync, signout, deleteAccount } from '../lib/supabase.js';
 import { exportBackup, importBackup } from '../lib/store.js';
+import { getTheme, setTheme, getReminderConfig, toggleMorningReminder } from '../lib/notifications.js';
 
 const APP_VERSION = '1.0.0';
 
 export default function SettingsView({ profile, onSaveProfile, installed, setMessage }) {
   const [section, setSection] = useState('profile');
   const [, force] = useState(0);
+  const [themeMode, setThemeMode] = useState(getTheme);
+  const [reminder, setReminder] = useState(getReminderConfig);
   const { user } = getAuthState();
   const syncState = getSyncState();
 
@@ -96,6 +99,55 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
               </div>
             </Card>
           )}
+
+          <Card title="Görünüm ve Bildirimler" subtitle="Tema tercihi ve günlük sabah check-in hatırlatıcısı">
+            <div className="fx-stack" style={{ gap: 12 }}>
+              <div className="fx-rowBetween">
+                <div className="fx-syncInfo">
+                  {themeMode === 'light' ? <Sun size={18} className="fx-accentIcon" /> : <Moon size={18} className="fx-accentIcon" />}
+                  <div>
+                    <b>Uygulama Teması</b>
+                    <small>{themeMode === 'light' ? 'Açık tema aktif' : 'Koyu tema aktif (OLED dostu)'}</small>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="fx-btn fx-btn--ghost fx-btn--sm"
+                  onClick={() => {
+                    const next = setTheme(themeMode === 'dark' ? 'light' : 'dark');
+                    setThemeMode(next);
+                  }}
+                >
+                  {themeMode === 'dark' ? 'Açık Temaya Geç' : 'Koyu Temaya Geç'}
+                </button>
+              </div>
+
+              <div className="fx-rowBetween" style={{ borderTop: '1px solid var(--fx-border)', paddingTop: 12 }}>
+                <div className="fx-syncInfo">
+                  <Bell size={18} className="fx-accentIcon" />
+                  <div>
+                    <b>Sabah Check-in & Su Hatırlatıcısı</b>
+                    <small>{reminder.enabled ? `Her gün ${reminder.time} bildirim açık` : 'Günlük bildirimler kapalı'}</small>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className={`fx-btn fx-btn--sm ${reminder.enabled ? 'fx-btn--primary' : 'fx-btn--ghost'}`}
+                  onClick={async () => {
+                    try {
+                      const next = await toggleMorningReminder(!reminder.enabled, reminder.time);
+                      setReminder(next);
+                      setMessage(next.enabled ? 'Günlük bildirimler açıldı.' : 'Bildirimler kapatıldı.');
+                    } catch (e) {
+                      setMessage(e.message);
+                    }
+                  }}
+                >
+                  {reminder.enabled ? 'Açık' : 'Aç'}
+                </button>
+              </div>
+            </div>
+          </Card>
 
           <Card title="Verilerim" subtitle="Verilerin sana aittir; istediğin zaman indirebilirsin.">
             <div className="fx-btnRow">

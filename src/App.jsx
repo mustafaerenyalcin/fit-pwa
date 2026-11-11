@@ -1,27 +1,29 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef, lazy, Suspense } from 'react';
 import Layout from './components/Layout.jsx';
 import ActiveWorkoutModal from './components/ActiveWorkoutModal.jsx';
 import AuthScreen from './components/AuthScreen.jsx';
 import Onboarding from './components/Onboarding.jsx';
 import AiMealLogger from './components/AiMealLogger.jsx';
+import SmartMealRecommender from './components/SmartMealRecommender.jsx';
 import WeeklyReport from './components/WeeklyReport.jsx';
 import ProgramGenerator from './components/ProgramGenerator.jsx';
-import { Segmented } from './components/ui.jsx';
+import { Segmented, Skeleton } from './components/ui.jsx';
 
 import TodayView from './views/TodayView.jsx';
-import CalendarView from './views/CalendarView.jsx';
-import TrainingView from './views/TrainingView.jsx';
-import NutritionView from './views/NutritionView.jsx';
-import ProgressView from './views/ProgressView.jsx';
-import HabitsView from './views/HabitsView.jsx';
-import CoachView from './views/CoachView.jsx';
-import SettingsView from './views/SettingsView.jsx';
+const CalendarView = lazy(() => import('./views/CalendarView.jsx'));
+const TrainingView = lazy(() => import('./views/TrainingView.jsx'));
+const NutritionView = lazy(() => import('./views/NutritionView.jsx'));
+const ProgressView = lazy(() => import('./views/ProgressView.jsx'));
+const HabitsView = lazy(() => import('./views/HabitsView.jsx'));
+const CoachView = lazy(() => import('./views/CoachView.jsx'));
+const SettingsView = lazy(() => import('./views/SettingsView.jsx'));
 
-import { targets, today } from './lib/calculations.js';
+import { targets, today, calculateCalories } from './lib/calculations.js';
 import { DEFAULT_PROFILE } from './lib/constants.js';
 import { getSetting, setSetting, list, add, remove, subscribe } from './lib/store.js';
 import { scheduleSync, getAuthState, getSyncState } from './lib/supabase.js';
 import { getCustomProgram } from './lib/workoutPlans.js';
+import { initTheme } from './lib/notifications.js';
 
 const CATEGORIES = ['workout', 'meal', 'habit', 'weight', 'supplement', 'checkin', 'report'];
 const VALID_TABS = ['today', 'training', 'nutrition', 'progress', 'coach', 'settings'];
@@ -40,6 +42,7 @@ export default function App() {
   const [auth, setAuth] = useState(getAuthState());
 
   useEffect(() => {
+    initTheme();
     const h = () => setAuth(getAuthState());
     window.addEventListener('fit-sync-change', h);
     h();
@@ -253,6 +256,7 @@ function MainApp() {
 
   return (
     <Layout tab={tab} setTab={setTab} day={day} setDay={setDay} profile={profile} online={online}>
+      <Suspense fallback={<div className="fx-card"><Skeleton lines={5} /></div>}>
       {tab === 'today' && (
         <TodayView
           day={day}
@@ -307,6 +311,12 @@ function MainApp() {
       {tab === 'nutrition' && (
         <div className="fx-stack">
           <AiMealLogger profile={profile} onAddMeal={(payload) => handleAddEntry('meal', payload)} />
+          <SmartMealRecommender
+            totals={totals}
+            target={target}
+            targetCalories={calculateCalories(profile) || 2200}
+            onAddMeal={(payload) => handleAddEntry('meal', payload)}
+          />
           <NutritionView
             day={day}
             profile={profile}
@@ -363,6 +373,7 @@ function MainApp() {
       {tab === 'settings' && (
         <SettingsView profile={profile} onSaveProfile={handleSaveProfile} installed={installed} setMessage={showToast} />
       )}
+      </Suspense>
 
       {activeWorkoutPlan && (
         <ActiveWorkoutModal

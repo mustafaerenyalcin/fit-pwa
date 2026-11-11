@@ -1,6 +1,8 @@
 import React from 'react';
 import { Play, CheckCircle2, Droplets, Plus, Utensils, ChevronRight, Moon, Dumbbell } from 'lucide-react';
 import DailyCheckin from '../components/DailyCheckin.jsx';
+import StreakBar from '../components/StreakBar.jsx';
+import MuscleRecoveryMap from '../components/MuscleRecoveryMap.jsx';
 import { Card, Ring } from '../components/ui.jsx';
 import { getWorkoutForDay } from '../lib/workoutPlans.js';
 import { calculateCalories, today } from '../lib/calculations.js';
@@ -48,6 +50,9 @@ export default function TodayView({
           {greeting}, <b>{profile.name || 'şampiyon'}</b> 👋
         </p>
       )}
+
+      {/* 0. Seri (Streak), Seviye ve Rozet Çubuğu */}
+      <StreakBar entries={entries} target={target} />
 
       {/* 1. Günlük özet halkaları */}
       <div className="fx-summary">
@@ -156,6 +161,9 @@ export default function TodayView({
           <small>Yaz ya da fotoğrafla</small>
         </button>
       </div>
+
+      {/* 5. İnteraktif Kas Toparlanma Haritası */}
+      <MuscleRecoveryMap entries={entries} day={day} />
     </div>
   );
 }

@@ -31,6 +31,25 @@
   color-scheme: dark;
 }
 
+:root[data-theme="light"] {
+  --fx-bg: #f4f7fb;
+  --fx-surface: #ffffff;
+  --fx-surface-2: #eef3f9;
+  --fx-surface-3: #e3ebf5;
+  --fx-border: #d8e2ef;
+  --fx-border-strong: #c2d0e3;
+  --fx-text: #0f1724;
+  --fx-muted: #55657d;
+  --fx-faint: #7c8ca3;
+  --fx-accent: #52a814;
+  --fx-accent-strong: #44910d;
+  --fx-accent-ink: #ffffff;
+  --fx-accent-soft: rgba(82, 168, 20, 0.12);
+  --fx-track: #dde6f2;
+  --fx-shadow: 0 8px 24px rgba(15, 23, 36, 0.08);
+  color-scheme: light;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -820,6 +839,162 @@ main.fx-content .metrics { gap: 12px; }
   main.fx-content .planSwitcher { flex-wrap: wrap; }
   main.fx-content .introHeaderRow { flex-direction: column; align-items: stretch; gap: 12px; }
 }
+
+/* =====================================================================
+   Seri (Streak), Kas Haritası ve Akıllı Öğün Önericisi
+   ===================================================================== */
+.fx-streakCard { padding: 14px 16px; }
+.fx-streakTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+.fx-streakLeft { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.fx-flameBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border-strong);
+  color: var(--fx-muted);
+  flex-shrink: 0;
+  line-height: 1;
+}
+.fx-flameBadge.lit {
+  background: linear-gradient(145deg, rgba(255, 138, 61, 0.22), rgba(255, 196, 61, 0.08));
+  border-color: rgba(255, 152, 61, 0.45);
+  color: #ff983d;
+}
+.fx-flameBadge b { font-size: 13px; margin-top: 2px; }
+.fx-streakTitleRow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.fx-levelPill {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--fx-accent-soft);
+  color: var(--fx-accent);
+}
+.fx-streakRight { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.fx-weekDots { display: flex; gap: 4px; }
+.fx-dayDot {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--fx-faint);
+}
+.fx-dayDot.on {
+  background: var(--fx-accent);
+  border-color: var(--fx-accent);
+  color: var(--fx-accent-ink);
+}
+.fx-dayDot.today:not(.on) {
+  border-color: var(--fx-accent);
+  color: var(--fx-text);
+}
+@media (max-width: 520px) {
+  .fx-weekDots { display: none; }
+}
+.fx-streakDrawer {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--fx-border);
+  animation: fx-fade 0.2s ease;
+}
+.fx-badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.fx-badgeItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+}
+.fx-badgeItem.locked { opacity: 0.42; filter: grayscale(1); }
+.fx-badgeItem.unlocked { border-color: rgba(179, 244, 111, 0.35); background: var(--fx-accent-soft); }
+.fx-badgeIcon { font-size: 22px; }
+.fx-badgeItem b { display: block; font-size: 13px; }
+.fx-badgeItem small { display: block; font-size: 11px; color: var(--fx-muted); }
+
+/* Kas Toparlanma Haritası */
+.fx-muscleLayout {
+  display: grid;
+  grid-template-columns: 165px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+@media (max-width: 540px) {
+  .fx-muscleLayout { grid-template-columns: 1fr; }
+}
+.fx-bodySvgWrap {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 16px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+}
+.fx-bodySvg { width: 145px; height: auto; }
+.fx-musclePart { cursor: pointer; transition: opacity 0.15s, filter 0.15s; opacity: 0.85; }
+.fx-musclePart:hover,
+.fx-musclePart.selected { opacity: 1; filter: drop-shadow(0 0 6px rgba(179, 244, 111, 0.45)); }
+.fx-muscleList { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 420px) {
+  .fx-muscleList { grid-template-columns: 1fr; }
+}
+.fx-muscleRow {
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--fx-surface-2);
+  border: 1.5px solid var(--fx-border);
+  color: inherit;
+  cursor: pointer;
+}
+.fx-muscleRow.active { border-color: var(--fx-accent); background: var(--fx-accent-soft); }
+.fx-muscleRowTop { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+.fx-muscleBar {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--fx-track);
+  margin: 6px 0;
+  overflow: hidden;
+}
+.fx-muscleBar span { display: block; height: 100%; border-radius: 3px; transition: width 0.3s ease; }
+
+/* Akıllı Türk Mutfağı Kombinasyonları */
+.fx-comboList { display: grid; gap: 10px; }
+.fx-comboCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+}
+.fx-comboInfo { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.fx-comboInfo b { font-size: 14px; }
+.fx-comboBadges { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
 
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
