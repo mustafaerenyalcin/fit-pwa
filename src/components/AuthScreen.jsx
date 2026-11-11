@@ -4,19 +4,16 @@ import {
   Lock,
   User,
   ArrowRight,
-  Sparkles,
-  Dumbbell,
-  Utensils,
-  Flame,
   Eye,
   EyeOff,
   ShieldCheck,
-  Zap,
   CheckCircle2,
+  Building2,
   Activity,
-  Trophy,
-  Play,
-  HeartPulse
+  Database,
+  Check,
+  Globe,
+  Smartphone
 } from 'lucide-react';
 import { signin, signup, signinWithGoogle, resetPassword, continueAsLocalUser } from '../lib/supabase.js';
 import { hasUnclaimedLegacyData } from '../lib/store.js';
@@ -24,51 +21,151 @@ import { useI18n } from '../lib/i18n.js';
 
 const translateError = (msg = '') => {
   const m = msg.toLowerCase();
-  if (m.includes('invalid login')) return 'E-posta veya şifre hatalı. Bilgilerini kontrol edip tekrar dene.';
-  if (m.includes('email not confirmed')) return 'E-postanı henüz onaylamadın. Gelen kutunu kontrol et.';
+  if (m.includes('invalid login'))
+    return 'Girdiğiniz e-posta adresi veya şifre hatalı. Lütfen bilgilerinizi kontrol edin.';
+  if (m.includes('email not confirmed'))
+    return 'E-posta adresiniz henüz doğrulanmamış. Lütfen gelen kutunuzu kontrol edin.';
   if (m.includes('already registered') || m.includes('already been registered'))
-    return 'Bu e-posta ile zaten bir hesap var. Üstten "Oturum Aç" sekmesine geçebilirsin.';
-  if (m.includes('password should be')) return 'Şifre en az 6 karakter olmalıdır.';
-  if (m.includes('rate limit')) return 'Çok fazla deneme yapıldı. Lütfen 1 dakika bekle.';
+    return 'Bu e-posta adresiyle kayıtlı bir hesap zaten mevcut. "Oturum Aç" sekmesinden giriş yapabilirsiniz.';
+  if (m.includes('password should be'))
+    return 'Şifreniz güvenlik standartları gereği en az 6 karakter olmalıdır.';
+  if (m.includes('rate limit'))
+    return 'Çok fazla deneme yapıldı. Güvenliğiniz için lütfen 1 dakika bekleyin.';
   if (m.includes('provider is not enabled'))
-    return 'Google girişi henüz aktif edilmedi. E-posta veya Hızlı Giriş ile anında devam edebilirsin.';
-  if (m.includes('fetch')) return 'Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.';
-  return msg || 'İşlem sırasında bir hata oluştu.';
+    return 'Kurumsal Google SSO şu anda bakımda. E-posta ile kayıt olabilir veya yerel modda devam edebilirsiniz.';
+  if (m.includes('fetch'))
+    return 'Sunucu bağlantısı kurulamadı. Lütfen internet bağlantınızı kontrol edin.';
+  return msg || 'İşlem sırasında beklenmeyen bir hata oluştu.';
 };
 
-function calcPasswordStrength(pw = '') {
-  if (!pw) return { score: 0, label: '', color: 'transparent' };
-  let score = 0;
-  if (pw.length >= 6) score++;
-  if (pw.length >= 9) score++;
-  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
-  if (/[0-9!@#$%^&*._-]/.test(pw)) score++;
-  score = Math.max(1, Math.min(4, score));
-
-  const map = {
-    1: { label: 'Zayıf Şifre', color: '#ff6b6b' },
-    2: { label: 'Orta Güçte', color: '#f5c451' },
-    3: { label: 'İyi Şifre', color: '#7ee0ff' },
-    4: { label: 'Çok Güçlü', color: '#b3f46f' }
-  };
-  return { score, ...map[score] };
-}
+const CORP_COPY = {
+  tr: {
+    brandSub: 'SAĞLIK VE PERFORMANS TEKNOLOJİLERİ',
+    sslBadge: '256-Bit TLS Şifreli Altyapı · KVKK & GDPR Uyumlu',
+    heroTitle: 'Veriye Dayalı Kişisel Antrenman ve Beslenme Yönetimi',
+    heroLead:
+      'Biyomekanik yük takibi, adaptif makro kalibrasyonu ve yapay zeka destekli günlük hazırlık analizini tek bir güvenli bulut platformunda birleştirin.',
+    pillar1Title: 'Adaptif AI Antrenman Mimarisi',
+    pillar1Desc: 'Uyku, toparlanma ve ekipman envanterinize göre günlük otomatik hacim/yoğunluk optimizasyonu.',
+    pillar2Title: 'Klinik Düzeyde Beslenme & Makro Analitiği',
+    pillar2Desc: 'Metin, ses ve fotoğraf üzerinden porsiyon ayrıştırma, TDEE kalibrasyonu ve aralıklı oruç takibi.',
+    pillar3Title: 'İzole Bulut & Kurumsal Veri Güvenliği',
+    pillar3Desc: 'Her kullanıcıya özel şifreli veri alanı (RLS), cihazlar arası anlık senkronizasyon ve tam veri taşınabilirliği.',
+    tabSignin: 'Oturum Aç',
+    tabSignup: 'Üyelik Oluştur',
+    signinTitle: 'Hesabınıza Giriş Yapın',
+    signinSub: 'Kayıtlı e-posta adresiniz ve şifrenizle platforma erişin.',
+    signupTitle: 'Yeni Üyelik Oluşturun',
+    signupSub: 'Kişisel sağlık ve performans profilinizi oluşturmak için bilgilerinizi girin.',
+    resetTitle: 'Şifre Sıfırlama Talebi',
+    resetSub: 'Kayıtlı e-posta adresinizi girin; şifre yenileme bağlantısını iletelim.',
+    firstName: 'Ad',
+    lastName: 'Soyad',
+    firstNamePh: 'Örn: Mustafa Eren',
+    lastNamePh: 'Örn: Yalçın',
+    emailLabel: 'E-posta Adresi',
+    emailPh: 'ad.soyad@sirket.com',
+    passwordLabel: 'Şifre',
+    passwordConfirmLabel: 'Şifre Tekrar',
+    passwordPh: '••••••••',
+    forgotBtn: 'Şifremi Unuttum',
+    ruleLength: 'En az 6 karakter uzunluğunda',
+    ruleAlphaNum: 'Harf ve rakam/sembol içerir (Önerilen)',
+    ruleMatch: 'Şifre tekrarı ile eşleşiyor',
+    termsPrefix: 'Kişisel verilerimin işlenmesine ilişkin ',
+    termsPrivacy: 'KVKK Aydınlatma Metni',
+    termsMid: '’ni ve ',
+    termsService: 'Kullanıcı Sözleşmesi',
+    termsSuffix: '’ni okudum, kabul ediyorum.',
+    termsError: 'Üyelik oluşturmak için lütfen Kullanıcı Sözleşmesi ve KVKK metnini onaylayın.',
+    pwMismatchError: 'Girdiğiniz şifreler birbiriyle eşleşmiyor.',
+    nameError: 'Lütfen adınızı ve soyadınızı eksiksiz girin.',
+    emailError: 'Lütfen geçerli bir e-posta adresi girin.',
+    pwShortError: 'Şifreniz en az 6 karakter olmalıdır.',
+    submitSignin: 'Güvenli Oturum Aç',
+    submitSignup: 'Üyeliği Tamamla ve Başla',
+    submitReset: 'Sıfırlama Bağlantısı Gönder',
+    orDivider: 'ALTERNATİF ERİŞİM YÖNTEMLERİ',
+    googleBtn: 'Google Hesabı ile Devam Et',
+    localBtnSaved: 'Cihazdaki Kayıtlı Profil ile Giriş',
+    localBtnNew: 'Çevrimdışı / Yerel Hesapla Devam Et',
+    backToSignin: '← Oturum açma ekranına dön'
+  },
+  en: {
+    brandSub: 'HEALTH & PERFORMANCE TECHNOLOGIES',
+    sslBadge: '256-Bit TLS Encrypted · GDPR & ISO Compliant',
+    heroTitle: 'Data-Driven Personal Training & Nutrition Management',
+    heroLead:
+      'Unify biomechanical load tracking, adaptive macro calibration, and AI-powered daily readiness analytics in one enterprise-grade cloud platform.',
+    pillar1Title: 'Adaptive AI Training Architecture',
+    pillar1Desc: 'Automated daily volume and intensity optimization based on sleep, recovery, and equipment inventory.',
+    pillar2Title: 'Clinical-Grade Nutrition & Macro Analytics',
+    pillar2Desc: 'Portion parsing via text, voice, and vision, adaptive TDEE calibration, and intermittent fasting tracking.',
+    pillar3Title: 'Isolated Cloud & Enterprise Data Security',
+    pillar3Desc: 'Dedicated encrypted user data isolation (RLS), real-time cross-device sync, and full data portability.',
+    tabSignin: 'Sign In',
+    tabSignup: 'Create Account',
+    signinTitle: 'Sign In to Your Account',
+    signinSub: 'Access the platform with your registered email and password.',
+    signupTitle: 'Create a New Account',
+    signupSub: 'Enter your details below to initialize your personal performance profile.',
+    resetTitle: 'Password Reset Request',
+    resetSub: 'Enter your registered email address to receive a password reset link.',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    firstNamePh: 'e.g. John',
+    lastNamePh: 'e.g. Doe',
+    emailLabel: 'Email Address',
+    emailPh: 'name@company.com',
+    passwordLabel: 'Password',
+    passwordConfirmLabel: 'Confirm Password',
+    passwordPh: '••••••••',
+    forgotBtn: 'Forgot Password?',
+    ruleLength: 'At least 6 characters long',
+    ruleAlphaNum: 'Contains letters & numbers (Recommended)',
+    ruleMatch: 'Passwords match',
+    termsPrefix: 'I have read and agree to the ',
+    termsPrivacy: 'Privacy Policy (GDPR)',
+    termsMid: ' and ',
+    termsService: 'Terms of Service',
+    termsSuffix: '.',
+    termsError: 'Please accept the Terms of Service and Privacy Policy to create an account.',
+    pwMismatchError: 'The passwords you entered do not match.',
+    nameError: 'Please enter your first and last name.',
+    emailError: 'Please enter a valid email address.',
+    pwShortError: 'Your password must be at least 6 characters long.',
+    submitSignin: 'Sign In Securely',
+    submitSignup: 'Complete Registration',
+    submitReset: 'Send Reset Link',
+    orDivider: 'ALTERNATIVE ACCESS METHODS',
+    googleBtn: 'Continue with Google SSO',
+    localBtnSaved: 'Continue with Saved Local Profile',
+    localBtnNew: 'Continue in Offline / Local Mode',
+    backToSignin: '← Back to Sign In'
+  }
+};
 
 export default function AuthScreen() {
-  const { lang, setLang, t, languages } = useI18n();
+  const { lang, setLang, languages } = useI18n();
+  const c = CORP_COPY[lang] || CORP_COPY.en;
+
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup' | 'reset'
-  const [previewTab, setPreviewTab] = useState('checkin'); // 'checkin' | 'nutrition' | 'muscle'
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
 
   const hasLegacy = useMemo(() => hasUnclaimedLegacyData(), []);
-  const pwStrength = useMemo(() => calcPasswordStrength(password), [password]);
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const isPwLenOk = password.length >= 6;
+  const isPwAlphaNum = /[A-Za-z]/.test(password) && /[0-9!@#$%^&*._-]/.test(password);
+  const isPwMatch = password.length > 0 && password === passwordConfirm;
 
   const switchMode = (nextMode) => {
     setMode(nextMode);
@@ -81,14 +178,22 @@ export default function AuthScreen() {
     setError('');
     setInfo('');
 
-    if (mode === 'signup' && !fullName.trim()) {
-      return setError('Lütfen adını veya hitap edilmesini istediğin ismi gir.');
+    const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+
+    if (mode === 'signup' && firstName.trim().length < 2) {
+      return setError(c.nameError);
     }
     if (!isEmailValid) {
-      return setError('Lütfen geçerli bir e-posta adresi gir (Örn: adin@mail.com).');
+      return setError(c.emailError);
     }
-    if (mode !== 'reset' && password.length < 6) {
-      return setError('Güvenliğin için şifren en az 6 karakter olmalıdır.');
+    if (mode !== 'reset' && !isPwLenOk) {
+      return setError(c.pwShortError);
+    }
+    if (mode === 'signup' && password !== passwordConfirm) {
+      return setError(c.pwMismatchError);
+    }
+    if (mode === 'signup' && !acceptedTerms) {
+      return setError(c.termsError);
     }
 
     setBusy(true);
@@ -96,11 +201,11 @@ export default function AuthScreen() {
       if (mode === 'signin') {
         await signin(email.trim(), password);
       } else if (mode === 'signup') {
-        const res = await signup(email.trim(), password, fullName.trim());
+        const res = await signup(email.trim(), password, fullName);
         if (res?.message && !res?.loggedIn) setInfo(res.message);
       } else {
         await resetPassword(email.trim());
-        setInfo('Şifre sıfırlama bağlantısı e-postana gönderildi. Gelen kutunu kontrol et.');
+        setInfo('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.');
       }
     } catch (err) {
       setError(translateError(err.message));
@@ -119,33 +224,27 @@ export default function AuthScreen() {
   };
 
   const handleInstantLocal = () => {
-    continueAsLocalUser(fullName.trim() || 'Eren');
+    const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+    continueAsLocalUser(fullName || 'Sporcu');
   };
 
   return (
-    <div className="fx-authPro">
-      {/* Arka Plan Sinematik Işık Efektleri */}
-      <div className="fx-authBackdrop" aria-hidden="true">
-        <div className="fx-orb fx-orb--green" />
-        <div className="fx-orb fx-orb--blue" />
-        <div className="fx-orb fx-orb--purple" />
-        <div className="fx-gridMesh" />
-      </div>
-
-      <div className="fx-authContainer">
-        {/* SOL PANEL: İNTERAKTİF CANLI ÜRÜN DENEYİMİ */}
-        <div className="fx-authShowcase">
-          <div className="fx-brandBadgeRow">
-            <div className="fx-logo fx-logo--lg">
-              fit<span>.</span>
-            </div>
-            <span className="fx-proPill">
-              <Sparkles size={12} /> {t('auth.badge')}
-            </span>
+    <div className="fx-corpAuth">
+      {/* Üst Kurumsal Bar */}
+      <header className="fx-corpTopbar">
+        <div className="fx-corpBrand">
+          <div className="fx-logo">
+            fit<span>.</span>
           </div>
+          <span className="fx-corpDivider" />
+          <span className="fx-corpBrandSub">{c.brandSub}</span>
+        </div>
 
-          {/* Küresel Dil Seçici Çubuğu (Global 4-Language Selector) */}
-          <div className="fx-authLangBar" role="group" aria-label="Language Selector">
+        <div className="fx-corpTopRight">
+          <span className="fx-corpSslBadge">
+            <ShieldCheck size={14} /> {c.sslBadge}
+          </span>
+          <div className="fx-authLangBar" role="group" aria-label="Language">
             {languages.map((l) => (
               <button
                 key={l.code}
@@ -157,186 +256,71 @@ export default function AuthScreen() {
               </button>
             ))}
           </div>
-
-          <h1 className="fx-heroHeadline">
-            {t('auth.heroTitle1')}
-            <br />
-            <em>{t('auth.heroTitle2')}</em> {t('auth.heroTitle3')}
-          </h1>
-
-          <p className="fx-heroLead">
-            {t('auth.heroSub')}
-          </p>
-
-          {/* İnteraktif Canlı Önizleme Seçicisi */}
-          <div className="fx-previewSelector">
-            <button
-              type="button"
-              className={previewTab === 'checkin' ? 'active' : ''}
-              onClick={() => setPreviewTab('checkin')}
-            >
-              {t('auth.tabCheckin')}
-            </button>
-            <button
-              type="button"
-              className={previewTab === 'nutrition' ? 'active' : ''}
-              onClick={() => setPreviewTab('nutrition')}
-            >
-              {t('auth.tabMeal')}
-            </button>
-            <button
-              type="button"
-              className={previewTab === 'muscle' ? 'active' : ''}
-              onClick={() => setPreviewTab('muscle')}
-            >
-              {t('auth.tabMuscle')}
-            </button>
-          </div>
-
-          {/* Seçili Önizleme Sahnesi */}
-          <div className="fx-InteractiveStage" key={previewTab}>
-            {previewTab === 'checkin' && (
-              <div className="fx-stageCard">
-                <div className="fx-stageHeader">
-                  <div className="fx-bentoRing">
-                    <svg width="68" height="68" viewBox="0 0 68 68">
-                      <circle cx="34" cy="34" r="28" stroke="#243142" strokeWidth="6" fill="none" />
-                      <circle
-                        cx="34"
-                        cy="34"
-                        r="28"
-                        stroke="#b3f46f"
-                        strokeWidth="6"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeDasharray="176"
-                        strokeDashoffset="14"
-                        transform="rotate(-90 34 34)"
-                      />
-                    </svg>
-                    <span>%92</span>
-                  </div>
-                  <div className="fx-stageTitle">
-                    <span className="fx-bentoTag">
-                      <Sparkles size={11} /> BUGÜNÜN AI STRATEJİSİ HAZIR
-                    </span>
-                    <b>Yüksek Hazırlık · Omuz & Core Hipertrofi</b>
-                    <small>8 sa uyku · Ağrı yok · 45 dk Ev Dambıl Programı optimize edildi</small>
-                  </div>
-                </div>
-                <div className="fx-stageMoves">
-                  <div>
-                    <span>1. Dumbbell Shoulder Press</span>
-                    <b>4 × 10 · 12.5 kg</b>
-                  </div>
-                  <div>
-                    <span>2. Lateral Raise (Drop Set)</span>
-                    <b>4 × 15 · 7.5 kg</b>
-                  </div>
-                  <div>
-                    <span>3. Weighted Plank & Leg Raise</span>
-                    <b>3 × Süperset</b>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {previewTab === 'nutrition' && (
-              <div className="fx-stageCard">
-                <div className="fx-stageHeader">
-                  <div className="fx-stageIconBox">
-                    <Utensils size={24} />
-                  </div>
-                  <div className="fx-stageTitle">
-                    <span className="fx-bentoTag">SERBEST METİN & FOTOĞRAF TANIMA</span>
-                    <b>“1 tabak kuru fasulye, yarım pilav, 200g süzme yoğurt”</b>
-                    <small>Saniyeler içinde Türk porsiyonlarına göre makro ayrıştırma</small>
-                  </div>
-                </div>
-                <div className="fx-stageMacros">
-                  <div>
-                    <b>610</b>
-                    <small>Kalori (kcal)</small>
-                  </div>
-                  <div>
-                    <b style={{ color: '#7ee0ff' }}>39 g</b>
-                    <small>Protein</small>
-                  </div>
-                  <div>
-                    <b style={{ color: '#f5c451' }}>74 g</b>
-                    <small>Karbonhidrat</small>
-                  </div>
-                  <div>
-                    <b style={{ color: '#ff983d' }}>16 g</b>
-                    <small>Sağlıklı Yağ</small>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {previewTab === 'muscle' && (
-              <div className="fx-stageCard">
-                <div className="fx-stageHeader">
-                  <div className="fx-stageIconBox" style={{ color: '#7ee0ff' }}>
-                    <Trophy size={24} />
-                  </div>
-                  <div className="fx-stageTitle">
-                    <span className="fx-bentoTag">PRO VÜCUT KOMPOZİSYONU & RECOVERY</span>
-                    <b>Adonis Altın Oranı (1.618) & Kas Toparlanma Haritası</b>
-                    <small>Son 72 saatteki setlerine göre hangi kasın %100 hazır olduğunu gör</small>
-                  </div>
-                </div>
-                <div className="fx-stageMacros">
-                  <div>
-                    <b style={{ color: '#b3f46f' }}>%100</b>
-                    <small>Omuz Hazır</small>
-                  </div>
-                  <div>
-                    <b style={{ color: '#b3f46f' }}>%95</b>
-                    <small>Karın / Core</small>
-                  </div>
-                  <div>
-                    <b style={{ color: '#7ee0ff' }}>1.61</b>
-                    <small>Omuz/Bel Oranı</small>
-                  </div>
-                  <div>
-                    <b style={{ color: '#ff983d' }}>%12.8</b>
-                    <small>Tahmini Yağ</small>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="fx-trustBar">
-            <span>
-              <ShieldCheck size={15} /> Bulut senkronizasyonlu & çevrimdışı çalışır
-            </span>
-            <span>
-              <Dumbbell size={15} /> iOS, Android ve Masaüstü tam uyum
-            </span>
-          </div>
         </div>
+      </header>
 
-        {/* SAĞ PANEL: ULTRA-PRO GİRİŞ / KAYIT KARTI */}
-        <div className="fx-authFormWrap">
-          <div className="fx-authGlassCard">
-            {/* Tek Tıkla Anında Giriş Kartı (Önceki veriler varsa veya beklemek istemiyorsa) */}
-            <button type="button" className="fx-legacyContinueBanner" onClick={handleInstantLocal}>
-              <div className="fx-legacyIcon">
-                <Play size={18} fill="currentColor" />
-              </div>
-              <div className="fx-legacyText">
-                <b>{hasLegacy ? t('auth.instantSavedTitle') : t('auth.instantNewTitle')}</b>
-                <small>
-                  {hasLegacy ? t('auth.instantSavedSub') : t('auth.instantNewSub')}
-                </small>
-              </div>
-            </button>
+      <div className="fx-corpMainGrid">
+        {/* SOL PANEL: KURUMSAL PLATFORM MİMARİSİ */}
+        <section className="fx-corpInfoCol">
+          <div className="fx-corpInfoInner">
+            <span className="fx-corpVersionTag">FIT ENTERPRISE PLATFORM · v4.0</span>
+            <h1 className="fx-corpHeadline">{c.heroTitle}</h1>
+            <p className="fx-corpLead">{c.heroLead}</p>
 
-            {/* Kayan Sekme Seçici (Oturum Aç / Yeni Hesap Oluştur) */}
+            <div className="fx-corpPillars">
+              <div className="fx-corpPillarItem">
+                <div className="fx-corpPillarIcon">
+                  <Activity size={20} />
+                </div>
+                <div>
+                  <h3>{c.pillar1Title}</h3>
+                  <p>{c.pillar1Desc}</p>
+                </div>
+              </div>
+
+              <div className="fx-corpPillarItem">
+                <div className="fx-corpPillarIcon">
+                  <Building2 size={20} />
+                </div>
+                <div>
+                  <h3>{c.pillar2Title}</h3>
+                  <p>{c.pillar2Desc}</p>
+                </div>
+              </div>
+
+              <div className="fx-corpPillarItem">
+                <div className="fx-corpPillarIcon">
+                  <Database size={20} />
+                </div>
+                <div>
+                  <h3>{c.pillar3Title}</h3>
+                  <p>{c.pillar3Desc}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="fx-corpMetricsFooter">
+              <div>
+                <strong>ISO / RLS</strong>
+                <span>Veri İzolasyonu</span>
+              </div>
+              <div>
+                <strong>iOS & Android</strong>
+                <span>Native PWA / Capacitor</span>
+              </div>
+              <div>
+                <strong>4 Dil</strong>
+                <span>TR · EN · DE · ES</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SAĞ PANEL: KURUMSAL GİRİŞ & KAYIT FORMU */}
+        <section className="fx-corpFormCol">
+          <div className="fx-corpCard">
             {mode !== 'reset' && (
-              <div className="fx-authTabs" role="tablist">
+              <div className="fx-corpTabs" role="tablist">
                 <button
                   type="button"
                   role="tab"
@@ -344,7 +328,7 @@ export default function AuthScreen() {
                   className={mode === 'signin' ? 'active' : ''}
                   onClick={() => switchMode('signin')}
                 >
-                  {t('auth.loginTab')}
+                  {c.tabSignin}
                 </button>
                 <button
                   type="button"
@@ -353,84 +337,95 @@ export default function AuthScreen() {
                   className={mode === 'signup' ? 'active' : ''}
                   onClick={() => switchMode('signup')}
                 >
-                  {t('auth.signupTab')}
+                  {c.tabSignup}
                 </button>
               </div>
             )}
 
-            <div className="fx-authCardHeader">
+            <div className="fx-corpCardHead">
               <h2>
                 {mode === 'signin'
-                  ? t('auth.welcomeBack')
+                  ? c.signinTitle
                   : mode === 'signup'
-                    ? t('auth.createAccount')
-                    : t('auth.forgotTitle')}
+                    ? c.signupTitle
+                    : c.resetTitle}
               </h2>
               <p>
                 {mode === 'signin'
-                  ? t('auth.loginSub')
+                  ? c.signinSub
                   : mode === 'signup'
-                    ? t('auth.signupSub')
-                    : 'Kayıtlı e-posta adresini yaz, sıfırlama bağlantısını gönderelim.'}
+                    ? c.signupSub
+                    : c.resetSub}
               </p>
             </div>
 
-            <form onSubmit={submit} className="fx-authForm" noValidate>
+            <form onSubmit={submit} className="fx-corpForm" noValidate>
               {mode === 'signup' && (
-                <label className="fx-proField">
-                  <span>ADIN VEYA KULLANICI ADIN</span>
-                  <div className="fx-proInputWrap">
-                    <User size={17} />
-                    <input
-                      type="text"
-                      autoComplete="name"
-                      placeholder="Örn: Eren"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                    />
-                    {fullName.trim().length >= 2 && (
-                      <CheckCircle2 size={17} className="fx-validTick" />
-                    )}
-                  </div>
-                </label>
+                <div className="fx-corpNameGrid">
+                  <label className="fx-corpField">
+                    <span>{c.firstName} *</span>
+                    <div className="fx-corpInputBox">
+                      <User size={16} />
+                      <input
+                        type="text"
+                        autoComplete="given-name"
+                        placeholder={c.firstNamePh}
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                      />
+                    </div>
+                  </label>
+                  <label className="fx-corpField">
+                    <span>{c.lastName}</span>
+                    <div className="fx-corpInputBox">
+                      <input
+                        type="text"
+                        autoComplete="family-name"
+                        placeholder={c.lastNamePh}
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </div>
+                  </label>
+                </div>
               )}
 
-              <label className="fx-proField">
-                <span>E-POSTA ADRESİ</span>
-                <div className="fx-proInputWrap">
-                  <Mail size={17} />
+              <label className="fx-corpField">
+                <span>{c.emailLabel} *</span>
+                <div className="fx-corpInputBox">
+                  <Mail size={16} />
                   <input
                     type="email"
                     autoComplete="email"
                     inputMode="email"
-                    placeholder="ornek@eposta.com"
+                    placeholder={c.emailPh}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  {isEmailValid && <CheckCircle2 size={17} className="fx-validTick" />}
+                  {isEmailValid && <CheckCircle2 size={16} className="fx-validTick" />}
                 </div>
               </label>
 
               {mode !== 'reset' && (
-                <div className="fx-proField">
-                  <div className="fx-fieldLabelRow">
-                    <span>ŞİFRE</span>
+                <label className="fx-corpField">
+                  <div className="fx-corpLabelRow">
+                    <span>{c.passwordLabel} *</span>
                     {mode === 'signin' && (
                       <button
                         type="button"
-                        className="fx-forgotLink"
+                        className="fx-corpForgotLink"
                         onClick={() => switchMode('reset')}
                       >
-                        Şifremi unuttum?
+                        {c.forgotBtn}
                       </button>
                     )}
                   </div>
-                  <div className="fx-proInputWrap">
-                    <Lock size={17} />
+                  <div className="fx-corpInputBox">
+                    <Lock size={16} />
                     <input
                       type={showPw ? 'text' : 'password'}
                       autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                      placeholder={mode === 'signup' ? 'En az 6 karakter belirle' : '••••••••'}
+                      placeholder={c.passwordPh}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
@@ -438,29 +433,64 @@ export default function AuthScreen() {
                       type="button"
                       className="fx-pwToggle"
                       onClick={() => setShowPw((v) => !v)}
-                      aria-label={showPw ? 'Şifreyi gizle' : 'Şifreyi göster'}
+                      aria-label="Toggle password"
                     >
-                      {showPw ? <EyeOff size={17} /> : <Eye size={17} />}
+                      {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
+                </label>
+              )}
 
-                  {mode === 'signup' && password.length > 0 && (
-                    <div className="fx-pwStrength">
-                      <div className="fx-pwBars">
-                        {[1, 2, 3, 4].map((lvl) => (
-                          <span
-                            key={lvl}
-                            style={{
-                              background:
-                                pwStrength.score >= lvl ? pwStrength.color : 'var(--fx-track)'
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <small style={{ color: pwStrength.color }}>{pwStrength.label}</small>
+              {mode === 'signup' && (
+                <>
+                  <label className="fx-corpField">
+                    <span>{c.passwordConfirmLabel} *</span>
+                    <div className="fx-corpInputBox">
+                      <Lock size={16} />
+                      <input
+                        type={showPw ? 'text' : 'password'}
+                        autoComplete="new-password"
+                        placeholder={c.passwordPh}
+                        value={passwordConfirm}
+                        onChange={(e) => setPasswordConfirm(e.target.value)}
+                      />
+                      {isPwMatch && <CheckCircle2 size={16} className="fx-validTick" />}
                     </div>
-                  )}
-                </div>
+                  </label>
+
+                  {/* Kurumsal Şifre Güvenlik Politikası Kontrol Listesi */}
+                  <div className="fx-corpPolicyChecklist">
+                    <div className={isPwLenOk ? 'ok' : ''}>
+                      <Check size={13} /> <span>{c.ruleLength}</span>
+                    </div>
+                    <div className={isPwAlphaNum ? 'ok' : ''}>
+                      <Check size={13} /> <span>{c.ruleAlphaNum}</span>
+                    </div>
+                    <div className={isPwMatch ? 'ok' : ''}>
+                      <Check size={13} /> <span>{c.ruleMatch}</span>
+                    </div>
+                  </div>
+
+                  {/* Resmi KVKK / GDPR ve Kullanıcı Sözleşmesi Onay Kutusu */}
+                  <label className="fx-corpConsentRow">
+                    <input
+                      type="checkbox"
+                      checked={acceptedTerms}
+                      onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    />
+                    <span>
+                      {c.termsPrefix}
+                      <a href="/gizlilik.html" target="_blank" rel="noreferrer">
+                        {c.termsPrivacy}
+                      </a>
+                      {c.termsMid}
+                      <a href="/kosullar.html" target="_blank" rel="noreferrer">
+                        {c.termsService}
+                      </a>
+                      {c.termsSuffix}
+                    </span>
+                  </label>
+                </>
               )}
 
               {error && <div className="fx-alert fx-alert--error">{error}</div>}
@@ -468,29 +498,31 @@ export default function AuthScreen() {
 
               <button
                 type="submit"
-                className="fx-btn fx-btn--primary fx-btn--block fx-btn--lg fx-authSubmitBtn"
+                className="fx-corpSubmitBtn"
                 disabled={busy}
               >
-                {busy
-                  ? '...'
-                  : mode === 'signin'
-                    ? t('auth.submitLogin')
-                    : mode === 'signup'
-                      ? t('auth.submitSignup')
-                      : t('auth.submitForgot')}
-                {!busy && <ArrowRight size={18} />}
+                <span>
+                  {busy
+                    ? '...'
+                    : mode === 'signin'
+                      ? c.submitSignin
+                      : mode === 'signup'
+                        ? c.submitSignup
+                        : c.submitReset}
+                </span>
+                {!busy && <ArrowRight size={17} />}
               </button>
             </form>
 
             {mode !== 'reset' ? (
               <>
-                <div className="fx-divider">
-                  <span>veya tek dokunuşla</span>
+                <div className="fx-corpDividerText">
+                  <span>{c.orDivider}</span>
                 </div>
 
-                <div className="fx-socialGrid">
-                  <button type="button" className="fx-socialBtn" onClick={handleGoogle}>
-                    <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+                <div className="fx-corpAltActions">
+                  <button type="button" className="fx-corpSecondaryBtn" onClick={handleGoogle}>
+                    <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
                       <path
                         fill="#FFC107"
                         d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"
@@ -508,36 +540,24 @@ export default function AuthScreen() {
                         d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"
                       />
                     </svg>
-                    <span>Google ile Devam Et</span>
+                    <span>{c.googleBtn}</span>
                   </button>
 
-                  <button type="button" className="fx-socialBtn fx-socialBtn--fast" onClick={handleInstantLocal}>
-                    <Zap size={17} className="fx-accentIcon" />
-                    <span>Misafir / Hızlı Mod</span>
+                  <button type="button" className="fx-corpSecondaryBtn" onClick={handleInstantLocal}>
+                    <Smartphone size={16} />
+                    <span>{hasLegacy ? c.localBtnSaved : c.localBtnNew}</span>
                   </button>
                 </div>
               </>
             ) : (
-              <div className="fx-authSwitch">
+              <div className="fx-authSwitch" style={{ marginTop: 14 }}>
                 <button type="button" onClick={() => switchMode('signin')}>
-                  ← Giriş ekranına geri dön
+                  {c.backToSignin}
                 </button>
               </div>
             )}
-
-            <p className="fx-legal">
-              Devam ederek{' '}
-              <a href="/gizlilik.html" target="_blank" rel="noreferrer">
-                KVKK & Gizlilik Politikası
-              </a>{' '}
-              ve{' '}
-              <a href="/kosullar.html" target="_blank" rel="noreferrer">
-                Kullanım Koşulları
-              </a>
-              ’nı kabul etmiş olursun.
-            </p>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

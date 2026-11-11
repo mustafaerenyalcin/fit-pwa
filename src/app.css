@@ -2559,6 +2559,471 @@ main.fx-content .chatContainer {
   color: var(--fx-muted);
 }
 
+/* =====================================================================
+   Kurumsal (Enterprise / Corporate) Giriş & Üyelik Mimarisi
+   ===================================================================== */
+.fx-corpAuth {
+  min-height: 100dvh;
+  background: radial-gradient(circle at 15% 15%, rgba(179, 244, 111, 0.06), transparent 45%),
+              radial-gradient(circle at 85% 80%, rgba(126, 224, 255, 0.05), transparent 45%),
+              var(--fx-bg);
+  color: var(--fx-text);
+  display: flex;
+  flex-direction: column;
+}
+
+.fx-corpTopbar {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--fx-border);
+  flex-wrap: wrap;
+}
+
+.fx-corpBrand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.fx-corpDivider {
+  width: 1px;
+  height: 20px;
+  background: var(--fx-border-strong);
+}
+
+.fx-corpBrandSub {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--fx-muted);
+}
+
+.fx-corpTopRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.fx-corpSslBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--fx-surface);
+  border: 1px solid var(--fx-border);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--fx-muted);
+}
+.fx-corpSslBadge svg {
+  color: var(--fx-accent);
+}
+
+.fx-corpMainGrid {
+  flex: 1;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 36px 28px 48px;
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 48px;
+  align-items: center;
+}
+
+@media (max-width: 960px) {
+  .fx-corpMainGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 24px 18px 40px;
+  }
+  .fx-corpTopbar {
+    padding: 16px 18px;
+  }
+  .fx-corpBrandSub,
+  .fx-corpDivider,
+  .fx-corpSslBadge {
+    display: none;
+  }
+}
+
+.fx-corpInfoInner {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fx-corpVersionTag {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 5px 11px;
+  border-radius: 6px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border-strong);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--fx-accent);
+}
+
+.fx-corpHeadline {
+  margin: 0;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.9px;
+  color: var(--fx-text);
+}
+
+.fx-corpLead {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--fx-muted);
+}
+
+.fx-corpPillars {
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.fx-corpPillarItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--fx-surface);
+  border: 1px solid var(--fx-border);
+}
+
+.fx-corpPillarIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border-strong);
+  color: var(--fx-accent);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.fx-corpPillarItem h3 {
+  margin: 0 0 4px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--fx-text);
+}
+
+.fx-corpPillarItem p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fx-muted);
+}
+
+.fx-corpMetricsFooter {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--fx-border);
+}
+
+.fx-corpMetricsFooter > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fx-corpMetricsFooter strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--fx-text);
+}
+
+.fx-corpMetricsFooter span {
+  font-size: 12px;
+  color: var(--fx-muted);
+}
+
+/* Sağ Kurumsal Form Kartı */
+.fx-corpFormCol {
+  display: flex;
+  justify-content: center;
+}
+
+.fx-corpCard {
+  width: 100%;
+  max-width: 470px;
+  padding: 32px 30px;
+  border-radius: 20px;
+  background: var(--fx-surface);
+  border: 1px solid var(--fx-border-strong);
+  box-shadow: var(--fx-shadow);
+}
+
+@media (max-width: 520px) {
+  .fx-corpCard {
+    padding: 24px 20px;
+  }
+}
+
+.fx-corpTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 12px;
+  background: var(--fx-bg-2);
+  border: 1px solid var(--fx-border);
+  margin-bottom: 22px;
+}
+
+.fx-corpTabs button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--fx-muted);
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.fx-corpTabs button.active {
+  background: var(--fx-surface-2);
+  color: var(--fx-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fx-corpCardHead {
+  margin-bottom: 20px;
+}
+
+.fx-corpCardHead h2 {
+  margin: 0 0 6px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.fx-corpCardHead p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--fx-muted);
+  line-height: 1.5;
+}
+
+.fx-corpForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.fx-corpNameGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .fx-corpNameGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fx-corpField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fx-corpField > span,
+.fx-corpLabelRow > span {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--fx-text);
+}
+
+.fx-corpLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fx-corpForgotLink {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--fx-accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fx-corpInputBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 13px;
+  border-radius: 10px;
+  background: var(--fx-bg-2);
+  border: 1px solid var(--fx-border-strong);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fx-corpInputBox:focus-within {
+  border-color: var(--fx-accent);
+  box-shadow: 0 0 0 3px var(--fx-accent-soft);
+}
+
+.fx-corpInputBox svg {
+  color: var(--fx-muted);
+  flex-shrink: 0;
+}
+
+.fx-corpInputBox input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--fx-text);
+  font-size: 14px;
+  outline: none;
+}
+
+.fx-corpPolicyChecklist {
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--fx-bg-2);
+  border: 1px solid var(--fx-border);
+  font-size: 12px;
+  color: var(--fx-muted);
+}
+
+.fx-corpPolicyChecklist > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.fx-corpPolicyChecklist > div.ok {
+  color: var(--fx-ok);
+  font-weight: 600;
+}
+
+.fx-corpConsentRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--fx-muted);
+  cursor: pointer;
+}
+
+.fx-corpConsentRow input[type="checkbox"] {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--fx-accent);
+  flex-shrink: 0;
+}
+
+.fx-corpConsentRow a {
+  color: var(--fx-text);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.fx-corpSubmitBtn {
+  height: 46px;
+  border-radius: 10px;
+  border: none;
+  background: var(--fx-accent);
+  color: var(--fx-accent-ink);
+  font-size: 14.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: transform 0.12s ease, opacity 0.15s ease;
+}
+
+.fx-corpSubmitBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.fx-corpSubmitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fx-corpDividerText {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 14px;
+  color: var(--fx-muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.fx-corpDividerText::before,
+.fx-corpDividerText::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--fx-border);
+}
+
+.fx-corpAltActions {
+  display: grid;
+  gap: 9px;
+}
+
+.fx-corpSecondaryBtn {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border-strong);
+  color: var(--fx-text);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.fx-corpSecondaryBtn:hover {
+  border-color: var(--fx-accent);
+  background: var(--fx-accent-soft);
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
