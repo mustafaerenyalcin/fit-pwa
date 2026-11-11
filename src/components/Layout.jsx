@@ -1,6 +1,7 @@
-import React from 'react';
-import { Sun, Dumbbell, Utensils, LineChart, Bot, ChevronLeft, ChevronRight, WifiOff, Settings } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sun, Moon, Dumbbell, Utensils, LineChart, Bot, ChevronLeft, ChevronRight, WifiOff, Settings } from 'lucide-react';
 import { today } from '../lib/calculations.js';
+import { getTheme, setTheme } from '../lib/notifications.js';
 
 export const TABS = [
   ['today', 'Bugün', Sun],
@@ -36,6 +37,12 @@ export default function Layout({ tab, setTab, day, setDay, profile, online = tru
   const userName = profile?.name || 'Sporcu';
   const showDate = ['today', 'training', 'nutrition'].includes(tab);
   const isToday = day === today();
+  const [theme, setThemeState] = useState(getTheme);
+
+  const toggleTheme = () => {
+    const next = setTheme(theme === 'dark' ? 'light' : 'dark');
+    setThemeState(next);
+  };
 
   return (
     <div className="fx-app">
@@ -84,6 +91,15 @@ export default function Layout({ tab, setTab, day, setDay, profile, online = tru
                 </button>
               </div>
             )}
+            <button
+              type="button"
+              className="fx-iconBtn"
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Açık temaya geç' : 'Koyu temaya geç'}
+              aria-label="Tema değiştir"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             <button type="button" className="fx-avatarBtn" onClick={() => setTab('settings')} aria-label="Profil ve ayarlar">
               <span className="fx-avatar">{userName.charAt(0).toUpperCase()}</span>
             </button>

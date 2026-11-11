@@ -7,6 +7,7 @@ import AiMealLogger from './components/AiMealLogger.jsx';
 import SmartMealRecommender from './components/SmartMealRecommender.jsx';
 import WeeklyReport from './components/WeeklyReport.jsx';
 import ProgramGenerator from './components/ProgramGenerator.jsx';
+import CustomWorkoutBuilder from './components/CustomWorkoutBuilder.jsx';
 import { Segmented, Skeleton } from './components/ui.jsx';
 
 import TodayView from './views/TodayView.jsx';
@@ -285,6 +286,7 @@ function MainApp() {
           {trainingSection === 'program' && (
             <>
               <ProgramGenerator profile={profile} program={program} onDone={() => showToast('Yeni programın hazır!')} />
+              <CustomWorkoutBuilder onStartWorkout={(plan) => setActiveWorkoutPlan(plan)} />
               <TrainingView
                 key={program?.createdAt || 'default'}
                 day={day}

@@ -29,12 +29,19 @@ export const FOOD_DATABASE = [
   { id: 'muz', name: 'Muz (1 orta boy ~120g)', category: 'carbs', per100g: { calories: 89, protein: 1.1, carbs: 23, fat: 0.3 }, defaultGram: 120, portionDesc: '1 adet (~27g karb)' },
   { id: 'elma', name: 'Elma', category: 'carbs', per100g: { calories: 52, protein: 0.3, carbs: 14, fat: 0.2 }, defaultGram: 150, portionDesc: '1 adet (~21g karb)' },
 
-  // Bakliyat & Ev Yemekleri
+  // Bakliyat & Ev Yemekleri & Dışarıda Yemek
   { id: 'mercimek-corbasi', name: 'Mercimek Çorbası', category: 'meals', per100g: { calories: 65, protein: 3.2, carbs: 9.5, fat: 1.5 }, defaultGram: 250, portionDesc: '1 kase 250ml (~8g protein)' },
   { id: 'kuru-fasulye', name: 'Kuru Fasulye Yemeği (Pişmiş)', category: 'meals', per100g: { calories: 110, protein: 6.5, carbs: 16, fat: 2.5 }, defaultGram: 200, portionDesc: '1 tabak 200g (~13g protein)' },
   { id: 'nohut-yemegi', name: 'Nohut Yemeği (Pişmiş)', category: 'meals', per100g: { calories: 125, protein: 6.8, carbs: 18, fat: 3.0 }, defaultGram: 200, portionDesc: '1 tabak 200g (~14g protein)' },
   { id: 'kiymali-yumurta', name: 'Kıymalı Yumurta', category: 'meals', per100g: { calories: 185, protein: 16, carbs: 1.2, fat: 13 }, defaultGram: 180, portionDesc: '1 porsiyon (~29g protein)' },
   { id: 'menemen', name: 'Menemen (Az yağlı)', category: 'meals', per100g: { calories: 110, protein: 6.5, carbs: 4.5, fat: 7.5 }, defaultGram: 200, portionDesc: '1 porsiyon (~13g protein)' },
+  { id: 'tavuk-doner', name: 'Tavuk Döner (Sadece Et)', category: 'meals', per100g: { calories: 185, protein: 27, carbs: 2, fat: 7.5 }, defaultGram: 150, portionDesc: '150g porsiyon (~40g protein)' },
+  { id: 'et-doner', name: 'Yaprak Et Döner (Porsiyon)', category: 'meals', per100g: { calories: 235, protein: 26, carbs: 1, fat: 14 }, defaultGram: 150, portionDesc: '150g porsiyon (~39g protein)' },
+  { id: 'lahmacun', name: 'Lahmacun (1 Adet ~110g)', category: 'meals', per100g: { calories: 210, protein: 9.5, carbs: 29, fat: 6.5 }, defaultGram: 220, portionDesc: '2 adet (~21g protein)' },
+  { id: 'izgara-kofte', name: 'Izgara Kasap Köfte', category: 'meals', per100g: { calories: 230, protein: 24, carbs: 3, fat: 13.5 }, defaultGram: 180, portionDesc: '1 porsiyon 6 adet (~43g protein)' },
+  { id: 'protein-sut', name: 'Yüksek Proteinli Süt (500ml Kutu)', category: 'protein', per100g: { calories: 54, protein: 6, carbs: 4.8, fat: 1 }, defaultGram: 500, portionDesc: '1 kutu 500ml (~30g protein)' },
+  { id: 'ayran', name: 'Ayran / Kefir', category: 'protein', per100g: { calories: 38, protein: 2.2, carbs: 3, fat: 1.8 }, defaultGram: 300, portionDesc: '1 büyük bardak 300ml (~7g protein)' },
+  { id: 'karabugday-patlagi', name: 'Karabuğday / Pirinç Patlağı', category: 'carbs', per100g: { calories: 380, protein: 11, carbs: 78, fat: 2.5 }, defaultGram: 30, portionDesc: '3 dilim 30g (~23g karb)' },
 
   // Sağlıklı Yağlar & Kuruyemişler
   { id: 'zeytinyagi', name: 'Zeytinyağı (1 yemek kaşığı ~10g)', category: 'fats', per100g: { calories: 884, protein: 0, carbs: 0, fat: 100 }, defaultGram: 10, portionDesc: '1 yemek kaşığı (~10g yağ)' },

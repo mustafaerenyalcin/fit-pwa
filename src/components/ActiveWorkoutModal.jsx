@@ -18,6 +18,7 @@ import {
   Activity
 } from 'lucide-react';
 import ExerciseVisual from './ExerciseVisual.jsx';
+import WorkoutSummaryCard from './WorkoutSummaryCard.jsx';
 import { getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
 import { sounds } from '../lib/audio.js';
@@ -692,37 +693,32 @@ export default function ActiveWorkoutModal({
         ) : (
           /* WORKOUT SUMMARY SCREEN */
           <div className="workoutSummaryScreen">
-            <div className="summaryBanner">
-              <div className="trophyIcon">
-                <Award size={48} />
-              </div>
-              <h2>Harika İş! Antrenman Tamamlandı</h2>
-              <p>{plan.name} başarıyla bitirildi.</p>
-            </div>
+            <WorkoutSummaryCard
+              planName={plan.name}
+              planFocus={plan.focus}
+              elapsedSeconds={elapsed}
+              totalVolume={liveTotalVolume}
+              completedSetsCount={totalCompletedSets}
+              exercises={sessionData.exercises}
+              newPRs={sessionData.exercises
+                .map((ex) => {
+                  const maxKg = ex.sets.reduce((m, s) => (s.done ? Math.max(m, Number(s.kg) || 0) : m), 0);
+                  const prevKg = Number(ex.previousKg) || 0;
+                  if (maxKg > prevKg && prevKg > 0) {
+                    const bestSet = ex.sets.find((s) => s.done && Number(s.kg) === maxKg);
+                    return { name: ex.name, kg: maxKg, reps: bestSet?.reps || '10' };
+                  }
+                  return null;
+                })
+                .filter(Boolean)}
+              onConfirmFinish={handleSaveAndClose}
+            />
 
-            <div className="summaryMetricsGrid">
-              <div className="summaryMetric">
-                <Clock size={22} />
-                <span className="lbl">Toplam Süre</span>
-                <strong>{formatTime(elapsed)}</strong>
-              </div>
-              <div className="summaryMetric">
-                <Dumbbell size={22} />
-                <span className="lbl">Toplam Kaldırılan Hacim</span>
-                <strong>{liveTotalVolume.toLocaleString('tr-TR')} kg</strong>
-              </div>
-              <div className="summaryMetric">
-                <Award size={22} />
-                <span className="lbl">Tamamlanan Set</span>
-                <strong>{totalCompletedSets} Set</strong>
-              </div>
-            </div>
-
-            <div className="summaryNote">
+            <div className="summaryNote" style={{ marginTop: 14 }}>
               <label>
-                Antrenman Notun & Gözlemlerin:
+                Antrenman Notun & Gözlemlerin (opsiyonel):
                 <textarea
-                  rows="3"
+                  rows="2"
                   placeholder="Örn: Omuz lateral raise hareketinde 10 kg çok temiz çıktı, haftaya artırılabilir."
                   value={sessionData.note}
                   onChange={(e) =>
@@ -732,20 +728,13 @@ export default function ActiveWorkoutModal({
               </label>
             </div>
 
-            <div className="summaryActions">
+            <div className="summaryActions" style={{ marginTop: 8 }}>
               <button
                 type="button"
                 className="secondary"
                 onClick={() => setShowSummary(false)}
               >
-                Geri Dön ve Düzenle
-              </button>
-              <button
-                type="button"
-                className="primary finishFinalBtn"
-                onClick={handleSaveAndClose}
-              >
-                <Check size={18} /> Antrenmanı Kaydet ve Kapat
+                ← Setlere Geri Dön ve Düzenle
               </button>
             </div>
           </div>
