@@ -1141,6 +1141,164 @@ main.fx-content .metrics { gap: 12px; }
   color: var(--fx-text);
 }
 
+/* =====================================================================
+   Fit v2.0 Elite: Vücut Kompozisyonu, Adaptif TDEE, Mobilite/Nefes Stüdyosu
+   ve Canlı Antrenman Mini-Player
+   ===================================================================== */
+.fx-proCompGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+@media (max-width: 560px) {
+  .fx-proCompGrid { grid-template-columns: 1fr; }
+}
+.fx-proCompStat {
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fx-proCompStat strong {
+  font-size: 24px;
+  letter-spacing: -0.6px;
+  color: var(--fx-text);
+}
+.fx-symmetryBox {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+}
+.fx-symmetryLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Alışveriş Listesi */
+.fx-shoppingDrawer {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--fx-border);
+  animation: fx-fade 0.2s ease;
+}
+.fx-shoppingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 8px;
+}
+.fx-shopItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.fx-shopItem.done {
+  opacity: 0.6;
+  background: var(--fx-accent-soft);
+  border-color: rgba(179, 244, 111, 0.3);
+}
+.fx-shopItem.done b { text-decoration: line-through; }
+.fx-shopItem b { display: block; font-size: 13px; }
+.fx-shopItem small { display: block; font-size: 11px; color: var(--fx-muted); }
+
+/* Mobilite & Nefes Stüdyosu */
+.fx-studioBox {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--fx-surface-2);
+  border: 1px solid var(--fx-border);
+}
+@media (max-width: 520px) {
+  .fx-studioBox { flex-direction: column; text-align: center; }
+  .fx-studioInfo .fx-btnRow { justify-content: center; }
+}
+.fx-studioTimer {
+  width: 84px;
+  height: 84px;
+  border-radius: 22px;
+  background: var(--fx-accent-soft);
+  border: 2px solid var(--fx-accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.fx-studioTimer b { font-size: 26px; color: var(--fx-accent); line-height: 1; }
+.fx-studioTimer small { font-size: 11px; color: var(--fx-muted); margin-top: 4px; }
+.fx-studioInfo h4 { margin: 0 0 4px; font-size: 16px; }
+.fx-studioInfo p { margin: 0; }
+
+.fx-breathBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 14px 12px;
+  text-align: center;
+}
+.fx-breathOrb {
+  width: 136px;
+  height: 136px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--fx-accent-soft), rgba(126, 224, 255, 0.14));
+  border: 2px solid var(--fx-accent);
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  transition: transform 1s ease-in-out;
+  box-shadow: 0 0 32px rgba(179, 244, 111, 0.2);
+}
+.fx-breathOrb b { font-size: 14px; line-height: 1.25; }
+
+/* Canlı Antrenman Yüzen Mini-Player Çubuğu */
+.fx-miniWorkoutBar {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(var(--fx-tabbar-h) + var(--fx-safe-bottom) + 12px);
+  z-index: 150;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: rgba(18, 26, 37, 0.96);
+  backdrop-filter: blur(18px);
+  border: 1.5px solid var(--fx-accent);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  animation: fx-fade 0.22s ease;
+}
+.fx-miniWorkoutLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.fx-miniWorkoutLeft b { display: block; font-size: 14px; color: #fff; }
+.fx-miniWorkoutLeft small { display: block; font-size: 12px; color: var(--fx-accent); }
+@media (min-width: 900px) {
+  .fx-miniWorkoutBar { bottom: 24px; }
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

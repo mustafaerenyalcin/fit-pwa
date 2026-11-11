@@ -5,6 +5,9 @@ import AuthScreen from './components/AuthScreen.jsx';
 import Onboarding from './components/Onboarding.jsx';
 import AiMealLogger from './components/AiMealLogger.jsx';
 import SmartMealRecommender from './components/SmartMealRecommender.jsx';
+import AdaptiveMacroCoach from './components/AdaptiveMacroCoach.jsx';
+import BodyCompositionPro from './components/BodyCompositionPro.jsx';
+import RecoveryStudio from './components/RecoveryStudio.jsx';
 import WeeklyReport from './components/WeeklyReport.jsx';
 import ProgramGenerator from './components/ProgramGenerator.jsx';
 import CustomWorkoutBuilder from './components/CustomWorkoutBuilder.jsx';
@@ -286,6 +289,7 @@ function MainApp() {
           {trainingSection === 'program' && (
             <>
               <ProgramGenerator profile={profile} program={program} onDone={() => showToast('Yeni programın hazır!')} />
+              <RecoveryStudio />
               <CustomWorkoutBuilder onStartWorkout={(plan) => setActiveWorkoutPlan(plan)} />
               <TrainingView
                 key={program?.createdAt || 'default'}
@@ -319,6 +323,7 @@ function MainApp() {
             targetCalories={calculateCalories(profile) || 2200}
             onAddMeal={(payload) => handleAddEntry('meal', payload)}
           />
+          <AdaptiveMacroCoach profile={profile} entries={entries} target={target} />
           <NutritionView
             day={day}
             profile={profile}
@@ -348,13 +353,16 @@ function MainApp() {
             <WeeklyReport profile={profile} entries={entries} target={target} onSaveReport={handleSaveReport} />
           )}
           {progressSection === 'body' && (
-            <ProgressView
-              day={day}
-              profile={profile}
-              entries={entries}
-              onAddWeight={(payload) => handleAddEntry('weight', payload)}
-              onRemoveWeight={(id) => handleRemoveEntry(id)}
-            />
+            <>
+              <BodyCompositionPro profile={profile} entries={entries} />
+              <ProgressView
+                day={day}
+                profile={profile}
+                entries={entries}
+                onAddWeight={(payload) => handleAddEntry('weight', payload)}
+                onRemoveWeight={(id) => handleRemoveEntry(id)}
+              />
+            </>
           )}
           {progressSection === 'habits' && (
             <HabitsView

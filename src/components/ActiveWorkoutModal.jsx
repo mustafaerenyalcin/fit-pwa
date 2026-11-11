@@ -84,6 +84,7 @@ export default function ActiveWorkoutModal({
 
   const [activeExIndex, setActiveExIndex] = useState(0);
   const [elapsed, setElapsed] = useState(sessionData.elapsedSeconds || 0);
+  const [minimized, setMinimized] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
 
   // Rest timer
@@ -306,6 +307,26 @@ export default function ActiveWorkoutModal({
     ? getProgressiveOverloadAdvice(prevData, currentExercise?.targetReps)
     : null;
 
+  if (minimized) {
+    return (
+      <div className="fx-miniWorkoutBar" onClick={() => setMinimized(false)} role="button" tabIndex={0}>
+        <div className="fx-miniWorkoutLeft">
+          <span className="liveDot" />
+          <div>
+            <b>{plan.name}</b>
+            <small>
+              {formatTime(elapsed)} · {totalCompletedSets} set tamamlandı
+              {restRemaining > 0 ? ` · Dinlenme: ${restRemaining}s` : ''}
+            </small>
+          </div>
+        </div>
+        <button type="button" className="fx-btn fx-btn--primary fx-btn--sm">
+          Antrenmana Dön
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="activeWorkoutOverlay">
       <div className="activeWorkoutModal">
@@ -343,6 +364,14 @@ export default function ActiveWorkoutModal({
             <button
               type="button"
               className="secondary finishBtnTop"
+              onClick={() => setMinimized(true)}
+              title="Antrenmanı küçült ve uygulamada gezin"
+            >
+              Küçült
+            </button>
+            <button
+              type="button"
+              className="primary finishBtnTop"
               onClick={handleCompleteWorkout}
             >
               <Check size={16} /> Bitir
