@@ -24,6 +24,7 @@ import EmptyState from '../components/EmptyState.jsx';
 import BarcodeScannerModal from '../components/BarcodeScannerModal.jsx';
 import { FOOD_DATABASE, calculateFoodNutrition } from '../lib/foodDatabase.js';
 import { FOOD_EXAMPLES, SUPPLEMENT_LIST } from '../lib/constants.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function NutritionView({
   day,
@@ -36,6 +37,7 @@ export default function NutritionView({
   onAddSupplement,
   onRemoveSupplement
 }) {
+  const { t } = useI18n();
   const [mealCategory, setMealCategory] = useState('Öğle');
   const [mealName, setMealName] = useState('');
   const [calories, setCalories] = useState('');
@@ -188,21 +190,17 @@ export default function NutritionView({
   return (
     <div className="nutritionView">
       <div className="intro">
-        <h2>Beslenme ve Makro Takibi</h2>
-        <p>
-          Kas kazanımı ve yağ oranı kontrolü için dengeli beslenme planı. Türk mutfağına özel
-          veritabanından arama yapabilir, gramaj seçebilir, sık yediğin favorileri tek dokunuşla
-          ekleyebilir veya dünün menüsünü kopyalayabilirsin.
-        </p>
+        <h2>{t('nut.title')}</h2>
+        <p>{t('nut.sub')}</p>
       </div>
 
       {/* Copy Yesterday's Meals Button */}
       {yesterdayMeals.length > 0 && todayMeals.length === 0 && (
         <div className="copyYesterdayBanner">
           <Copy size={16} />
-          <span>Dün ({yesterdayIso}) {yesterdayMeals.length} öğün kaydettin. Aynısını bugüne kopyalamak ister misin?</span>
+          <span>{yesterdayIso} ({yesterdayMeals.length})</span>
           <button type="button" className="pillBtn primaryPill" onClick={copyYesterdayMeals}>
-            Dünün Öğünlerini Kopyala
+            {t('nut.copyYest')}
           </button>
         </div>
       )}
@@ -210,44 +208,49 @@ export default function NutritionView({
       {/* Macro Metrics */}
       <div className="metrics four">
         <Metric
-          label="GÜNLÜK PROTEİN HEDEFİ"
+          label={t('nut.proteinGoal')}
           value={`${target.protein} g`}
-          extra={`${totals.protein} g alındı · ${Math.max(0, target.protein - totals.protein)} g kaldı`}
+          extra={`${totals.protein} g · ${Math.max(0, target.protein - totals.protein)} g`}
           icon={Utensils}
         />
         <Metric
-          label="ALINAN KALORİ"
+          label={t('nut.caloriesIn')}
           value={`${totals.calories} kcal`}
-          extra="Günlük toplam kalori"
+          extra={`${target.calories || 2200} kcal`}
           icon={Flame}
         />
         <Metric
-          label="KARBONHİDRAT"
+          label={t('nut.carbs')}
           value={`${totals.carbs} g`}
-          extra="Enerji ve kas glikojeni"
+          extra="kcal / 4"
           icon={Utensils}
         />
         <Metric
-          label="SAĞLIKLI YAĞ"
+          label={t('nut.fat')}
           value={`${totals.fat} g`}
-          extra={`Hedef: ~${target.fat} g`}
+          extra={`~${target.fat} g`}
           icon={Flame}
         />
       </div>
 
       <div className="twoCols">
         {/* Add Meal / Food Search Panel */}
-        <Panel title="Öğün & Besin Ekle" sub="Veritabanından seç veya manuel gir">
+        <Panel title={t('nut.addPanel')} sub={t('nut.addPanelSub')}>
           {/* Meal Category Selector */}
           <div className="mealCategoryTabs">
-            {['Kahvaltı', 'Öğle', 'Akşam', 'Ara Öğün'].map((cat) => (
+            {[
+              ['Kahvaltı', t('nut.catBreakfast')],
+              ['Öğle', t('nut.catLunch')],
+              ['Akşam', t('nut.catDinner')],
+              ['Ara Öğün', t('nut.catSnack')]
+            ].map(([catVal, catLabel]) => (
               <button
-                key={cat}
+                key={catVal}
                 type="button"
-                className={`categoryPill ${mealCategory === cat ? 'active' : ''}`}
-                onClick={() => setMealCategory(cat)}
+                className={`categoryPill ${mealCategory === catVal ? 'active' : ''}`}
+                onClick={() => setMealCategory(catVal)}
               >
-                {cat}
+                {catLabel}
               </button>
             ))}
           </div>
@@ -271,7 +274,7 @@ export default function NutritionView({
               }}
               onClick={() => setShowBarcodeScanner(true)}
             >
-              <Scan size={17} /> Kamera ile Ücretsiz Barkod Tara (Sıfır Paywall)
+              <Scan size={17} /> {t('nut.barcodeBtn')}
             </button>
           </div>
 
@@ -281,7 +284,7 @@ export default function NutritionView({
               <Search size={16} />
               <input
                 type="text"
-                placeholder="Besin ara (örn: tavuk, yumurta, yulaf, lor, somon…)"
+                placeholder={t('nut.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -341,15 +344,15 @@ export default function NutritionView({
           {/* Input Form */}
           <div className="formGrid" style={{ marginTop: 12 }}>
             <label className="wide">
-              Öğün / Besin Adı
+              {t('nut.mealName')}
               <input
                 value={mealName}
                 onChange={(e) => setMealName(e.target.value)}
-                placeholder="Örn: Izgara Tavuk & Bulgur Pilavı"
+                placeholder="Chicken & Rice / Whey..."
               />
             </label>
             <label>
-              Kalori (kcal)
+              {t('nut.calories')}
               <input
                 type="number"
                 min="0"
@@ -359,7 +362,7 @@ export default function NutritionView({
               />
             </label>
             <label>
-              Protein (g)
+              {t('nut.protein')}
               <input
                 type="number"
                 min="0"
@@ -370,7 +373,7 @@ export default function NutritionView({
               />
             </label>
             <label>
-              Karbonhidrat (g)
+              {t('nut.carbsG')}
               <input
                 type="number"
                 min="0"
@@ -381,7 +384,7 @@ export default function NutritionView({
               />
             </label>
             <label>
-              Yağ (g)
+              {t('nut.fatG')}
               <input
                 type="number"
                 min="0"
@@ -400,7 +403,7 @@ export default function NutritionView({
               disabled={!mealName.trim()}
               onClick={handleSubmitMeal}
             >
-              <Plus size={16} /> Öğünü Kaydet ({mealCategory})
+              <Plus size={16} /> {t('nut.saveMeal')}
             </button>
 
             {mealName.trim() && calories && protein && (
@@ -416,32 +419,31 @@ export default function NutritionView({
                     fat: Number(fat) || 0
                   })
                 }
-                title="Sık tüketilen favorilere kaydet"
               >
-                <Bookmark size={15} /> Favorilere Ekle
+                <Bookmark size={15} /> {t('nut.addFav')}
               </button>
             )}
           </div>
         </Panel>
 
         {/* Daily Macros & Summary Panel */}
-        <Panel title="Bugünün Makro Dağılımı" sub={day}>
+        <Panel title={t('nut.todayMacros')} sub={day}>
           <div className="nutritionNumbers">
             <div>
               <b>{totals.protein} g</b>
-              <small>Protein ({target.protein} g hedef)</small>
+              <small>{t('nut.protein')} ({target.protein} g)</small>
             </div>
             <div>
               <b>{totals.calories}</b>
-              <small>Toplam Kalori</small>
+              <small>{t('nut.calories')}</small>
             </div>
             <div>
               <b>{totals.carbs} g</b>
-              <small>Karbonhidrat</small>
+              <small>{t('nut.carbsG')}</small>
             </div>
             <div>
               <b>{totals.fat} g</b>
-              <small>Sağlıklı Yağ</small>
+              <small>{t('nut.fatG')}</small>
             </div>
           </div>
 
@@ -450,16 +452,15 @@ export default function NutritionView({
           {/* Segmented Macro Bar */}
           {totalCalFromMacros > 0 && (
             <div className="macroSegmentContainer">
-              <span className="macroSegmentTitle">Enerji Dağılım Oranı:</span>
               <div className="macroSegmentBar">
-                <span className="segPro" style={{ width: `${proPct}%` }} title={`Protein %${proPct}`} />
-                <span className="segCarb" style={{ width: `${carbPct}%` }} title={`Karbonhidrat %${carbPct}`} />
-                <span className="segFat" style={{ width: `${fatPct}%` }} title={`Yağ %${fatPct}`} />
+                <span className="segPro" style={{ width: `${proPct}%` }} title={`Protein ${proPct}%`} />
+                <span className="segCarb" style={{ width: `${carbPct}%` }} title={`Carbs ${carbPct}%`} />
+                <span className="segFat" style={{ width: `${fatPct}%` }} title={`Fat ${fatPct}%`} />
               </div>
               <div className="macroSegmentLegend">
-                <span><i style={{ background: '#7ee787' }} /> %{proPct} Protein</span>
-                <span><i style={{ background: '#f0883e' }} /> %{carbPct} Karb</span>
-                <span><i style={{ background: '#e3b341' }} /> %{fatPct} Yağ</span>
+                <span><i style={{ background: '#7ee787' }} /> {proPct}% {t('nut.protein')}</span>
+                <span><i style={{ background: '#f0883e' }} /> {carbPct}% {t('nut.carbsG')}</span>
+                <span><i style={{ background: '#e3b341' }} /> {fatPct}% {t('nut.fatG')}</span>
               </div>
             </div>
           )}
@@ -468,7 +469,7 @@ export default function NutritionView({
           <div className="favoritesSection">
             <div className="favHeader">
               <Star size={15} className="favStar" />
-              <b>Favori & Sık Tüketilen Öğünler</b>
+              <b>{t('nut.favTitle')}</b>
             </div>
             <div className="favList">
               {favorites.map((fav, i) => (
@@ -476,7 +477,7 @@ export default function NutritionView({
                   <div className="favItemMeta">
                     <b>{fav.name}</b>
                     <small>
-                      {fav.calories} kcal · {fav.protein}g protein · {fav.carbs}g karb
+                      {fav.calories} kcal · {fav.protein}g P · {fav.carbs}g C
                     </small>
                   </div>
                   <div className="favItemBtns">
@@ -484,9 +485,8 @@ export default function NutritionView({
                       type="button"
                       className="pillBtn primaryPill"
                       onClick={() => addFavoriteToToday(fav)}
-                      title="Bugüne ekle"
                     >
-                      <Plus size={13} /> Ekle
+                      <Plus size={13} /> {t('nut.addBtn')}
                     </button>
                     <button
                       type="button"
@@ -507,23 +507,22 @@ export default function NutritionView({
       {/* Today's Logged Meals & Supplements */}
       <div className="twoCols">
         {/* Today's Meals */}
-        <Panel title="Bugün Tüketilen Öğünler">
+        <Panel title={t('nut.todayMeals')}>
           <div className="history">
             {todayMeals.length ? (
               todayMeals.map((m) => (
                 <div className="historyRow" key={m.id}>
                   <div>
-                    <span className="mealCatBadge">{m.payload?.category || 'Öğün'}</span>
+                    <span className="mealCatBadge">{m.payload?.category || 'Meal'}</span>
                     <b>{m.payload?.name}</b>
                     <small>
-                      {m.payload?.calories} kcal · {m.payload?.protein}g protein · {m.payload?.carbs || 0}g karb · {m.payload?.fat || 0}g yağ
+                      {m.payload?.calories} kcal · {m.payload?.protein}g P · {m.payload?.carbs || 0}g C · {m.payload?.fat || 0}g F
                     </small>
                   </div>
                   <button
                     type="button"
                     className="danger"
                     onClick={() => onRemoveMeal(m.id)}
-                    title="Sil"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -532,15 +531,15 @@ export default function NutritionView({
             ) : (
               <EmptyState
                 icon={Utensils}
-                title="Bugün henüz öğün girilmedi"
-                description="Yukarıdaki arama çubuğunu veya formu kullanarak öğünlerini ekle."
+                title={t('nut.noMeals')}
+                description={t('nut.noMealsDesc')}
               />
             )}
           </div>
         </Panel>
 
         {/* Supplement Tracking */}
-        <Panel title="Takviye Takibi" sub="Kreatin, Protein Tozu ve BCAA">
+        <Panel title={t('nut.suppTitle')} sub={t('nut.suppSub')}>
           <div className="measureInput">
             <label>
               Takviye

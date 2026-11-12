@@ -14,9 +14,11 @@ import {
 } from 'lucide-react';
 import { upgradeToPro, cancelPro, getAiMembership } from '../lib/aiQuota.js';
 import { sounds } from '../lib/audio.js';
+import { useI18n } from '../lib/i18n.js';
 import LegalModal from './LegalModal.jsx';
 
 export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onSuccess }) {
+  const { t } = useI18n();
   const currentMembership = getAiMembership();
   const [billingCycle, setBillingCycle] = useState(initialPlan); // 'yearly' | 'monthly' | 'family'
   const [processing, setProcessing] = useState(false);
@@ -26,13 +28,13 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
 
   const handleRestorePurchases = () => {
     sounds.tap();
-    setRestoreNotice('Satın alımlar sorgulanıyor…');
+    setRestoreNotice(t('subModal.restoreChecking'));
     setTimeout(() => {
       const mem = getAiMembership();
       if (mem.isPro) {
-        setRestoreNotice('✓ Aktif Atelier Black aboneliğiniz başarıyla geri yüklendi.');
+        setRestoreNotice(t('subModal.restoreFound'));
       } else {
-        setRestoreNotice('Bu hesaba bağlı aktif bir mağaza aboneliği bulunamadı.');
+        setRestoreNotice(t('subModal.restoreNone'));
       }
       setTimeout(() => setRestoreNotice(''), 4000);
     }, 800);
@@ -61,30 +63,12 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
   };
 
   const features = [
-    {
-      title: '4 Kişiye Kadar Gym Buddy Squad & Aile Erişimi',
-      desc: 'Arkadaşlarınla ortak ekip kur; birbirinizin canlı antrenmanlarını, serilerini ve ağırlıklarını anlık takip edin.'
-    },
-    {
-      title: 'Sınırsız Gemini Vision Tabak & Öğün Analizi',
-      desc: 'Fotoğrafını çek, makroları ve porsiyonları tek saniyede çıkarsın. Günlük 3 kotası kalkar.'
-    },
-    {
-      title: 'Sınırsız AI Kamera Biyomekanik & Eklem Taraması',
-      desc: 'Squat, Deadlift ve Bench Press formunu yapay zeka ile tara; sakatlık riskini sıfırla.'
-    },
-    {
-      title: 'Kişisel AI Spor Hekimi & Antrenör Danışmanı',
-      desc: 'Kas ağrıların, toparlanma durumun ve antrenman takılmaların için 7/24 kişisel analiz.'
-    },
-    {
-      title: 'Otomatik Haftalık Yüklenme & Deload Optimizasyonu',
-      desc: 'Ağırlık artışlarını santral sinir sistemi yorgunluğuna göre otomatik ayarlar.'
-    },
-    {
-      title: 'Haftalık 3x Seri Kalkanı (Streak Shield)',
-      desc: 'Yoğun günlerde veya hastalıkta antrenman serin asla sıfırlanmaz.'
-    }
+    { title: t('subModal.f1t'), desc: t('subModal.f1d') },
+    { title: t('subModal.f2t'), desc: t('subModal.f2d') },
+    { title: t('subModal.f3t'), desc: t('subModal.f3d') },
+    { title: t('subModal.f4t'), desc: t('subModal.f4d') },
+    { title: t('subModal.f5t'), desc: t('subModal.f5d') },
+    { title: t('subModal.f6t'), desc: t('subModal.f6d') }
   ];
 
   return (
@@ -117,9 +101,9 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                 <Crown size={20} color="#f5c451" />
                 <span>ATELIER BLACK &amp; SQUAD PASS</span>
               </div>
-              <h2 className="fx-subTitle">Zirve Performans &amp; Ekip Gücü</h2>
+              <h2 className="fx-subTitle">{t('subModal.title')}</h2>
               <p className="fx-subDesc">
-                İster tek başına sınırları kaldır, ister arkadaşlarınla 4 kişilik Gym Buddy Squad kurup kişi başı ₺75'e ortak antrenman yap.
+                {t('subModal.desc')}
               </p>
             </div>
 
@@ -134,14 +118,14 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                   setBillingCycle('yearly');
                 }}
               >
-                <div className="fx-subTabBadge">%40 TASARRUF</div>
-                <b>Yıllık Pro</b>
+                <div className="fx-subTabBadge">{t('subModal.save40')}</div>
+                <b>{t('subModal.yearly')}</b>
                 <div className="fx-subPriceRow">
                   <span>₺</span>
                   <strong>119</strong>
-                  <small>/ ay</small>
+                  <small>{t('subModal.perMonth')}</small>
                 </div>
-                <small className="fx-subBilledInfo">Yıllık 1.428 ₺ (7 gün ücretsiz)</small>
+                <small className="fx-subBilledInfo">{t('subModal.yearlyInfo')}</small>
               </button>
 
               {/* 2. AYLIK BİREYSEL */}
@@ -153,13 +137,13 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                   setBillingCycle('monthly');
                 }}
               >
-                <b>Aylık Pro</b>
+                <b>{t('subModal.monthly')}</b>
                 <div className="fx-subPriceRow">
                   <span>₺</span>
                   <strong>199</strong>
-                  <small>/ ay</small>
+                  <small>{t('subModal.perMonth')}</small>
                 </div>
-                <small className="fx-subBilledInfo">Esnek, dilediğin an iptal et</small>
+                <small className="fx-subBilledInfo">{t('subModal.monthlyInfo')}</small>
               </button>
 
               {/* 3. AİLE & GYM BUDDY SQUAD (MAX 4 KİŞİ) */}
@@ -171,21 +155,21 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                   setBillingCycle('family');
                 }}
               >
-                <div className="fx-subTabBadge fx-subTabBadge--squad">4 KİŞİ SQUAD</div>
-                <b>Aile &amp; Squad</b>
+                <div className="fx-subTabBadge fx-subTabBadge--squad">{t('subModal.squadBadge')}</div>
+                <b>{t('subModal.squad')}</b>
                 <div className="fx-subPriceRow">
                   <span>₺</span>
                   <strong>299</strong>
-                  <small>/ ay</small>
+                  <small>{t('subModal.perMonth')}</small>
                 </div>
-                <small className="fx-subBilledInfo">4 Kişi · Kişi başı ~75 ₺</small>
+                <small className="fx-subBilledInfo">{t('subModal.squadInfo')}</small>
               </button>
             </div>
 
             {/* ÖZELLİK LİSTESİ */}
             <div className="fx-subFeatureList">
               <span className="fx-subLabel">
-                {billingCycle === 'family' ? 'SQUAD & AİLE PLANI AYRICALIKLARI:' : 'ATELIER BLACK AYRICALIKLARI:'}
+                {billingCycle === 'family' ? t('subModal.perksSquad') : t('subModal.perksPro')}
               </span>
               {features.map((f, idx) => (
                 <div key={idx} className="fx-subFeatureItem">
@@ -204,7 +188,7 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
             <div className="fx-subGuaranteeBox">
               <Shield size={16} color="#00f0ff" />
               <span>
-                <b>Sıfır Tuzak Güvencesi:</b> 1 Gym Buddy ekleme, barkod tarama ve antrenman sayacı her zaman %100 ücretsiz kalır.
+                <b>{t('subModal.guaranteeTitle')}</b> {t('subModal.guaranteeText')}
               </span>
             </div>
 
@@ -225,12 +209,12 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
               >
                 {billingCycle === 'family' ? <Users size={18} /> : <Crown size={18} />}
                 {processing
-                  ? 'Aktivasyon Yapılıyor…'
+                  ? t('subModal.processing')
                   : billingCycle === 'family'
-                  ? '👑 Aile & Squad Planını Başlat (₺299/ay · 4 Kişi)'
+                  ? t('subModal.ctaSquad')
                   : billingCycle === 'yearly'
-                  ? '7 Gün Ücretsiz Dene & Başlat (₺119/ay)'
-                  : 'Atelier Black Bireysel’e Geç (₺199/ay)'}
+                  ? t('subModal.ctaYearly')
+                  : t('subModal.ctaMonthly')}
               </button>
 
               {restoreNotice && (
@@ -262,7 +246,7 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                     cursor: 'pointer'
                   }}
                 >
-                  Satın Alımları Geri Yükle (Restore Purchases)
+                  {t('subModal.restore')}
                 </button>
 
                 <div style={{ display: 'flex', gap: 14, fontSize: 11, color: 'var(--fx-muted)' }}>
@@ -271,7 +255,7 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                     onClick={() => setLegalType('terms')}
                     style={{ background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
                   >
-                    Kullanım Koşulları (EULA)
+                    {t('subModal.eula')}
                   </button>
                   <span>·</span>
                   <button
@@ -279,12 +263,12 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                     onClick={() => setLegalType('privacy')}
                     style={{ background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
                   >
-                    Gizlilik Politikası
+                    {t('subModal.privacy')}
                   </button>
                 </div>
 
                 <p style={{ margin: 0, fontSize: 10, color: 'rgba(255, 255, 255, 0.35)', lineHeight: 1.4, maxWidth: 360 }}>
-                  Abonelik, geçerli dönemin bitiminden en az 24 saat önce iptal edilmediği sürece otomatik yenilenir. Apple Kimliği veya Google Play hesap ayarlarınızdan dilediğiniz an yönetebilirsiniz.
+                  {t('subModal.autoRenew')}
                 </p>
               </div>
             </div>

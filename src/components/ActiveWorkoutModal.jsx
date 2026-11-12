@@ -26,6 +26,7 @@ import { getDetailedExerciseGuide } from '../lib/exerciseGuide.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
 import { sounds } from '../lib/audio.js';
 import { celebration } from '../lib/celebration.js';
+import { useI18n } from '../lib/i18n.js';
 
 const ACTIVE_WORKOUT_KEY = 'fit-active-session-v1';
 
@@ -37,6 +38,7 @@ export default function ActiveWorkoutModal({
   onFinish,
   onClose
 }) {
+  const { t } = useI18n();
   // Session restore from localStorage if ongoing
   const [sessionData, setSessionData] = useState(() => {
     try {
@@ -176,7 +178,7 @@ export default function ActiveWorkoutModal({
             setRestActive(false);
             if (soundEnabled) {
               sounds.chime();
-              sounds.speak('Dinlenme bitti şampiyon. Sıradaki sete hazırsın, hadi bas!');
+              sounds.speak(t('wm.voiceRestDone'));
             }
             return 0;
           }
@@ -506,7 +508,7 @@ export default function ActiveWorkoutModal({
         <div className={`activeRestBar ${restActive ? 'active' : ''}`}>
           <div className="restBarLeft">
             <TimerReset size={18} className={restActive ? 'pulse' : ''} />
-            <span>Dinlenme Sayacı: </span>
+            <span>{t('wm.restTimer')} </span>
             <strong className="restClock">
               {Math.floor(restSeconds / 60)}:{String(restSeconds % 60).padStart(2, '0')}
             </strong>
@@ -521,7 +523,7 @@ export default function ActiveWorkoutModal({
                 setRestActive((v) => !v);
               }}
             >
-              {restActive ? 'Duraklat' : 'Başlat'}
+              {restActive ? t('wm.pause') : t('wm.start')}
             </button>
             <button
               type="button"
@@ -532,7 +534,7 @@ export default function ActiveWorkoutModal({
                 setRestActive(false);
               }}
             >
-              Sıfırla
+              {t('wm.reset')}
             </button>
             <select
               value={restDuration}
@@ -543,11 +545,11 @@ export default function ActiveWorkoutModal({
               }}
               className="restDurationSelect"
             >
-              <option value={45}>45 sn</option>
-              <option value={60}>60 sn</option>
-              <option value={90}>90 sn</option>
-              <option value={120}>120 sn</option>
-              <option value={180}>180 sn</option>
+              <option value={45}>45 {t('wm.sec')}</option>
+              <option value={60}>60 {t('wm.sec')}</option>
+              <option value={90}>90 {t('wm.sec')}</option>
+              <option value={120}>120 {t('wm.sec')}</option>
+              <option value={180}>180 {t('wm.sec')}</option>
             </select>
             <button
               type="button"
@@ -593,7 +595,7 @@ export default function ActiveWorkoutModal({
                 <div>
                   <div className="exMuscleTag">{currentExercise.muscle}</div>
                   <h2>{currentExercise.name}</h2>
-                  <p className="exTargetReps">Hedef: {currentExercise.targetReps}</p>
+                  <p className="exTargetReps">{t('wm.target')} {currentExercise.targetReps}</p>
                 </div>
 
                 <div className="exHeaderActionBtns">
@@ -608,18 +610,16 @@ export default function ActiveWorkoutModal({
                         return updated;
                       });
                     }}
-                    title="Dambıl başına girilen ağırlığı toplam hacimde otomatik 2 ile çarpar"
                   >
-                    <Dumbbell size={13} /> {currentExercise.isDoubleDumbbell ? '2× Çift Dambıl (Aktif)' : 'Dambıl Çarpanı (2×)'}
+                    <Dumbbell size={13} /> {currentExercise.isDoubleDumbbell ? t('wm.doubleDbActive') : t('wm.doubleDb')}
                   </button>
 
                   <button
                     type="button"
                     className="guideToggleBtn"
                     onClick={() => handleAddWarmupSets(activeExIndex)}
-                    title="Hedef ağırlığına göre otomatik 3 aşamalı bilimsel ısınma seti piramidi ekler (%45x10, %70x5, %85x2)"
                   >
-                    🔥 Isınma Piramidi
+                    {t('wm.warmup')}
                   </button>
 
                   {currentExercise.alternatives && currentExercise.alternatives.length > 0 && (
@@ -627,9 +627,8 @@ export default function ActiveWorkoutModal({
                       type="button"
                       className="guideToggleBtn"
                       onClick={() => setShowReplaceModal(true)}
-                      title="Bu hareketi alternatif bir egzersizle değiştir"
                     >
-                      <RefreshCw size={13} /> Hareketi Değiştir
+                      <RefreshCw size={13} /> {t('wm.swap')}
                     </button>
                   )}
                   <button
@@ -637,7 +636,7 @@ export default function ActiveWorkoutModal({
                     className="guideToggleBtn"
                     onClick={() => setShowGuide((v) => !v)}
                   >
-                    <HelpCircle size={14} /> Rehber {showGuide ? '−' : '+'}
+                    <HelpCircle size={14} /> {t('wm.guide')} {showGuide ? '−' : '+'}
                   </button>
                 </div>
               </div>
@@ -651,18 +650,16 @@ export default function ActiveWorkoutModal({
                     sounds.tap();
                     setTempoActive(!tempoActive);
                   }}
-                  title="3 saniye negatif iniş, 1 saniye duraklama, 1 saniye patlayıcı itiş ritmi"
                 >
-                  <Clock size={13} /> {tempoActive ? `Tempo Ritim: ${tempoPhase === 'down' ? 'İniş (3s)' : tempoPhase === 'pause' ? 'Dip (1s)' : 'Patlama (1s)'}` : '⚡ 3-1-1-0 Hipertrofi Metronomu'}
+                  <Clock size={13} /> {tempoActive ? `${tempoPhase === 'down' ? t('wm.tempoDown') : tempoPhase === 'pause' ? t('wm.tempoPause') : t('wm.tempoUp')}` : t('wm.tempoBtn')}
                 </button>
 
                 <button
                   type="button"
                   className={`fx-neuralPrimeBtn ${neuralPrimingActive ? 'pulsing' : ''}`}
                   onClick={handleTriggerNeuralPrime}
-                  title="Ağır set öncesi 40Hz Gamma nöral dalgasıyla sinir sistemini uyar"
                 >
-                  <Zap size={13} color="#00f0ff" /> {neuralPrimingActive ? '🧠 40Hz Nöral Dalga Aktif…' : '40Hz Nöral Odak (PR Hazırlığı)'}
+                  <Zap size={13} color="#00f0ff" /> {neuralPrimingActive ? t('wm.neuralActive') : t('wm.neuralBtn')}
                 </button>
               </div>
 
@@ -747,12 +744,12 @@ export default function ActiveWorkoutModal({
               {/* Set Tracker Table with RPE & Set Type */}
               <div className="setTrackerTable">
                 <div className="setTableHeader">
-                  <span className="colSet">SET</span>
-                  <span className="colPrev">ÖNCEKİ</span>
-                  <span className="colKg">AĞIRLIK (KG)</span>
-                  <span className="colReps">TEKRAR</span>
-                  <span className="colRpe" title="RPE: Zorlanma Seviyesi (7-8: 2-3 tekrar rezerv)">RPE</span>
-                  <span className="colCheck">TAMAM</span>
+                  <span className="colSet">{t('wm.colSet')}</span>
+                  <span className="colPrev">{t('wm.colPrev')}</span>
+                  <span className="colKg">{t('wm.colKg')}</span>
+                  <span className="colReps">{t('wm.colReps')}</span>
+                  <span className="colRpe">RPE</span>
+                  <span className="colCheck">{t('wm.colCheck')}</span>
                   <span className="colDel"></span>
                 </div>
 
@@ -860,7 +857,7 @@ export default function ActiveWorkoutModal({
                     className="addSetBtn"
                     onClick={() => addSetToExercise(activeExIndex)}
                   >
-                    <Plus size={14} /> Yeni Set Ekle
+                    <Plus size={14} /> {t('wm.addSet')}
                   </button>
                 </div>
               </div>
@@ -876,7 +873,7 @@ export default function ActiveWorkoutModal({
                     setActiveExIndex((idx) => Math.max(0, idx - 1));
                   }}
                 >
-                  ← Önceki Hareket
+                  {t('wm.prevEx')}
                 </button>
 
                 {activeExIndex < sessionData.exercises.length - 1 ? (
@@ -888,7 +885,7 @@ export default function ActiveWorkoutModal({
                       setActiveExIndex((idx) => idx + 1);
                     }}
                   >
-                    Sonraki Hareket →
+                    {t('wm.nextEx')}
                   </button>
                 ) : (
                   <button
@@ -896,7 +893,7 @@ export default function ActiveWorkoutModal({
                     className="primary lightButton"
                     onClick={handleCompleteWorkout}
                   >
-                    Antrenmanı Tamamla <Award size={16} />
+                    {t('wm.finishEx')} <Award size={16} />
                   </button>
                 )}
               </div>
@@ -928,10 +925,10 @@ export default function ActiveWorkoutModal({
 
             <div className="summaryNote" style={{ marginTop: 14 }}>
               <label>
-                Antrenman Notun & Gözlemlerin (opsiyonel):
+                {t('wm.noteLabel')}
                 <textarea
                   rows="2"
-                  placeholder="Örn: Omuz lateral raise hareketinde 10 kg çok temiz çıktı, haftaya artırılabilir."
+                  placeholder="RPE / Form / Weight notes..."
                   value={sessionData.note}
                   onChange={(e) =>
                     setSessionData((prev) => ({ ...prev, note: e.target.value }))
@@ -946,7 +943,7 @@ export default function ActiveWorkoutModal({
                 className="secondary"
                 onClick={() => setShowSummary(false)}
               >
-                ← Setlere Geri Dön ve Düzenle
+                {t('wm.backToSets')}
               </button>
             </div>
 
@@ -966,7 +963,7 @@ export default function ActiveWorkoutModal({
               }}
               onClick={() => setShowStoryModal(true)}
             >
-              📸 Athlete Story Kartı Oluştur &amp; Paylaş (Instagram / WhatsApp)
+              {t('wm.shareStory')}
             </button>
           </div>
         )}
