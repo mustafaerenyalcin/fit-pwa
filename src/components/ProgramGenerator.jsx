@@ -3,8 +3,6 @@ import { Sparkles, Loader2 } from 'lucide-react';
 import { Card } from './ui.jsx';
 import { generateProgram } from '../lib/programGenerator.js';
 
-export { generateProgram };
-
 export default function ProgramGenerator({ profile, program, onDone }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
