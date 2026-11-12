@@ -37,7 +37,7 @@ const TOOLS_CONFIG = [
     category: 'nutrition',
     badge: '16:8 Fazı',
     color: '#00f0ff',
-    image: '/images/tools/fasting.jpg',
+    image: '/images/tools/fasting-v2.jpg',
     bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(0, 240, 255, 0.02))'
   },
   {

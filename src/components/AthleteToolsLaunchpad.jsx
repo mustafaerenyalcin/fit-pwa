@@ -31,7 +31,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       sub: '16:8 Protokolü ve metabolik yağ yakım fazı',
       badge: 'Metabolik Faz',
       color: '#ff4d1c',
-      image: '/images/tools/fasting.jpg',
+      image: '/images/tools/fasting-v2.jpg',
       action: () => onNavigate('tools', 'fasting')
     },
     {
