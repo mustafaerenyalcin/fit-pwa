@@ -13,6 +13,8 @@ import {
 import { RichText } from '../components/ui.jsx';
 import { askCoach } from '../lib/aiCoach.js';
 import { buildContext } from '../lib/api.js';
+import { consumeAiCredit } from '../lib/aiQuota.js';
+import SubscriptionModal from '../components/SubscriptionModal.jsx';
 
 export default function CoachView({
   profile,
@@ -29,6 +31,7 @@ export default function CoachView({
   const [inputQuestion, setInputQuestion] = useState('');
   const [busy, setBusy] = useState(false);
   const [listening, setListening] = useState(false);
+  const [showSubModal, setShowSubModal] = useState(false);
   const recRef = useRef(null);
 
   // Recipe Wizard state
@@ -91,6 +94,12 @@ export default function CoachView({
   const handleAsk = async (questionText) => {
     const q = questionText || inputQuestion;
     if (!q.trim() || busy) return;
+
+    // Ücretsiz kotası kontrolü: Günlük hak bitmişse abonelik modalı açılır
+    if (!consumeAiCredit()) {
+      setShowSubModal(true);
+      return;
+    }
 
     const userMsg = { sender: 'user', text: q.trim() };
     setMessages((prev) => [...prev, userMsg]);
@@ -266,6 +275,10 @@ export default function CoachView({
           </button>
         </form>
       </div>
+
+      {showSubModal && (
+        <SubscriptionModal onClose={() => setShowSubModal(false)} />
+      )}
     </div>
   );
 }
