@@ -1,10 +1,10 @@
 /**
- * Fit PWA Service Worker v0.6.0
+ * Fit PWA Service Worker v2.1.0 (FIT. ATELIER)
  * Offline-first caching with stale-while-revalidate for static assets
- * and network-first for document navigation.
+ * and immediate network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-pwa-v1.0.0';
+const CACHE_NAME = 'fit-atelier-v2.1.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -15,17 +15,17 @@ const STATIC_ASSETS = [
   '/icons/icon-512.png'
 ];
 
-// Install: Cache critical application shell
+// Install: Cache critical application shell & skip waiting immediately
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches
       .open(CACHE_NAME)
       .then((cache) => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
   );
 });
 
-// Activate: Clean up old caches
+// Activate: Purge ALL old caches immediately and claim clients
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
