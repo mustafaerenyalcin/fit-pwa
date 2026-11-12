@@ -15,7 +15,8 @@ import {
   TrendingUp,
   RefreshCw,
   Trash2,
-  Activity
+  Activity,
+  Zap
 } from 'lucide-react';
 import ExerciseVisual from './ExerciseVisual.jsx';
 import WorkoutSummaryCard from './WorkoutSummaryCard.jsx';
