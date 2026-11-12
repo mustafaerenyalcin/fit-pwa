@@ -60,10 +60,25 @@ export default function TodayView({
   const g = calculateGamification(entries, target);
   const readiness = calculateReadiness(entries, profile, target);
   const streak = g.streak || { current: 0 };
-  const hasStreakAtRisk = !streak.loggedToday && streak.current > 0;
+  const hasStreakAtRisk = !streak.loggedToday && !streak.shieldUsed && streak.current > 0;
+
+  // Günün Türkçe / Yerel Tarih Başlığı (Örn: "12 KASIM ÇARŞAMBA")
+  const dateFormatted = new Date(day + 'T12:00:00')
+    .toLocaleDateString('tr-TR', {
+      day: 'numeric',
+      month: 'long',
+      weekday: 'long'
+    })
+    .toLocaleUpperCase('tr-TR');
 
   return (
     <div className="fx-zenTodayContainer animate-fade-in">
+      {/* 0. ANA SAYFA MİKRO KOKPİT ŞERİDİ */}
+      <div className="fx-homeEyebrowBar">
+        <span className="fx-homeDateBadge">{dateFormatted}</span>
+        <span className="fx-homeTag">SPORCU KOMUTA MERKEZİ</span>
+      </div>
+
       {/* 1. SEVİYE, SERİ & AI ENERJİ SPORCU BAŞLIĞI */}
       <AthleteHeaderBar
         entries={entries}
@@ -73,10 +88,10 @@ export default function TodayView({
         onOpenSubscription={() => setShowSubModal(true)}
       />
 
-      {/* 2. DİNAMİK SERİ KORUMA HATIRLATICISI (KUTSAL SERİ ŞERİDİ) */}
-      {streak.current > 0 && (
+      {/* 2. DİNAMİK SERİ KORUMA HATIRLATICISI (YALNIZCA SERİ GERÇEKTEN TEHLİKEDE İSE GÖRÜNÜR) */}
+      {hasStreakAtRisk && (
         <div
-          className={`fx-streakAuraBar ${hasStreakAtRisk ? 'risk' : 'safe'}`}
+          className="fx-streakAuraBar risk"
           onClick={() => {
             sounds.tap();
             setShowStreakModal(true);
@@ -86,24 +101,20 @@ export default function TodayView({
         >
           <div className="fx-streakAuraLeft">
             <div className="fx-streakMiniFlame">
-              <Flame size={16} className={hasStreakAtRisk ? 'flame-risk' : 'flame-safe'} />
+              <Flame size={16} className="flame-risk" />
             </div>
             <div>
               <strong className="fx-streakAuraTitle">
-                {streak.current} Gün Kesintisiz Seri
+                {streak.current} Günlük Seri Tehlikede!
               </strong>
               <small className="fx-streakAuraSub">
-                {streak.loggedToday
-                  ? 'Bugünkü seri kilitlendi · Yarın aynı saatte devam!'
-                  : streak.shieldUsed
-                  ? 'Dinlenme kalkanı devrede · Serin korundu.'
-                  : '⚠️ Henüz seans kaydetmedin · Serini koru veya kalkan kullan!'}
+                Bugün henüz seans kaydetmedin · Serini korumak için antrenmana başla veya dinlenme kalkanı kullan.
               </small>
             </div>
           </div>
           <button type="button" className="fx-streakAuraActionBtn">
-            {streak.shieldUsed ? <ShieldCheck size={13} /> : <Shield size={13} />}
-            <span>Kasayı Aç</span>
+            <Shield size={13} />
+            <span>Kalkanı Aç</span>
           </button>
         </div>
       )}

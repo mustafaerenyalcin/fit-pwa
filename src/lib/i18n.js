@@ -12,7 +12,7 @@ export const LANGUAGES = [
 const DICT = {
   tr: {
     // Nav & Layout
-    'nav.today': 'Bugün',
+    'nav.today': 'Ana Sayfa',
     'nav.training': 'Antrenman',
     'nav.nutrition': 'Beslenme',
     'nav.tools': 'Araçlar',
@@ -140,7 +140,7 @@ const DICT = {
   },
 
   en: {
-    'nav.today': 'Today',
+    'nav.today': 'Home',
     'nav.training': 'Workouts',
     'nav.nutrition': 'Nutrition',
     'nav.tools': 'Tools',

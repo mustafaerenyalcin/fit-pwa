@@ -8310,6 +8310,36 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   padding-bottom: 32px;
 }
 
+/* 0. ANA SAYFA MİKRO KOKPİT ŞERİDİ */
+.fx-homeEyebrowBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 6px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.fx-homeDateBadge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--fx-accent, #c8ff00);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fx-homeTag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--fx-muted, #94a3b8);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
 /* 1. ATHLETE COMPACT HEADER BAR */
 .fx-zenAthleteHeader {
   display: flex;
@@ -9000,22 +9030,24 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 .fx-zenToolTile {
   background: linear-gradient(145deg, #11141e 0%, #090b10 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 16px;
   text-align: left;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
 }
 .fx-zenToolTile:hover {
-  background: linear-gradient(145deg, #161a28 0%, #0d1017 100%);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(255, 255, 255, 0.06);
 }
 .fx-zenToolTop {
   display: flex;

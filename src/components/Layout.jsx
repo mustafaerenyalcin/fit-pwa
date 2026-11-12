@@ -11,7 +11,7 @@ import {
   WifiOff,
   Settings,
   Globe,
-  Activity,
+  Home,
   Layers
 } from 'lucide-react';
 import { today } from '../lib/calculations.js';
@@ -22,7 +22,7 @@ import UserAvatar from './UserAvatar.jsx';
 import { sounds } from '../lib/audio.js';
 
 const TABS = [
-  ['today', 'nav.today', Activity, '01'],
+  ['today', 'nav.today', Home, '01'],
   ['training', 'nav.training', Dumbbell, '02'],
   ['nutrition', 'nav.nutrition', Utensils, '03'],
   ['tools', 'nav.tools', Layers, '04'],

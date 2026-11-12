@@ -11,6 +11,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       sub: 'Kamerayla anında besin ve makro ekle',
       badge: 'Sıfır Paywall',
       color: '#00f0ff',
+      image: '/images/nutrition-bg.jpg',
       action: () => onOpenBarcode()
     },
     {
@@ -20,6 +21,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       sub: 'Squat & Deadlift biyomekanik açı analizi',
       badge: 'Biyomekanik',
       color: '#c8ff00',
+      image: '/images/tools/form_check.jpg',
       action: () => onNavigate('tools', 'form_check')
     },
     {
@@ -29,6 +31,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       sub: '16:8 Protokolü ve metabolik yağ yakım fazı',
       badge: 'Metabolik Faz',
       color: '#ff4d1c',
+      image: '/images/tools/fasting.jpg',
       action: () => onNavigate('tools', 'fasting')
     },
     {
@@ -38,6 +41,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       sub: 'Biyometrik analiz ve kişisel seans uyarlaması',
       badge: 'Yapay Zeka',
       color: '#a855f7',
+      image: '/images/tools/buddy.jpg',
       action: () => onNavigate('coach')
     }
   ];
@@ -70,15 +74,21 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
                 sounds.tap();
                 t.action();
               }}
+              style={{
+                backgroundImage: `linear-gradient(180deg, rgba(14, 18, 28, 0.78) 0%, rgba(9, 11, 17, 0.94) 80%, rgba(7, 9, 14, 0.98) 100%), url('${t.image}')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                borderColor: `${t.color}35`
+              }}
             >
               <div className="fx-zenToolTop">
                 <div
                   className="fx-zenToolIconBox"
-                  style={{ color: t.color, backgroundColor: `${t.color}18` }}
+                  style={{ color: t.color, backgroundColor: `${t.color}1e` }}
                 >
                   <Icon size={18} />
                 </div>
-                <span className="fx-zenToolBadge" style={{ color: t.color, borderColor: `${t.color}40` }}>
+                <span className="fx-zenToolBadge" style={{ color: t.color, borderColor: `${t.color}40`, backgroundColor: `${t.color}14` }}>
                   {t.badge}
                 </span>
               </div>
