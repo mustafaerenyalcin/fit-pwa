@@ -7970,6 +7970,703 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   box-shadow: 0 0 8px #ff4d1c;
 }
 
+/* =====================================================================
+   ZEN ATHLETE COCKPIT - CLEAN, HARMONIOUS & "YERLİ YERİNDE" ARCHITECTURE
+   ===================================================================== */
+
+.fx-zenTodayContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+/* 1. ATHLETE COMPACT HEADER BAR */
+.fx-zenAthleteHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(20, 24, 34, 0.85) 0%, rgba(10, 12, 18, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.fx-zenProfilePod {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+  transition: opacity 0.18s ease;
+}
+.fx-zenProfilePod:hover {
+  opacity: 0.9;
+}
+
+.fx-zenAvatarWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.fx-zenLvlBadge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  background: linear-gradient(135deg, #f5c451, #ff4d1c);
+  color: #090a0f;
+  font-size: 8.5px;
+  font-weight: 900;
+  padding: 0 5px;
+  border-radius: 999px;
+  letter-spacing: 0.4px;
+  font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+  border: 1.5px solid #090a0f;
+}
+
+.fx-zenUserMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fx-zenNameRow {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.fx-zenGreeting {
+  font-size: 12px;
+  color: var(--fx-muted);
+}
+.fx-zenName {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.fx-zenRankPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fx-zenRankTag {
+  font-size: 10px;
+  font-weight: 800;
+  color: #f5c451;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+}
+.fx-zenXpProgressMini {
+  width: 44px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.fx-zenXpBar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #f5c451, #c8ff00);
+  border-radius: 999px;
+}
+.fx-zenXpDigits {
+  font-size: 9.5px;
+  color: var(--fx-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fx-zenHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fx-zenStreakPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.fx-zenStreakPill.active {
+  background: rgba(255, 77, 28, 0.1);
+  border-color: rgba(255, 77, 28, 0.35);
+  color: #ff4d1c;
+}
+.fx-zenStreakPill b {
+  font-weight: 900;
+  color: #fff;
+}
+.fx-zenStreakPill small {
+  font-size: 9px;
+  opacity: 0.8;
+}
+
+.fx-zenBadgeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(245, 196, 81, 0.08);
+  border: 1px solid rgba(245, 196, 81, 0.25);
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #f5c451;
+  font-size: 11px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.fx-zenBadgeBtn:hover {
+  background: rgba(245, 196, 81, 0.18);
+  transform: translateY(-1px);
+}
+
+/* 2. HERO WORKOUT CARD (TODAY'S MAIN FOCUS) */
+.fx-zenHeroCard {
+  background: linear-gradient(145deg, #131722 0%, #0a0d14 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 20px 22px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.fx-zenHeroTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.fx-zenHeroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #ff4d1c;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.8px;
+}
+
+.fx-zenReadinessPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+.fx-zenReadinessPill:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.fx-zenReadinessTier {
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+.fx-zenReadinessDrawer {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.fx-zenReadinessGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.fx-zenFactorCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.fx-zenFactorCell small {
+  display: block;
+  font-size: 9px;
+  color: var(--fx-muted);
+  font-weight: 700;
+}
+.fx-zenFactorCell b {
+  font-size: 12px;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+}
+.fx-zenReadinessAdvice {
+  margin: 0;
+  font-size: 12px;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.fx-zenHeroBody {
+  margin-bottom: 18px;
+}
+.fx-zenHeroTitle {
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  margin: 0 0 6px;
+  letter-spacing: -0.4px;
+}
+.fx-zenHeroSub {
+  font-size: 13.5px;
+  color: var(--fx-muted);
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+.fx-zenDoneText {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #c8ff00;
+  font-weight: 700;
+}
+
+.fx-zenMoveChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.fx-zenMoveChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  color: #cbd5e1;
+}
+.fx-zenMoveChip b {
+  color: #fff;
+  font-weight: 700;
+}
+.fx-zenMoveChip small {
+  color: var(--fx-muted);
+  font-size: 10px;
+}
+.fx-zenMoveChip--more {
+  background: rgba(255, 77, 28, 0.1);
+  border-color: rgba(255, 77, 28, 0.25);
+  color: #ff4d1c;
+  font-weight: 800;
+}
+
+.fx-zenHeroActions {
+  margin-bottom: 14px;
+}
+.fx-zenDoneButtonRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(200, 255, 0, 0.08);
+  border: 1px solid rgba(200, 255, 0, 0.25);
+  padding: 10px 16px;
+  border-radius: 14px;
+}
+.fx-zenCompletedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #c8ff00;
+  font-weight: 800;
+  font-size: 13.5px;
+}
+.fx-zenStoryBtn {
+  font-size: 12px;
+  padding: 6px 12px;
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f0ff;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fx-zenStoryBtn:hover {
+  background: rgba(0, 240, 255, 0.18);
+}
+
+.fx-zenMissionsBar {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 12px;
+}
+.fx-zenMissionsToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+.fx-zenMissionsLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--fx-muted);
+}
+.fx-zenMissionsCount {
+  color: #fff;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+.fx-zenMissionsRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+.fx-zenXpReward {
+  color: #f5c451;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+}
+.fx-zenMissionsDropdown {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.fx-zenMissionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+.fx-zenMissionRow.done {
+  color: #c8ff00;
+}
+.fx-zenMissionRow b {
+  margin-left: auto;
+  font-size: 10.5px;
+  color: #f5c451;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* 3. DAILY GOALS & TELEMETRY (3 RINGS & QUICK FUEL) */
+.fx-zenGoalsCard {
+  background: linear-gradient(145deg, #10141e 0%, #090b10 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 20px 22px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.fx-zenGoalsTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.fx-zenGoalsBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #00f0ff;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.8px;
+}
+.fx-zenLinkMini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: var(--fx-muted);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+.fx-zenLinkMini:hover {
+  color: #fff;
+}
+
+.fx-zenRingsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.fx-zenRingPod {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fx-zenRingPod:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+.fx-zenRingMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.fx-zenRingMeta small {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: var(--fx-muted);
+}
+.fx-zenRingMeta strong {
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.fx-zenRingMeta span {
+  font-size: 11px;
+  color: var(--fx-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.fx-zenRemTag {
+  font-size: 9.5px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.fx-zenFuelActionStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.fx-zenFuelPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 7px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.fx-zenFuelPill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+.fx-zenFuelPill--water {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.06);
+}
+.fx-zenFuelPill--whey {
+  color: #c8ff00;
+  border-color: rgba(200, 255, 0, 0.25);
+  background: rgba(200, 255, 0, 0.06);
+}
+.fx-zenFuelPill--barcode {
+  color: #00f0ff;
+  border-color: rgba(0, 240, 255, 0.25);
+  background: rgba(0, 240, 255, 0.06);
+}
+.fx-zenFuelPill--meal {
+  color: #f5c451;
+  border-color: rgba(245, 196, 81, 0.25);
+  background: rgba(245, 196, 81, 0.06);
+}
+
+/* 4. ATHLETE TOOLS LAUNCHPAD */
+.fx-zenToolsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fx-zenToolsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+.fx-zenToolsEyebrow {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.8px;
+}
+.fx-zenToolsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.fx-zenToolTile {
+  background: linear-gradient(145deg, #11141e 0%, #090b10 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+.fx-zenToolTile:hover {
+  background: linear-gradient(145deg, #161a28 0%, #0d1017 100%);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+.fx-zenToolTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.fx-zenToolIconBox {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fx-zenToolBadge {
+  font-size: 9px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid;
+  letter-spacing: 0.4px;
+}
+.fx-zenToolMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fx-zenToolTitle {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+.fx-zenToolSub {
+  font-size: 11px;
+  color: var(--fx-muted);
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* 5. RECOVERY & BIOMETRICS (CHECK-IN + RECOVERY MAP) */
+.fx-zenRecoverySection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.fx-zenRecoveryCol {
+  display: flex;
+  flex-direction: column;
+}
+
+/* RESPONSIVE OPTIMIZATIONS FOR PHONES & TABLETS */
+@media (max-width: 860px) {
+  .fx-zenToolsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .fx-zenRecoverySection {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .fx-zenAthleteHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .fx-zenHeaderActions {
+    justify-content: space-between;
+  }
+  .fx-zenHeroCard {
+    padding: 16px;
+  }
+  .fx-zenHeroTitle {
+    font-size: 20px;
+  }
+  .fx-zenRingsGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .fx-zenRingPod {
+    padding: 10px 12px;
+  }
+  .fx-zenReadinessGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .fx-zenFuelActionStrip {
+    justify-content: stretch;
+  }
+  .fx-zenFuelPill {
+    flex: 1 1 calc(50% - 8px);
+    justify-content: center;
+  }
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

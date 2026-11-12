@@ -1,0 +1,94 @@
+import React, { useState, useMemo } from 'react';
+import { Flame, Trophy, Shield, Zap, Sparkles, Award } from 'lucide-react';
+import { calculateGamification } from '../lib/streaks.js';
+import UserAvatar from './UserAvatar.jsx';
+import AiEnergyPill from './AiEnergyPill.jsx';
+import BadgesModal from './BadgesModal.jsx';
+import { sounds } from '../lib/audio.js';
+
+export default function AthleteHeaderBar({
+  entries = {},
+  profile = {},
+  target = {},
+  greeting = 'Merhaba',
+  onOpenSubscription
+}) {
+  const [showBadges, setShowBadges] = useState(false);
+  const g = useMemo(() => calculateGamification(entries, target), [entries, target]);
+  const { streak, level, title, currentLevelXp, nextLevelXp, badges, xp } = g;
+
+  const xpPercent = Math.min(100, Math.round((currentLevelXp / nextLevelXp) * 100));
+  const unlockedBadges = badges.filter((b) => b.unlocked).length;
+
+  const handleOpenBadges = () => {
+    sounds.tap();
+    setShowBadges(true);
+  };
+
+  return (
+    <>
+      <header className="fx-zenAthleteHeader">
+        {/* SOL: AVATAR + SPORCU ADI + RÜTBE & XP */}
+        <div className="fx-zenProfilePod" onClick={handleOpenBadges} role="button" tabIndex={0}>
+          <div className="fx-zenAvatarWrap">
+            <UserAvatar avatarUrl={profile?.avatarUrl} name={profile?.name || 'Sporcu'} size={44} />
+            <span className="fx-zenLvlBadge">L{level}</span>
+          </div>
+          <div className="fx-zenUserMeta">
+            <div className="fx-zenNameRow">
+              <span className="fx-zenGreeting">{greeting},</span>
+              <strong className="fx-zenName">{profile?.name || 'Sporcu'}</strong>
+            </div>
+            <div className="fx-zenRankPill">
+              <span className="fx-zenRankTag">{title}</span>
+              <span className="fx-zenXpProgressMini">
+                <span className="fx-zenXpBar" style={{ width: `${xpPercent}%` }} />
+              </span>
+              <small className="fx-zenXpDigits">%{xpPercent} XP</small>
+            </div>
+          </div>
+        </div>
+
+        {/* SAĞ: SERİ + AI ENERJİ + ROZETLER */}
+        <div className="fx-zenHeaderActions">
+          {/* SERİ FLAME PİLL */}
+          <div
+            className={`fx-zenStreakPill ${streak.current > 0 ? 'active' : ''}`}
+            title={`${streak.current} Gün Kesintisiz Seri · ${streak.shieldsRemaining} Kalkan Hazır`}
+          >
+            <Flame size={16} className={streak.current > 0 ? 'pulse' : ''} />
+            <b>{streak.current}</b>
+            <small>GÜN</small>
+            {streak.shieldUsed && (
+              <Shield size={11} color="#00f0ff" title="Dinlenme kalkanı devrede" />
+            )}
+          </div>
+
+          {/* AI HAKKI / ENERJİ DÜĞMESİ */}
+          <AiEnergyPill onOpenModal={onOpenSubscription} />
+
+          {/* BAŞARIM ROZETLERİ DÜĞMESİ */}
+          <button
+            type="button"
+            className="fx-zenBadgeBtn"
+            onClick={handleOpenBadges}
+            title={`${unlockedBadges}/${badges.length} Başarım Rozeti Açıldı`}
+          >
+            <Trophy size={15} color="#f5c451" />
+            <span>{unlockedBadges}</span>
+          </button>
+        </div>
+      </header>
+
+      {/* ROZETLER MODALI */}
+      {showBadges && (
+        <BadgesModal
+          badges={badges}
+          xp={xp}
+          level={level}
+          onClose={() => setShowBadges(false)}
+        />
+      )}
+    </>
+  );
+}
