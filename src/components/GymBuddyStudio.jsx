@@ -453,7 +453,7 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
               </div>
             </div>
             <p style={{ fontSize: 13, color: 'var(--fx-muted)', margin: '10px 0 14px', lineHeight: 1.45 }}>
-              Arkadaşlarınla masrafı bölüş! Aylık ₺199'a 4 kişi birden sınırsız AI Koç, biyomekanik tarama ve canlı Squad telemetrisine sahip olun (Kişi başı sadece ~₺50/ay).
+              Arkadaşlarınla masrafı bölüş! Aylık ₺299'a 4 kişi birden sınırsız AI Koç, biyomekanik tarama ve canlı Squad telemetrisine sahip olun (Kişi başı sadece ~₺75/ay).
             </p>
             <button
               type="button"
@@ -465,7 +465,7 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
                 fontWeight: 900
               }}
             >
-              <Users size={16} /> Squad Planını İncele (₺199/ay)
+              <Users size={16} /> Squad Planını İncele (₺299/ay)
             </button>
           </div>
         )}

@@ -102,7 +102,7 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
               </div>
               <h2 className="fx-subTitle">Zirve Performans &amp; Ekip Gücü</h2>
               <p className="fx-subDesc">
-                İster tek başına sınırları kaldır, ister arkadaşlarınla 4 kişilik Gym Buddy Squad kurup kişi başı ₺37'ye ortak antrenman yap.
+                İster tek başına sınırları kaldır, ister arkadaşlarınla 4 kişilik Gym Buddy Squad kurup kişi başı ₺75'e ortak antrenman yap.
               </p>
             </div>
 
@@ -121,10 +121,10 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                 <b>Yıllık Pro</b>
                 <div className="fx-subPriceRow">
                   <span>₺</span>
-                  <strong>79</strong>
+                  <strong>119</strong>
                   <small>/ ay</small>
                 </div>
-                <small className="fx-subBilledInfo">Yıllık 948 ₺ (7 gün ücretsiz)</small>
+                <small className="fx-subBilledInfo">Yıllık 1.428 ₺ (7 gün ücretsiz)</small>
               </button>
 
               {/* 2. AYLIK BİREYSEL */}
@@ -139,7 +139,7 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                 <b>Aylık Pro</b>
                 <div className="fx-subPriceRow">
                   <span>₺</span>
-                  <strong>129</strong>
+                  <strong>199</strong>
                   <small>/ ay</small>
                 </div>
                 <small className="fx-subBilledInfo">Esnek, dilediğin an iptal et</small>
@@ -158,10 +158,10 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                 <b>Aile &amp; Squad</b>
                 <div className="fx-subPriceRow">
                   <span>₺</span>
-                  <strong>199</strong>
+                  <strong>299</strong>
                   <small>/ ay</small>
                 </div>
-                <small className="fx-subBilledInfo">4 Kişi · Kişi başı ~50 ₺</small>
+                <small className="fx-subBilledInfo">4 Kişi · Kişi başı ~75 ₺</small>
               </button>
             </div>
 
@@ -210,10 +210,10 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                 {processing
                   ? 'Aktivasyon Yapılıyor…'
                   : billingCycle === 'family'
-                  ? '👑 Aile & Squad Planını Başlat (₺199/ay · 4 Kişi)'
+                  ? '👑 Aile & Squad Planını Başlat (₺299/ay · 4 Kişi)'
                   : billingCycle === 'yearly'
-                  ? '7 Gün Ücretsiz Dene & Başlat (₺79/ay)'
-                  : 'Atelier Black Bireysel’e Geç (₺129/ay)'}
+                  ? '7 Gün Ücretsiz Dene & Başlat (₺119/ay)'
+                  : 'Atelier Black Bireysel’e Geç (₺199/ay)'}
               </button>
 
               {currentMembership.isPro && (
