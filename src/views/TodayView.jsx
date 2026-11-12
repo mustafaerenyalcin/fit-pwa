@@ -20,6 +20,8 @@ import StreakBar from '../components/StreakBar.jsx';
 import MuscleRecoveryMap from '../components/MuscleRecoveryMap.jsx';
 import UserAvatar from '../components/UserAvatar.jsx';
 import ReadinessCockpitCard from '../components/ReadinessCockpitCard.jsx';
+import AiEnergyPill from '../components/AiEnergyPill.jsx';
+import SubscriptionModal from '../components/SubscriptionModal.jsx';
 import { Ring } from '../components/ui.jsx';
 import { getWorkoutForDay } from '../lib/workoutPlans.js';
 import { calculateCalories, today } from '../lib/calculations.js';
@@ -39,6 +41,7 @@ export default function TodayView({
   onRemoveCheckin
 }) {
   const { t } = useI18n();
+  const [showSubModal, setShowSubModal] = useState(false);
   const dayIndex = (new Date(day + 'T12:00:00').getDay() + 6) % 7;
   const plan = getWorkoutForDay(profile.training || 'home', dayIndex);
   const isRest = !plan || plan.rest || !plan.moves;
@@ -100,6 +103,7 @@ export default function TodayView({
         </div>
 
         <div className="fx-cockpitQuickTriggers">
+          <AiEnergyPill onOpenSubscription={() => setShowSubModal(true)} />
           {!doneToday.length && !isRest && (
             <button
               type="button"
@@ -358,6 +362,10 @@ export default function TodayView({
           <MuscleRecoveryMap entries={entries} day={day} />
         </div>
       </div>
+
+      {showSubModal && (
+        <SubscriptionModal onClose={() => setShowSubModal(false)} />
+      )}
     </div>
   );
 }

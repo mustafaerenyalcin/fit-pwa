@@ -22,7 +22,7 @@ import {
   Scale,
   Award
 } from 'lucide-react';
-import { generateProgram } from './ProgramGenerator.jsx';
+import { generateProgram } from '../lib/programGenerator.js';
 import { calculateCalories, targets } from '../lib/calculations.js';
 import { sounds } from '../lib/audio.js';
 

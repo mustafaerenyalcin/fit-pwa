@@ -1,5 +1,5 @@
 import React from 'react';
-import { PRESET_AVATARS } from './AvatarPicker.jsx';
+import { PRESET_AVATARS } from '../lib/avatarPresets.js';
 
 export default function UserAvatar({ avatarUrl, name = 'S', size = 32, className = '' }) {
   const isPreset = avatarUrl?.startsWith('preset:');

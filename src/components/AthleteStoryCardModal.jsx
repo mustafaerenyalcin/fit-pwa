@@ -31,6 +31,14 @@ export default function AthleteStoryCardModal({
       canvas.height = 1920;
       const ctx = canvas.getContext('2d');
 
+      const safeRoundRect = (x, y, w, h, r = 24) => {
+        if (typeof ctx.roundRect === 'function') {
+          ctx.roundRect(x, y, w, h, r);
+        } else {
+          ctx.rect(x, y, w, h);
+        }
+      };
+
       // 1. Dark Titanium gradient background
       const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
       bgGrad.addColorStop(0, '#09090b');
@@ -74,7 +82,7 @@ export default function AthleteStoryCardModal({
       ctx.strokeStyle = 'rgba(255, 77, 28, 0.4)';
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.roundRect(100, 440, 880, 320, 30);
+      safeRoundRect(100, 440, 880, 320, 30);
       ctx.fill();
       ctx.stroke();
 
@@ -103,7 +111,7 @@ export default function AthleteStoryCardModal({
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(x, 800, 280, 220, 24);
+        safeRoundRect(x, 800, 280, 220, 24);
         ctx.fill();
         ctx.stroke();
 
@@ -119,7 +127,7 @@ export default function AthleteStoryCardModal({
       // Exercises Box
       ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
       ctx.beginPath();
-      ctx.roundRect(100, 1060, 880, 560, 30);
+      safeRoundRect(100, 1060, 880, 560, 30);
       ctx.fill();
 
       ctx.fillStyle = '#ffffff';

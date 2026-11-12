@@ -1,0 +1,45 @@
+{
+  "id": "/",
+  "name": "Fit — Kişisel Spor ve Sağlık Asistanı",
+  "short_name": "Fit",
+  "description": "Evde dambılla antrenman, kalori ve protein takibi, vücut gelişimi ve sağlıklı yaşam asistanı.",
+  "lang": "tr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#0b1018",
+  "theme_color": "#0b1018",
+  "categories": ["fitness", "health", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Antrenman",
+      "short_name": "Antrenman",
+      "description": "Bugünkü antrenmanına hemen başla",
+      "url": "/#training",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Beslenme",
+      "short_name": "Beslenme",
+      "description": "Öğün ve protein kaydet",
+      "url": "/#nutrition",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

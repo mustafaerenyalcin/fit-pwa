@@ -28,7 +28,7 @@ import BeforeAfterSlider from '../components/BeforeAfterSlider.jsx';
 import AiFormCheckStudio from '../components/AiFormCheckStudio.jsx';
 import { sounds } from '../lib/audio.js';
 
-export const TOOLS_CONFIG = [
+const TOOLS_CONFIG = [
   {
     id: 'fasting',
     title: 'Aralıklı Oruç & Otofaji',
