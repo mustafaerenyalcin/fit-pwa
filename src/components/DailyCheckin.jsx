@@ -128,7 +128,7 @@ Günlük protein hedefim: ${target?.protein || '?'} g.`;
   if (plan) {
     const readinessColor = plan.readiness >= 75 ? 'var(--fx-accent)' : plan.readiness >= 50 ? '#f5c451' : '#ff8a65';
     return (
-      <section className="fx-card fx-plan">
+      <section className="fx-card fx-plan fx-zenPlanCard animate-fade-in">
         <div className="fx-planHead">
           <Ring value={plan.readiness} size={68} stroke={7} color={readinessColor}>
             <b>{plan.readiness}</b>
@@ -211,13 +211,13 @@ Günlük protein hedefim: ${target?.protein || '?'} g.`;
 
   /* ---------- Sorular ---------- */
   return (
-    <section className="fx-card fx-checkin">
+    <section className="fx-card fx-checkin fx-zenCheckinCard animate-fade-in">
       <div className="fx-checkinHead">
         <span className="fx-eyebrow">
           <Sparkles size={12} /> GÜNLÜK CHECK-IN · 20 SANİYE
         </span>
         <h2>Bugün nasılsın, {profile.name || 'şampiyon'}?</h2>
-        <p className="fx-muted">Cevaplarına göre bugünkü antrenmanını ve öğünlerini yeniden kuracağım.</p>
+        <p className="fx-muted">Cevaplarına göre bugünkü antrenmanını ve öğünlerini anında uyarlayacağım.</p>
       </div>
 
       {busy ? (
@@ -230,7 +230,7 @@ Günlük protein hedefim: ${target?.protein || '?'} g.`;
         <>
           <div className="fx-q">
             <span className="fx-qLabel">Enerjin</span>
-            <div className="fx-choiceRow">
+            <div className="fx-choiceRow wrap">
               {ENERGY.map((o) => (
                 <Choice key={o.id} compact active={energy === o.id} onClick={() => setEnergy(o.id)} icon={o.icon} title={o.label} />
               ))}
@@ -239,7 +239,7 @@ Günlük protein hedefim: ${target?.protein || '?'} g.`;
 
           <div className="fx-q">
             <span className="fx-qLabel">Dün gece uyku</span>
-            <div className="fx-choiceRow">
+            <div className="fx-choiceRow wrap">
               {SLEEP.map((o) => (
                 <Choice key={o.id} compact active={sleep === o.id} onClick={() => setSleep(o.id)} title={o.label} />
               ))}

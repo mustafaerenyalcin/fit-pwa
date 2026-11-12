@@ -184,29 +184,31 @@ export default function TodayView({
           </div>
         </div>
 
-        {biometricTab === 'recovery' ? (
-          <div className="animate-fade-in">
-            <MuscleRecoveryMap entries={entries} day={day} />
-          </div>
-        ) : (
-          isToday && (
+        <div className="fx-biometricTabContent">
+          {biometricTab === 'recovery' ? (
             <div className="animate-fade-in">
-              <DailyCheckin
-                day={day}
-                profile={profile}
-                entries={entries}
-                target={target}
-                todayPlan={plan}
-                onStartWorkout={onStartWorkout}
-                onSave={(payload) => {
-                  onSaveCheckin(payload);
-                  setBiometricTab('recovery');
-                }}
-                onRemove={onRemoveCheckin}
-              />
+              <MuscleRecoveryMap entries={entries} day={day} />
             </div>
-          )
-        )}
+          ) : (
+            isToday && (
+              <div className="animate-fade-in">
+                <DailyCheckin
+                  day={day}
+                  profile={profile}
+                  entries={entries}
+                  target={target}
+                  todayPlan={plan}
+                  onStartWorkout={onStartWorkout}
+                  onSave={(payload) => {
+                    onSaveCheckin(payload);
+                    setBiometricTab('recovery');
+                  }}
+                  onRemove={onRemoveCheckin}
+                />
+              </div>
+            )
+          )}
+        </div>
       </div>
 
       {/* MODALLAR */}
