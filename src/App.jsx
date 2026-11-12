@@ -168,6 +168,23 @@ function MainApp() {
     window.addEventListener('hashchange', onHash);
     document.addEventListener('visibilitychange', onVisible);
 
+    // Android donanım geri tuşu ve Esc tuşu ile açık modalları zarifçe kapatma (App Store / Play Store native standardı)
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        const topClose = document.querySelector('.fx-modalBackdrop .fx-modalClose, .fx-modalBackdrop .fx-closeBtn');
+        if (topClose) topClose.click();
+      }
+    };
+    const handleBackButton = (e) => {
+      const topClose = document.querySelector('.fx-modalBackdrop .fx-modalClose, .fx-modalBackdrop .fx-closeBtn');
+      if (topClose) {
+        if (e.preventDefault) e.preventDefault();
+        topClose.click();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('backbutton', handleBackButton);
+
     // Yeni cihazda ilk senkronizasyon gecikirse onboarding'e takılmamak için üst sınır
     const t = setTimeout(() => setWaitedForSync(true), 8000);
 
@@ -178,6 +195,8 @@ function MainApp() {
       window.removeEventListener('offline', onOffline);
       window.removeEventListener('hashchange', onHash);
       document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('backbutton', handleBackButton);
       clearTimeout(t);
     };
   }, []);

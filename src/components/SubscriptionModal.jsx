@@ -14,12 +14,29 @@ import {
 } from 'lucide-react';
 import { upgradeToPro, cancelPro, getAiMembership } from '../lib/aiQuota.js';
 import { sounds } from '../lib/audio.js';
+import LegalModal from './LegalModal.jsx';
 
 export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onSuccess }) {
   const currentMembership = getAiMembership();
   const [billingCycle, setBillingCycle] = useState(initialPlan); // 'yearly' | 'monthly' | 'family'
   const [processing, setProcessing] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
+  const [legalType, setLegalType] = useState(null);
+  const [restoreNotice, setRestoreNotice] = useState('');
+
+  const handleRestorePurchases = () => {
+    sounds.tap();
+    setRestoreNotice('Satın alımlar sorgulanıyor…');
+    setTimeout(() => {
+      const mem = getAiMembership();
+      if (mem.isPro) {
+        setRestoreNotice('✓ Aktif Atelier Black aboneliğiniz başarıyla geri yüklendi.');
+      } else {
+        setRestoreNotice('Bu hesaba bağlı aktif bir mağaza aboneliği bulunamadı.');
+      }
+      setTimeout(() => setRestoreNotice(''), 4000);
+    }, 800);
+  };
 
   const handleSubscribe = () => {
     sounds.success();
@@ -216,18 +233,66 @@ export default function SubscriptionModal({ initialPlan = 'yearly', onClose, onS
                   : 'Atelier Black Bireysel’e Geç (₺199/ay)'}
               </button>
 
-              {currentMembership.isPro && (
+              {restoreNotice && (
+                <div style={{ marginTop: 10, fontSize: 12, color: restoreNotice.startsWith('✓') ? '#c8ff00' : 'var(--fx-muted)', textAlign: 'center' }}>
+                  {restoreNotice}
+                </div>
+              )}
+
+              {/* APP STORE & GOOGLE PLAY YASAL VE GERİ YÜKLEME ÇUBUĞU */}
+              <div style={{
+                marginTop: 16,
+                paddingTop: 12,
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+                alignItems: 'center',
+                textAlign: 'center'
+              }}>
                 <button
                   type="button"
-                  className="fx-btn fx-btn--ghost fx-btn--sm"
-                  onClick={handleCancelTest}
-                  style={{ marginTop: 6 }}
+                  onClick={handleRestorePurchases}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--fx-muted)',
+                    fontSize: 12,
+                    textDecoration: 'underline',
+                    cursor: 'pointer'
+                  }}
                 >
-                  (Test Modu) Aboneliği Ücretsiz Plana Döndür
+                  Satın Alımları Geri Yükle (Restore Purchases)
                 </button>
-              )}
+
+                <div style={{ display: 'flex', gap: 14, fontSize: 11, color: 'var(--fx-muted)' }}>
+                  <button
+                    type="button"
+                    onClick={() => setLegalType('terms')}
+                    style={{ background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
+                  >
+                    Kullanım Koşulları (EULA)
+                  </button>
+                  <span>·</span>
+                  <button
+                    type="button"
+                    onClick={() => setLegalType('privacy')}
+                    style={{ background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
+                  >
+                    Gizlilik Politikası
+                  </button>
+                </div>
+
+                <p style={{ margin: 0, fontSize: 10, color: 'rgba(255, 255, 255, 0.35)', lineHeight: 1.4, maxWidth: 360 }}>
+                  Abonelik, geçerli dönemin bitiminden en az 24 saat önce iptal edilmediği sürece otomatik yenilenir. Apple Kimliği veya Google Play hesap ayarlarınızdan dilediğiniz an yönetebilirsiniz.
+                </p>
+              </div>
             </div>
           </>
+        )}
+
+        {legalType && (
+          <LegalModal type={legalType} onClose={() => setLegalType(null)} />
         )}
       </div>
     </div>

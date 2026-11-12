@@ -53,16 +53,34 @@
 html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
 }
 body {
   background: var(--fx-bg);
   color: var(--fx-text);
   overscroll-behavior-y: none;
+  -webkit-touch-callout: none;
+}
+button,
+a,
+.fx-btn,
+.fx-iconBtn,
+.fx-choice,
+.fx-card,
+.fx-dockItem,
+.fx-segmented,
+.fx-quickMainFab,
+.fx-quickDialItem {
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 input,
 textarea,
 select {
   font-size: 16px; /* iOS'ta odaklanınca zoom'u engeller */
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 /* ---------- Tipografi yardımcıları ---------- */

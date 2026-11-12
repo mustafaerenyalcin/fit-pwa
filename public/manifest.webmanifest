@@ -1,17 +1,17 @@
 {
   "id": "/",
-  "name": "Fit — Kişisel Spor ve Sağlık Asistanı",
-  "short_name": "Fit",
-  "description": "Evde dambılla antrenman, kalori ve protein takibi, vücut gelişimi ve sağlıklı yaşam asistanı.",
+  "name": "FIT. ATELIER — Performans & Atletik Koçluk",
+  "short_name": "FIT. ATELIER",
+  "description": "Elit atletik antrenman, Casey Butt genetik kas tavanı, hipertrofi tempo metronomu, yapay zeka makro ve resmi sporcu lisansı stüdyosu.",
   "lang": "tr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": ["standalone", "minimal-ui", "window-controls-overlay"],
   "orientation": "portrait",
-  "background_color": "#0b1018",
-  "theme_color": "#0b1018",
-  "categories": ["fitness", "health", "lifestyle"],
+  "background_color": "#080b0f",
+  "theme_color": "#080b0f",
+  "categories": ["fitness", "health", "lifestyle", "sports"],
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -28,17 +28,24 @@
   ],
   "shortcuts": [
     {
-      "name": "Antrenman",
+      "name": "Günün Antrenmanı",
       "short_name": "Antrenman",
-      "description": "Bugünkü antrenmanına hemen başla",
+      "description": "Bugünkü canlı seansa ve tempo metronomuna başla",
       "url": "/#training",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Beslenme",
+      "name": "Hızlı Makro & Su",
       "short_name": "Beslenme",
-      "description": "Öğün ve protein kaydet",
+      "description": "Öğün, protein ve hidrasyon kaydet",
       "url": "/#nutrition",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Laboratuvar & Araçlar",
+      "short_name": "Laboratuvar",
+      "description": "Genetik potansiyel, 1RM ve biyometrik hesaplayıcılar",
+      "url": "/#tools",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
