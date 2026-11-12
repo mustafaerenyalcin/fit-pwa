@@ -53,7 +53,7 @@ export default function SmartReminders({ totals, target, setMessage }) {
       try {
         new Notification('Fit AI Koç · Akıllı Hatırlatıcı', {
           body: bodyText,
-          icon: '/icons/icon-192.svg'
+          icon: '/icons/icon-192.png'
         });
       } catch {}
     }

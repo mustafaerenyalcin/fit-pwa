@@ -11,7 +11,8 @@ import {
   Clock,
   CheckCircle2,
   Maximize2,
-  Minimize2
+  Minimize2,
+  Sparkles
 } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 

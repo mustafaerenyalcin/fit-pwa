@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Dumbbell, Target, Layers, Calculator, Zap } from 'lucide-react';
+import { Dumbbell, Target, Layers, Calculator, Zap, Sparkles } from 'lucide-react';
 import { Card } from './ui.jsx';
 import { sounds } from '../lib/audio.js';
 
