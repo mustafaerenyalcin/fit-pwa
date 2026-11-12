@@ -12,6 +12,7 @@ import {
   Zap
 } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
+import { celebration } from '../lib/celebration.js';
 
 export default function WagerContractModal({ profile, buddy, stake, onClose }) {
   const [signed, setSigned] = useState(false);
@@ -24,6 +25,8 @@ export default function WagerContractModal({ profile, buddy, stake, onClose }) {
 
   const handleSign = () => {
     sounds.success();
+    celebration.confetti({ count: 75 });
+    celebration.floatingBadge({ text: 'DÜELLO BAŞLATILDI! ⚔️', color: '#ff3366', icon: '⚔️' });
     setSigned(true);
   };
 

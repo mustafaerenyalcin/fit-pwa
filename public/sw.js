@@ -4,7 +4,7 @@
  * and immediate network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-atelier-v2.8.0';
+const CACHE_NAME = 'fit-atelier-v3.0.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

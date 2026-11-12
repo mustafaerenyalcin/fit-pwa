@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { Sparkles, Play, RotateCcw, Loader2, Clock, Utensils, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
 import { Choice, Ring, Skeleton } from './ui.jsx';
 import { callAI, buildContext } from '../lib/api.js';
+import { sounds } from '../lib/audio.js';
+import { celebration } from '../lib/celebration.js';
 
 const ENERGY = [
   { id: 'high', icon: '🔥', label: 'Zindeyim' },
@@ -82,6 +84,10 @@ Günlük protein hedefim: ${target?.protein || '?'} g.`;
         question
       });
       const data = res.data || {};
+      celebration.confetti({ count: 65 });
+      celebration.floatingBadge({ text: '+50 XP Check-in 🎯', color: '#c8ff00', icon: '🎯' });
+      sounds.xpGain();
+
       onSave({
         energy,
         energyLabel: labelOf(ENERGY, energy),

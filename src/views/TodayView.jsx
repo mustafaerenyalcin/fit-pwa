@@ -37,6 +37,17 @@ export default function TodayView({
   const [showStreakModal, setShowStreakModal] = useState(false);
   const [biometricTab, setBiometricTab] = useState('recovery'); // 'recovery' | 'checkin'
 
+  // Hızlı eylem çekmecesinden veya dış tetikleyiciden 20sn check-in açma dinleyicisi
+  React.useEffect(() => {
+    const handleOpenCheckin = () => {
+      setBiometricTab('checkin');
+      const el = document.querySelector('.fx-zenRecoverySection');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    window.addEventListener('fit-open-checkin', handleOpenCheckin);
+    return () => window.removeEventListener('fit-open-checkin', handleOpenCheckin);
+  }, []);
+
   const dayIndex = (new Date(day + 'T12:00:00').getDay() + 6) % 7;
   const plan = getWorkoutForDay(profile.training || 'home', dayIndex);
   const isRest = !plan || plan.rest || !plan.moves;

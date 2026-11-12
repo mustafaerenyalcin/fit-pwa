@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Dna, Sparkles, Target, Award, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
+import { celebration } from '../lib/celebration.js';
 
 export default function GeneticPotentialCalc({ profile }) {
   const [height, setHeight] = useState(profile?.height || 180);
@@ -15,6 +16,8 @@ export default function GeneticPotentialCalc({ profile }) {
   // Casey Butt scientific drug-free bodybuilder maximum potential formulas
   const calculatePotential = () => {
     sounds.success();
+    celebration.sparks({ color: '#c8ff00', count: 32 });
+    celebration.floatingBadge({ text: 'DOĞAL TAVAN HESAPLANDI! 🧬', color: '#c8ff00', icon: '🧬' });
 
     const hCm = Number(height) || 180;
     const wCm = Number(currentWeight) || 78;

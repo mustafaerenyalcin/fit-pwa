@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Dumbbell, Target, Layers, Calculator, Zap, Sparkles } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
+import { celebration } from '../lib/celebration.js';
 
 const AVAILABLE_PLATES = [25, 20, 15, 10, 5, 2.5, 1.25];
 
@@ -12,6 +13,8 @@ export default function OneRepMaxCalc() {
 
   const handleCalculate = () => {
     sounds.success();
+    celebration.sparks({ color: '#c8ff00', count: 28 });
+    celebration.floatingBadge({ text: '1RM HESAPLANDI! ⚡', color: '#c8ff00', icon: '⚡' });
     const w = Number(weight) || 0;
     const r = Number(reps) || 0;
     const bW = Number(barWeight) || 20;

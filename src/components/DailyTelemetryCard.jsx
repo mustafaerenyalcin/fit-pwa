@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Ring } from './ui.jsx';
 import { sounds } from '../lib/audio.js';
+import { celebration } from '../lib/celebration.js';
 
 export default function DailyTelemetryCard({
   totals = { calories: 0, protein: 0 },
@@ -30,13 +31,42 @@ export default function DailyTelemetryCard({
   const proPct = Math.min(100, Math.round((totals.protein / targetProtein) * 100) || 0);
   const waterPct = Math.min(100, Math.round((water / targetWater) * 100) || 0);
 
-  const handleAddWater = (amount) => {
-    sounds.chime();
+  const handleAddWater = (amount, event = null) => {
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    if (event && event.currentTarget) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top;
+    }
+    celebration.waterSplash({ x, y });
+    celebration.floatingBadge({
+      text: `+${amount} ml Su`,
+      x,
+      y: y - 20,
+      icon: '💧',
+      color: '#00f0ff'
+    });
     if (onQuickWaterAdd) onQuickWaterAdd(amount);
   };
 
-  const handleAddWhey = () => {
-    sounds.tap();
+  const handleAddWhey = (event = null) => {
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    if (event && event.currentTarget) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top;
+    }
+    celebration.sparks({ x, y, color: '#00f0ff' });
+    celebration.floatingBadge({
+      text: '+26g Whey Protein',
+      x,
+      y: y - 20,
+      icon: '⚡',
+      color: '#00f0ff'
+    });
+    sounds.xpGain();
     if (onQuickMealAdd) {
       onQuickMealAdd({
         name: '1 Ölçek Whey Protein Shake',
@@ -122,7 +152,7 @@ export default function DailyTelemetryCard({
         <button
           type="button"
           className="fx-zenRingPod"
-          onClick={() => handleAddWater(250)}
+          onClick={(e) => handleAddWater(250, e)}
         >
           <Ring value={water} max={targetWater} size={74} stroke={7} color="#38bdf8">
             <span className="fx-ringPct">{waterPct}%</span>
@@ -147,21 +177,21 @@ export default function DailyTelemetryCard({
         <button
           type="button"
           className="fx-zenFuelPill fx-zenFuelPill--water"
-          onClick={() => handleAddWater(250)}
+          onClick={(e) => handleAddWater(250, e)}
         >
           <Droplets size={13} /> +250ml Su
         </button>
         <button
           type="button"
           className="fx-zenFuelPill fx-zenFuelPill--water"
-          onClick={() => handleAddWater(500)}
+          onClick={(e) => handleAddWater(500, e)}
         >
           <Droplets size={13} /> +500ml Su
         </button>
         <button
           type="button"
           className="fx-zenFuelPill fx-zenFuelPill--whey"
-          onClick={handleAddWhey}
+          onClick={(e) => handleAddWhey(e)}
         >
           <Zap size={13} /> +26g Whey
         </button>

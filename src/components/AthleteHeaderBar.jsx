@@ -7,6 +7,7 @@ import BadgesModal from './BadgesModal.jsx';
 import StreakVaultModal from './StreakVaultModal.jsx';
 import AthletePassportModal from './AthletePassportModal.jsx';
 import { sounds } from '../lib/audio.js';
+import { celebration } from '../lib/celebration.js';
 
 export default function AthleteHeaderBar({
   entries = {},
@@ -27,13 +28,31 @@ export default function AthleteHeaderBar({
   // Baş harfi büyük yap (örn. "iyi geceler" -> "İyi geceler")
   const capGreeting = greeting ? greeting.charAt(0).toLocaleUpperCase('tr-TR') + greeting.slice(1) : 'Merhaba';
 
-  const handleOpenBadges = () => {
-    sounds.tap();
+  const handleOpenBadges = (e = null) => {
+    sounds.xpGain();
+    if (e && e.currentTarget) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      celebration.sparks({
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        color: '#f5c451',
+        count: 20
+      });
+    }
     setShowBadges(true);
   };
 
-  const handleOpenStreakVault = () => {
+  const handleOpenStreakVault = (e = null) => {
     sounds.tap();
+    if (e && e.currentTarget) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      celebration.sparks({
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        color: '#ff6600',
+        count: 22
+      });
+    }
     setShowStreakVault(true);
   };
 

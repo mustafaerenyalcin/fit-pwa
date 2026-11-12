@@ -4,6 +4,7 @@ import AuthScreen from './components/AuthScreen.jsx';
 import Onboarding from './components/Onboarding.jsx';
 import { Segmented, Skeleton } from './components/ui.jsx';
 import TodayView from './views/TodayView.jsx';
+import QuickActionDock from './components/QuickActionDock.jsx';
 
 const ActiveWorkoutModal = lazy(() => import('./components/ActiveWorkoutModal.jsx'));
 const AiMealLogger = lazy(() => import('./components/AiMealLogger.jsx'));
@@ -33,7 +34,7 @@ import { calculateStreak } from './lib/streaks.js';
 import { DEFAULT_PROFILE } from './lib/constants.js';
 import { getSetting, setSetting, list, add, remove, subscribe } from './lib/store.js';
 import { scheduleSync, getAuthState, getSyncState } from './lib/supabase.js';
-import { getCustomProgram } from './lib/workoutPlans.js';
+import { getCustomProgram, getWorkoutForDay } from './lib/workoutPlans.js';
 import { initTheme } from './lib/notifications.js';
 import { useI18n } from './lib/i18n.js';
 
@@ -493,6 +494,28 @@ function MainApp() {
         <div className="fx-toast" role="status" onClick={() => setToast('')}>
           {toast}
         </div>
+      )}
+
+      {/* YÜZEN ERGONOMİK HIZLI EYLEM DOCK'I (SPEED DIAL) */}
+      {!activeWorkoutPlan && !showOnboardingModal && (
+        <QuickActionDock
+          onQuickWaterAdd={handleQuickWaterAdd}
+          onStartWorkout={(plan) => {
+            const dayIdx = (new Date(day + 'T12:00:00').getDay() + 6) % 7;
+            const targetPlan = plan || getWorkoutForDay(profile.training || 'home', dayIdx);
+            setActiveWorkoutPlan(targetPlan);
+          }}
+          onOpenCheckin={() => {
+            setTab('today');
+            setTimeout(() => {
+              window.dispatchEvent(new CustomEvent('fit-open-checkin'));
+            }, 60);
+          }}
+          onOpenBarcode={() => {
+            setTab('nutrition', 'ai');
+          }}
+          todayPlan={getWorkoutForDay(profile.training || 'home', (new Date(day + 'T12:00:00').getDay() + 6) % 7)}
+        />
       )}
     </Layout>
   );

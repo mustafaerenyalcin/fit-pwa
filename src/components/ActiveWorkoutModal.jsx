@@ -24,6 +24,7 @@ import { getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
 import { getDetailedExerciseGuide } from '../lib/exerciseGuide.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
 import { sounds } from '../lib/audio.js';
+import { celebration } from '../lib/celebration.js';
 
 const ACTIVE_WORKOUT_KEY = 'fit-active-session-v1';
 
@@ -270,9 +271,8 @@ export default function ActiveWorkoutModal({
     });
   };
 
-  // Toggle set done + Auto Rest Timer
-  const toggleSetDone = (exIdx, setIdx) => {
-    sounds.tap();
+  // Toggle set done + Auto Rest Timer + Spark & Haptic Delight
+  const toggleSetDone = (exIdx, setIdx, event = null) => {
     setSessionData((prev) => {
       const nextExercises = [...prev.exercises];
       const ex = { ...nextExercises[exIdx] };
@@ -289,6 +289,22 @@ export default function ActiveWorkoutModal({
       if (willBeDone) {
         setRestSeconds(restDuration);
         setRestActive(true);
+
+        // Dopamin artırıcı görsel ve işitsel kutlama
+        if (event && event.currentTarget) {
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = rect.left + rect.width / 2;
+          const y = rect.top + rect.height / 2;
+          celebration.sparks({ x, y, color: '#c8ff00' });
+          celebration.floatingBadge({ text: 'SET TAMAMLANDI! 🔥', x, y: y - 24, icon: '⚡' });
+        } else {
+          celebration.sparks({ color: '#c8ff00' });
+          celebration.floatingBadge({ text: 'SET TAMAMLANDI! 🔥', icon: '⚡' });
+        }
+
+        sounds.bellDing();
+      } else {
+        sounds.tap();
       }
       return updated;
     });
@@ -376,6 +392,9 @@ export default function ActiveWorkoutModal({
     try {
       localStorage.removeItem(ACTIVE_WORKOUT_KEY);
     } catch {}
+
+    celebration.confetti({ count: 95 });
+    celebration.floatingBadge({ text: 'SEANS TAMAMLANDI! 🏆', color: '#ffd700', icon: '🏆' });
 
     onFinish({
       name: plan.name,
@@ -811,7 +830,7 @@ export default function ActiveWorkoutModal({
                           <button
                             type="button"
                             className={`setCheckBtn ${set.done ? 'checked' : ''}`}
-                            onClick={() => toggleSetDone(activeExIndex, sIdx)}
+                            onClick={(e) => toggleSetDone(activeExIndex, sIdx, e)}
                           >
                             <Check size={18} />
                           </button>

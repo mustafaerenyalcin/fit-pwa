@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Flame, Shield, ShieldAlert, ShieldCheck, Trophy, Sparkles, Check, Zap, AlertTriangle, Calendar } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
+import { celebration } from '../lib/celebration.js';
 
 export default function StreakVaultModal({ streak = {}, onClose, onUseShield }) {
   const [shieldActive, setShieldActive] = useState(streak.shieldUsed || false);
@@ -12,6 +13,8 @@ export default function StreakVaultModal({ streak = {}, onClose, onUseShield }) 
   const handleActivateShield = () => {
     if (shieldsLeft <= 0 || shieldActive) return;
     sounds.success();
+    celebration.confetti({ count: 70 });
+    celebration.floatingBadge({ text: 'Kalkan Aktif! 🛡️', icon: '🛡️', color: '#00f0ff' });
     setShieldActive(true);
     setShieldsLeft((prev) => Math.max(0, prev - 1));
     setJustActivated(true);
@@ -21,6 +24,25 @@ export default function StreakVaultModal({ streak = {}, onClose, onUseShield }) 
     } catch {}
 
     if (onUseShield) onUseShield();
+  };
+
+  const handleFlameTap = (e) => {
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    if (e && e.currentTarget) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top + rect.height / 2;
+    }
+    celebration.sparks({ x, y, color: '#ff6600', count: 32 });
+    celebration.floatingBadge({
+      text: `${streak.current || 0} Günlük Ateş! 🔥`,
+      x,
+      y: y - 25,
+      icon: '🔥',
+      color: '#ff6600'
+    });
+    sounds.xpGain();
   };
 
   return (
@@ -46,7 +68,14 @@ export default function StreakVaultModal({ streak = {}, onClose, onUseShield }) 
           </div>
 
           {/* Duolingo Squash & Stretch Dancing Flame */}
-          <div className={`fx-duoFlameHero ${isAtRisk ? 'risk' : 'active'}`}>
+          <div
+            className={`fx-duoFlameHero ${isAtRisk ? 'risk' : 'active'}`}
+            onClick={handleFlameTap}
+            role="button"
+            tabIndex={0}
+            style={{ cursor: 'pointer' }}
+            title="Ateşi Ateşle!"
+          >
             <div className="fx-duoFlameCore">
               <Flame size={76} className="fx-duoFlameSvg" />
             </div>
