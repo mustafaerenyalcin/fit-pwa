@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Camera, Upload, Sparkles, Check, AlertTriangle, ShieldCheck, Activity, Award, RefreshCw } from 'lucide-react';
+import AiEnergyPill from './AiEnergyPill.jsx';
+import SubscriptionModal from './SubscriptionModal.jsx';
+import { consumeAiCredit } from '../lib/aiQuota.js';
 import { sounds } from '../lib/audio.js';
 
 const EXERCISE_PROTOCOLS = {
@@ -53,6 +56,7 @@ export default function AiFormCheckStudio() {
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(EXERCISE_PROTOCOLS.squat);
   const [uploadedPreview, setUploadedPreview] = useState(null);
+  const [showSubModal, setShowSubModal] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleSelectEx = (key) => {
@@ -64,6 +68,12 @@ export default function AiFormCheckStudio() {
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // AI Kota kontrolü
+    if (!consumeAiCredit()) {
+      setShowSubModal(true);
+      return;
+    }
 
     sounds.tap();
     setAnalyzing(true);
@@ -84,7 +94,7 @@ export default function AiFormCheckStudio() {
 
   return (
     <div className="fx-stack fx-aiFormStudio">
-      <div className="fx-cardHead">
+      <div className="fx-cardHead" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
             <Sparkles size={20} color="#00f0ff" /> AI Kamera ile Form &amp; Biyomekanik Analizörü
@@ -93,6 +103,7 @@ export default function AiFormCheckStudio() {
             Egzersiz yaparken fotoğrafını veya kısa videonu yükle; yapay zeka eklem açılarını, omurga nötrlüğünü ve sakatlık riskini tarasın.
           </p>
         </div>
+        <AiEnergyPill onOpenSubscription={() => setShowSubModal(true)} />
       </div>
 
       {/* EGZERSİZ SEÇİCİ */}
@@ -203,6 +214,10 @@ export default function AiFormCheckStudio() {
           ))}
         </div>
       </div>
+
+      {showSubModal && (
+        <SubscriptionModal onClose={() => setShowSubModal(false)} />
+      )}
     </div>
   );
 }

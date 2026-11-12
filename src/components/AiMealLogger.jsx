@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react';
 import { Camera, Sparkles, Loader2, Trash2, Check, X, Mic, MicOff } from 'lucide-react';
 import { callAI, compressImage } from '../lib/api.js';
 import { useI18n } from '../lib/i18n.js';
+import AiEnergyPill from './AiEnergyPill.jsx';
+import SubscriptionModal from './SubscriptionModal.jsx';
+import { consumeAiCredit, getAiCache, setAiCache } from '../lib/aiQuota.js';
 
 const CATEGORIES = ['Kahvaltı', 'Öğle', 'Akşam', 'Ara Öğün'];
 
@@ -26,6 +29,7 @@ export default function AiMealLogger({ profile, onAddMeal }) {
   const [listening, setListening] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null); // { items, category, note, photo }
+  const [showSubModal, setShowSubModal] = useState(false);
   const fileRef = useRef(null);
   const recRef = useRef(null);
 
@@ -66,11 +70,28 @@ export default function AiMealLogger({ profile, onAddMeal }) {
   };
 
   const analyzeText = async () => {
-    if (!text.trim()) return;
+    const query = text.trim();
+    if (!query) return;
+
+    // 1. Önce akıllı yerel önbelleğe bak (Zero Waste!)
+    const cached = getAiCache(query);
+    if (cached) {
+      accept(cached);
+      return;
+    }
+
+    // 2. Kota kontrolü
+    if (!consumeAiCredit()) {
+      setShowSubModal(true);
+      setError('Günlük 3 ücretsiz AI analiz hakkın doldu. Sınırsız analiz için Atelier Black’e geçebilirsin.');
+      return;
+    }
+
     setBusy(true);
     setError('');
     try {
-      const res = await callAI('meal', { profile, question: text.trim() });
+      const res = await callAI('meal', { profile, question: query });
+      setAiCache(query, res.data);
       accept(res.data);
     } catch (err) {
       setError(err.message);
@@ -81,6 +102,15 @@ export default function AiMealLogger({ profile, onAddMeal }) {
 
   const analyzePhoto = async (file) => {
     if (!file) return;
+
+    // Kota kontrolü
+    if (!consumeAiCredit()) {
+      setShowSubModal(true);
+      setError('Günlük 3 ücretsiz AI analiz hakkın doldu. Sınırsız görsel analiz için Atelier Black’e geçebilirsin.');
+      if (fileRef.current) fileRef.current.value = '';
+      return;
+    }
+
     setBusy(true);
     setError('');
     try {
@@ -217,13 +247,14 @@ export default function AiMealLogger({ profile, onAddMeal }) {
 
   return (
     <section className="fx-card fx-mealLogger">
-      <header className="fx-cardHead">
+      <header className="fx-cardHead" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h3>
             <Sparkles size={16} className="fx-accentIcon" /> {t('meal.title')}
           </h3>
           <p>{t('meal.subtitle')}</p>
         </div>
+        <AiEnergyPill onOpenSubscription={() => setShowSubModal(true)} />
       </header>
 
       <div className="fx-mealInputRow">
@@ -277,6 +308,10 @@ export default function AiMealLogger({ profile, onAddMeal }) {
           onChange={(e) => analyzePhoto(e.target.files?.[0])}
         />
       </div>
+
+      {showSubModal && (
+        <SubscriptionModal onClose={() => setShowSubModal(false)} />
+      )}
     </section>
   );
 }

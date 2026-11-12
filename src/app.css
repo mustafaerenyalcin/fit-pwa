@@ -7116,6 +7116,327 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   line-height: 1.5;
 }
 
+/* =====================================================================
+   AI ENERJİ BARI & KOTA GÖSTERGESİ (AI ENERGY PILL)
+   ===================================================================== */
+.fx-energyPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.28);
+  color: #00f0ff;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 10px rgba(0, 240, 255, 0.1);
+}
+.fx-energyPill:hover {
+  background: rgba(0, 240, 255, 0.16);
+  border-color: #00f0ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 240, 255, 0.25);
+}
+.fx-energyPill.low {
+  background: rgba(245, 196, 81, 0.1);
+  border-color: rgba(245, 196, 81, 0.35);
+  color: #f5c451;
+  box-shadow: 0 2px 10px rgba(245, 196, 81, 0.12);
+}
+.fx-energyPill.depleted {
+  background: rgba(255, 77, 28, 0.12);
+  border-color: rgba(255, 77, 28, 0.4);
+  color: #ff4d1c;
+  box-shadow: 0 2px 10px rgba(255, 77, 28, 0.18);
+}
+.fx-energyPill--pro {
+  background: linear-gradient(135deg, rgba(245, 196, 81, 0.18), rgba(255, 77, 28, 0.12));
+  border: 1px solid rgba(245, 196, 81, 0.45);
+  color: #f5c451;
+  box-shadow: 0 2px 12px rgba(245, 196, 81, 0.18);
+}
+.fx-energyPill--pro:hover {
+  border-color: #f5c451;
+  background: linear-gradient(135deg, rgba(245, 196, 81, 0.26), rgba(255, 77, 28, 0.18));
+}
+.fx-energyPillText {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.fx-energyPillText b {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+}
+.fx-energyPillUpgradeTag {
+  background: #ff4d1c;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+
+/* =====================================================================
+   ATELIER BLACK ABONELİK VİTRİNİ (SUBSCRIPTION MODAL)
+   ===================================================================== */
+.fx-subscriptionModal {
+  max-width: 520px !important;
+  background: rgba(12, 14, 22, 0.98) !important;
+  border: 1px solid rgba(245, 196, 81, 0.35) !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 50px rgba(245, 196, 81, 0.14) !important;
+  padding: 24px 20px !important;
+  border-radius: 26px !important;
+  position: relative;
+  overflow: hidden;
+}
+.fx-subscriptionModal::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(245, 196, 81, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.fx-subModalHead {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.fx-subCrownBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 196, 81, 0.12);
+  border: 1px solid rgba(245, 196, 81, 0.35);
+  color: #f5c451;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  letter-spacing: 1px;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 10px;
+}
+.fx-subTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+.fx-subDesc {
+  margin: 6px auto 0;
+  font-size: 13px;
+  color: var(--fx-muted);
+  max-width: 400px;
+  line-height: 1.45;
+}
+
+/* Fatura Döngüsü Seçici */
+.fx-subBillingSelector {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.fx-subBillingTab {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 14px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+.fx-subBillingTab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(245, 196, 81, 0.4);
+}
+.fx-subBillingTab.active {
+  background: linear-gradient(145deg, rgba(245, 196, 81, 0.12), rgba(255, 77, 28, 0.06));
+  border-color: #f5c451;
+  box-shadow: 0 0 20px rgba(245, 196, 81, 0.16);
+}
+.fx-subTabBadge {
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  background: linear-gradient(135deg, #f5c451, #ff4d1c);
+  color: #090a0f;
+  font-size: 9px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+.fx-subBillingTab b {
+  font-size: 13px;
+  font-weight: 800;
+  color: #e2e8f0;
+}
+.fx-subPriceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  margin: 4px 0 2px;
+}
+.fx-subPriceRow span {
+  font-size: 15px;
+  font-weight: 800;
+  color: #f5c451;
+}
+.fx-subPriceRow strong {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+}
+.fx-subPriceRow small {
+  font-size: 11px;
+  color: var(--fx-muted);
+}
+.fx-subBilledInfo {
+  font-size: 10px;
+  color: #94a3b8;
+  line-height: 1.3;
+}
+
+/* Özellik Listesi */
+.fx-subFeatureList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.fx-subFeatureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.fx-subCheckIcon {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(245, 196, 81, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.fx-subFeatureItem b {
+  font-size: 12.5px;
+  color: #fff;
+  display: block;
+}
+.fx-subFeatureItem p {
+  margin: 1px 0 0;
+  font-size: 11px;
+  color: var(--fx-muted);
+  line-height: 1.35;
+}
+
+/* Sıfır Tuzak Güvencesi */
+.fx-subGuaranteeBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 240, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  font-size: 11px;
+  color: #e2e8f0;
+  line-height: 1.4;
+}
+.fx-subGuaranteeBox b {
+  color: #00f0ff;
+}
+
+/* Eylem Butonları */
+.fx-subActionsRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fx-subSuccessScreen {
+  padding: 40px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* =====================================================================
+   AYARLARDA LÜKS ATELIER BLACK KARTI (SETTINGS MEMBERSHIP BANNER)
+   ===================================================================== */
+.fx-membershipCard {
+  background: linear-gradient(135deg, rgba(20, 24, 38, 0.95), rgba(12, 14, 22, 0.95));
+  border: 1px solid rgba(245, 196, 81, 0.35);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(245, 196, 81, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.fx-membershipStatusCol {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fx-membershipBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fx-membershipBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.fx-membershipBadge.free {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+}
+.fx-membershipBadge.pro {
+  background: rgba(245, 196, 81, 0.18);
+  border: 1px solid rgba(245, 196, 81, 0.45);
+  color: #f5c451;
+}
+.fx-membershipCard h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+.fx-membershipCard p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fx-muted);
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

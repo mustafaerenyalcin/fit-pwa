@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Cloud, RefreshCw, Download, Upload, LogOut, Trash2, Smartphone, Shield, FileText, Sun, Moon, Bell, Globe } from 'lucide-react';
+import { Cloud, RefreshCw, Download, Upload, LogOut, Trash2, Smartphone, Shield, FileText, Sun, Moon, Bell, Globe, Crown, Zap } from 'lucide-react';
 import ProfileView from './ProfileView.jsx';
 import AvatarPicker from '../components/AvatarPicker.jsx';
+import SubscriptionModal from '../components/SubscriptionModal.jsx';
 import { Segmented, Card } from '../components/ui.jsx';
 import { getAuthState, getSyncState, sync, signout, deleteAccount } from '../lib/supabase.js';
 import { exportBackup, importBackup } from '../lib/store.js';
 import { getTheme, setTheme, getReminderConfig, toggleMorningReminder } from '../lib/notifications.js';
+import { getAiMembership, getAiQuota } from '../lib/aiQuota.js';
 import { useI18n } from '../lib/i18n.js';
 
 const APP_VERSION = '4.0.0 Global';
@@ -16,13 +18,24 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
   const [, force] = useState(0);
   const [themeMode, setThemeMode] = useState(getTheme);
   const [reminder, setReminder] = useState(getReminderConfig);
+  const [membership, setMembership] = useState(getAiMembership);
+  const [quota, setQuota] = useState(getAiQuota);
+  const [showSubModal, setShowSubModal] = useState(false);
   const { user } = getAuthState();
   const syncState = getSyncState();
 
   useEffect(() => {
     const h = () => force((x) => x + 1);
+    const handleQuota = () => {
+      setMembership(getAiMembership());
+      setQuota(getAiQuota());
+    };
     window.addEventListener('fit-sync-change', h);
-    return () => window.removeEventListener('fit-sync-change', h);
+    window.addEventListener('fit-ai-quota-changed', handleQuota);
+    return () => {
+      window.removeEventListener('fit-sync-change', h);
+      window.removeEventListener('fit-ai-quota-changed', handleQuota);
+    };
   }, []);
 
   const doSync = async () => {
@@ -50,6 +63,37 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
 
   return (
     <div className="fx-stack">
+      {/* ATELIER BLACK ÜYELİK VE ABONELİK KARTI */}
+      <div className="fx-membershipCard">
+        <div className="fx-membershipStatusCol">
+          <div className="fx-membershipBadgeRow">
+            <span className={`fx-membershipBadge ${membership.isPro ? 'pro' : 'free'}`}>
+              {membership.isPro ? '👑 ATELIER BLACK (PRO)' : 'CORE ATHLETE (ÜCRETSİZ)'}
+            </span>
+            {!membership.isPro && (
+              <span style={{ fontSize: 11, color: 'var(--fx-muted)' }}>
+                ⚡ Günlük AI Enerjisi: {quota.remaining}/{quota.max}
+              </span>
+            )}
+          </div>
+          <h4>{membership.isPro ? 'Sınırsız Elit Sporcu Erişimi Aktif' : 'Atelier Black Pass ile Sınırlardan Kurtul'}</h4>
+          <p>
+            {membership.isPro
+              ? 'Tüm Gemini Vision görsel öğün analizi ve kamera biyomekanik form taraması sınırsız.'
+              : 'Fotoğrafla sınırsız besin analizi, sakatlık önleyici AI form taraması ve haftalık deload.'}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className={`fx-btn ${membership.isPro ? 'fx-btn--ghost' : 'fx-solarBtn'} fx-btn--sm`}
+          style={{ whiteSpace: 'nowrap', fontWeight: 800 }}
+          onClick={() => setShowSubModal(true)}
+        >
+          {membership.isPro ? 'Aboneliği İncele' : 'Black’e Yüksel (₺129/ay) →'}
+        </button>
+      </div>
+
       <Card title={t('settings.langTitle')} subtitle={t('settings.langSub')}>
         <div className="fx-langGrid">
           {languages.map((l) => (
@@ -258,6 +302,10 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
 
           <p className="fx-muted fx-small fx-center">Fit v{APP_VERSION} · Fit tıbbi tavsiye vermez.</p>
         </>
+      )}
+
+      {showSubModal && (
+        <SubscriptionModal onClose={() => setShowSubModal(false)} />
       )}
     </div>
   );
