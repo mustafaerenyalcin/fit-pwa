@@ -4,7 +4,7 @@
  * and immediate network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-atelier-v2.2.0';
+const CACHE_NAME = 'fit-atelier-v2.3.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -12,7 +12,12 @@ const STATIC_ASSETS = [
   '/gizlilik.html',
   '/kosullar.html',
   '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icons/icon-512.png',
+  '/images/workout-bg.jpg',
+  '/images/nutrition-bg.jpg',
+  '/images/squad-bg.jpg',
+  '/images/streak-bg.jpg',
+  '/images/recovery-bg.jpg'
 ];
 
 // Install: Cache critical application shell & skip waiting immediately
