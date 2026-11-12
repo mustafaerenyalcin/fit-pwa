@@ -49,10 +49,7 @@ export default function LanguageDropdown() {
         title={t('settings.langTitle') || 'Dil Seçimi'}
       >
         <Globe size={13} />
-        <span className="fx-langCurrentLabel">
-          <span className="fx-langFlag">{currentLang.flag}</span>
-          <span className="fx-langCode">{currentLang.short}</span>
-        </span>
+        <span className="fx-langCode">{currentLang.short}</span>
         <ChevronDown size={11} className={`fx-langChevron ${open ? 'rotate' : ''}`} />
       </button>
 
@@ -73,7 +70,7 @@ export default function LanguageDropdown() {
                   className={`fx-langMenuItem ${active ? 'active' : ''}`}
                   onClick={() => selectLanguage(item.code)}
                 >
-                  <span className="fx-langMenuFlag">{item.flag}</span>
+                  <span className="fx-langBadgeTag">{item.short}</span>
                   <div className="fx-langMenuText">
                     <span className="fx-langMenuName">{item.name}</span>
                     <small className="fx-langMenuSub">{item.speechLang}</small>

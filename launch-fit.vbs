@@ -10,4 +10,4 @@ WScript.Sleep 1800
 
 ' Microsoft Edge veya Chrome ile saf bağımsız uygulama penceresi (PWA penceresi) aç
 edgePath = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-WshShell.Run """" & edgePath & """ --app=https://lighthearted-gaufre-61028a.netlify.app", 1, False
+WshShell.Run """" & edgePath & """ --app=http://localhost:5173", 1, False

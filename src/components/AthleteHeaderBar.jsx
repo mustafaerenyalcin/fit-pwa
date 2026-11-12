@@ -20,6 +20,9 @@ export default function AthleteHeaderBar({
   const xpPercent = Math.min(100, Math.round((currentLevelXp / nextLevelXp) * 100));
   const unlockedBadges = badges.filter((b) => b.unlocked).length;
 
+  // Baş harfi büyük yap (örn. "iyi geceler" -> "İyi geceler")
+  const capGreeting = greeting ? greeting.charAt(0).toLocaleUpperCase('tr-TR') + greeting.slice(1) : 'Merhaba';
+
   const handleOpenBadges = () => {
     sounds.tap();
     setShowBadges(true);
@@ -36,15 +39,15 @@ export default function AthleteHeaderBar({
           </div>
           <div className="fx-zenUserMeta">
             <div className="fx-zenNameRow">
-              <span className="fx-zenGreeting">{greeting},</span>
+              <span className="fx-zenGreeting">{capGreeting},</span>
               <strong className="fx-zenName">{profile?.name || 'Sporcu'}</strong>
             </div>
             <div className="fx-zenRankPill">
               <span className="fx-zenRankTag">{title}</span>
-              <span className="fx-zenXpProgressMini">
-                <span className="fx-zenXpBar" style={{ width: `${xpPercent}%` }} />
+              <span className="fx-zenDotSep">·</span>
+              <span className="fx-zenXpDigits">
+                <b>{currentLevelXp}</b>/{nextLevelXp} XP (%{xpPercent})
               </span>
-              <small className="fx-zenXpDigits">%{xpPercent} XP</small>
             </div>
           </div>
         </div>
@@ -56,7 +59,7 @@ export default function AthleteHeaderBar({
             className={`fx-zenStreakPill ${streak.current > 0 ? 'active' : ''}`}
             title={`${streak.current} Gün Kesintisiz Seri · ${streak.shieldsRemaining} Kalkan Hazır`}
           >
-            <Flame size={16} className={streak.current > 0 ? 'pulse' : ''} />
+            <Flame size={15} className={streak.current > 0 ? 'pulse' : ''} />
             <b>{streak.current}</b>
             <small>GÜN</small>
             {streak.shieldUsed && (
@@ -74,7 +77,7 @@ export default function AthleteHeaderBar({
             onClick={handleOpenBadges}
             title={`${unlockedBadges}/${badges.length} Başarım Rozeti Açıldı`}
           >
-            <Trophy size={15} color="#f5c451" />
+            <Trophy size={14} color="#f5c451" />
             <span>{unlockedBadges}</span>
           </button>
         </div>

@@ -77,7 +77,10 @@ export default function HeroWorkoutCard({
         >
           <Activity size={12} color={readiness.color} />
           <b style={{ color: readiness.color }}>%{readiness.score} Hazır</b>
-          <span className="fx-zenReadinessTier">{readiness.tierLabel.split(' ')[0]}</span>
+          <span className="fx-zenDotSep">·</span>
+          <span className="fx-zenReadinessTier">
+            {readiness.tier === 'PEAK' ? 'Zirve Form' : readiness.tier === 'OPTIMAL' ? 'Optimum' : 'Toparlanma'}
+          </span>
           {showReadinessDetails ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
         </button>
       </div>
@@ -128,7 +131,7 @@ export default function HeroWorkoutCard({
         <p className="fx-zenHeroSub">
           {workoutDone ? (
             <span className="fx-zenDoneText">
-              <CheckCircle2 size={15} color="#c8ff00" /> Seans tamamlandı! Kas adaptasyonu ve glikojen yenilenmesi başladı.
+              <CheckCircle2 size={15} color="#c8ff00" /> Seans başarıyla tamamlandı. Kas adaptasyonu ve protein sentezi devrede!
             </span>
           ) : isRest ? (
             plan?.tips?.[0] || 'Bugün aktif toparlanma günü. Kas liflerinin onarılması ve sinir sisteminin dinlenmesi için kritik.'
@@ -206,8 +209,10 @@ export default function HeroWorkoutCard({
         >
           <div className="fx-zenMissionsLeft">
             <Target size={13} color="#ff4d1c" />
-            <span>GÜNLÜK GÖREVLER</span>
-            <b className="fx-zenMissionsCount">{completedMissions}/3 Tamamlandı</b>
+            <span className="fx-zenMissionsEyebrow">GÜNLÜK GÖREVLER</span>
+            <span className="fx-zenMissionsCountPill">
+              <b>{completedMissions}/3</b> Tamamlandı
+            </span>
           </div>
           <div className="fx-zenMissionsRight">
             <span className="fx-zenXpReward">+{completedMissions * 80 + 100} XP</span>

@@ -1,10 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { Activity, ShieldCheck } from 'lucide-react';
-import { Card } from './ui.jsx';
+import { ShieldCheck, Activity } from 'lucide-react';
+import { sounds } from '../lib/audio.js';
 
-/**
- * Hareket adından ve kas etiketinden hangi ana kas grubunun çalıştığını tespit eder.
- */
 function detectMuscleGroups(exName = '', muscleTag = '') {
   const s = `${exName} ${muscleTag}`.toLocaleLowerCase('tr-TR');
   const groups = new Set();
@@ -28,10 +25,6 @@ const MUSCLE_META = {
   legs: { label: 'Bacak & Kalça', hoursToRecover: 72 }
 };
 
-/**
- * Son antrenmanlara ve bugünkü check-in ağrı bildirimine göre
- * her kas grubunun toparlanma yüzdesini (0-100) hesaplar ve SVG vücut haritasında gösterir.
- */
 export default function MuscleRecoveryMap({ entries = {}, day }) {
   const [selected, setSelected] = useState('shoulders');
 
@@ -43,7 +36,6 @@ export default function MuscleRecoveryMap({ entries = {}, day }) {
       result[id] = { id, label: meta.label, pct: 100, lastTrained: null, setsDone: 0 };
     }
 
-    // Son 4 gündeki antrenmanları tara
     const recentWorkouts = (entries.workout || []).slice(0, 10);
     for (const w of recentWorkouts) {
       const wDate = new Date((w.created || w.day + 'T12:00:00'));
@@ -68,7 +60,6 @@ export default function MuscleRecoveryMap({ entries = {}, day }) {
       }
     }
 
-    // Bugünkü check-in'de ağrı bildirildiyse yorgunluğu güncelle
     const todayCheckin = (entries.checkin || []).find((c) => c.day === day);
     const soreList = todayCheckin?.payload?.sore || [];
     const soreMap = {
@@ -91,120 +82,141 @@ export default function MuscleRecoveryMap({ entries = {}, day }) {
   }, [entries.workout, entries.checkin, day]);
 
   const colorFor = (pct) => {
-    if (pct >= 80) return '#b3f46f'; // Hazır (Yeşil)
+    if (pct >= 80) return '#c8ff00'; // Hazır (Volt)
     if (pct >= 50) return '#f5c451'; // Toparlanıyor (Sarı)
-    return '#ff6b6b'; // Dinlenmeli (Kırmızı)
+    return '#ff4d1c'; // Dinlenmeli (Solar Corsa)
   };
 
   const statusLabel = (pct) => {
     if (pct >= 80) return 'Antrenmana Hazır';
     if (pct >= 50) return 'Toparlanıyor';
-    return 'Dinlenmeli / Yorgun';
+    return 'Dinlenmeli';
   };
 
   const activeMuscle = recovery[selected] || recovery.shoulders;
 
+  const handleSelect = (id) => {
+    sounds.tap();
+    setSelected(id);
+  };
+
   return (
-    <Card
-      title="Kas Toparlanma Haritası"
-      subtitle="Son antrenmanların ve ağrı bildirimlerine göre kaslarının hazırlık durumu"
-      action={
-        <span className="fx-tag" style={{ color: colorFor(activeMuscle.pct) }}>
-          <ShieldCheck size={13} style={{ verticalAlign: '-2px', marginRight: 4 }} />
-          {activeMuscle.label}: %{activeMuscle.pct}
+    <div className="fx-card fx-muscleRecoveryCard">
+      <div className="fx-muscleHeadRow">
+        <div>
+          <span className="fx-zenModuleEyebrow">TOPARLANMA RADARI</span>
+          <h3 className="fx-muscleTitle">Kas Toparlanma Haritası</h3>
+        </div>
+        <span className="fx-muscleActiveTag" style={{ color: colorFor(activeMuscle.pct), borderColor: `${colorFor(activeMuscle.pct)}40` }}>
+          <ShieldCheck size={12} />
+          {activeMuscle.label}: %{activeMuscle.pct} ({statusLabel(activeMuscle.pct)})
         </span>
-      }
-    >
+      </div>
+
       <div className="fx-muscleLayout">
-        {/* Anatomik SVG Vücut Haritası */}
+        {/* Anatomik Tam Vücut SVG Haritası */}
         <div className="fx-bodySvgWrap">
-          <svg viewBox="0 0 200 280" className="fx-bodySvg" aria-label="Kas haritası">
+          <svg viewBox="0 0 160 270" className="fx-bodySvg" aria-label="Kas haritası">
             {/* Baş & Boyun */}
-            <circle cx="100" cy="26" r="16" fill="#243142" />
-            <rect x="93" y="42" width="14" height="10" rx="4" fill="#243142" />
+            <circle cx="80" cy="18" r="13" fill="#1e2330" />
+            <rect x="76" y="30" width="8" height="9" rx="3" fill="#1e2330" />
 
             {/* Omuzlar (Shoulders) */}
             <g
               className={`fx-musclePart ${selected === 'shoulders' ? 'selected' : ''}`}
-              onClick={() => setSelected('shoulders')}
+              onClick={() => handleSelect('shoulders')}
             >
-              <ellipse cx="62" cy="64" rx="16" ry="13" fill={colorFor(recovery.shoulders.pct)} />
-              <ellipse cx="138" cy="64" rx="16" ry="13" fill={colorFor(recovery.shoulders.pct)} />
+              <ellipse cx="50" cy="46" rx="12" ry="9" fill={colorFor(recovery.shoulders.pct)} />
+              <ellipse cx="110" cy="46" rx="12" ry="9" fill={colorFor(recovery.shoulders.pct)} />
             </g>
 
             {/* Göğüs (Chest) */}
             <g
               className={`fx-musclePart ${selected === 'chest' ? 'selected' : ''}`}
-              onClick={() => setSelected('chest')}
+              onClick={() => handleSelect('chest')}
             >
-              <path d="M74 54 H126 L122 86 H78 Z" rx="8" fill={colorFor(recovery.chest.pct)} />
+              <path d="M58 40 H102 L98 64 H62 Z" rx="6" fill={colorFor(recovery.chest.pct)} />
             </g>
 
-            {/* Sırt / Kanat (Back - yan kanatlar olarak gösterilir) */}
+            {/* Sırt / Kanat (Back) */}
             <g
               className={`fx-musclePart ${selected === 'back' ? 'selected' : ''}`}
-              onClick={() => setSelected('back')}
+              onClick={() => handleSelect('back')}
             >
-              <path d="M70 84 L78 86 L82 128 L73 118 Z" fill={colorFor(recovery.back.pct)} />
-              <path d="M130 84 L122 86 L118 128 L127 118 Z" fill={colorFor(recovery.back.pct)} />
+              <path d="M54 62 L62 64 L66 100 L58 92 Z" fill={colorFor(recovery.back.pct)} />
+              <path d="M106 62 L98 64 L94 100 L102 92 Z" fill={colorFor(recovery.back.pct)} />
             </g>
 
             {/* Karın / Core */}
             <g
               className={`fx-musclePart ${selected === 'core' ? 'selected' : ''}`}
-              onClick={() => setSelected('core')}
+              onClick={() => handleSelect('core')}
             >
-              <rect x="82" y="88" width="36" height="48" rx="8" fill={colorFor(recovery.core.pct)} />
-              <line x1="100" y1="90" x2="100" y2="134" stroke="#0b1018" strokeWidth="2" />
-              <line x1="84" y1="104" x2="116" y2="104" stroke="#0b1018" strokeWidth="2" />
-              <line x1="84" y1="119" x2="116" y2="119" stroke="#0b1018" strokeWidth="2" />
+              <rect x="66" y="66" width="28" height="38" rx="4" fill={colorFor(recovery.core.pct)} />
+              <line x1="80" y1="67" x2="80" y2="103" stroke="#090a0f" strokeWidth="1.5" />
+              <line x1="68" y1="79" x2="92" y2="79" stroke="#090a0f" strokeWidth="1.5" />
+              <line x1="68" y1="91" x2="92" y2="91" stroke="#090a0f" strokeWidth="1.5" />
             </g>
 
             {/* Kollar (Arms) */}
             <g
               className={`fx-musclePart ${selected === 'arms' ? 'selected' : ''}`}
-              onClick={() => setSelected('arms')}
+              onClick={() => handleSelect('arms')}
             >
-              <rect x="46" y="78" width="16" height="58" rx="8" fill={colorFor(recovery.arms.pct)} />
-              <rect x="138" y="78" width="16" height="58" rx="8" fill={colorFor(recovery.arms.pct)} />
+              <rect x="36" y="52" width="11" height="42" rx="5" fill={colorFor(recovery.arms.pct)} />
+              <rect x="113" y="52" width="11" height="42" rx="5" fill={colorFor(recovery.arms.pct)} />
+              {/* Ön kollar */}
+              <rect x="34" y="96" width="10" height="38" rx="4" fill={colorFor(recovery.arms.pct)} />
+              <rect x="116" y="96" width="10" height="38" rx="4" fill={colorFor(recovery.arms.pct)} />
             </g>
 
-            {/* Bacaklar (Legs) */}
+            {/* Bacaklar (Legs: Üst Bacak + Diz + Kalf + Ayaklar) */}
             <g
               className={`fx-musclePart ${selected === 'legs' ? 'selected' : ''}`}
-              onClick={() => setSelected('legs')}
+              onClick={() => handleSelect('legs')}
             >
-              <path d="M76 140 H98 L94 252 H78 Z" fill={colorFor(recovery.legs.pct)} />
-              <path d="M102 140 H124 L122 252 H106 Z" fill={colorFor(recovery.legs.pct)} />
+              {/* Sol Üst Bacak */}
+              <path d="M62 108 H77 L75 165 H64 Z" fill={colorFor(recovery.legs.pct)} />
+              {/* Sağ Üst Bacak */}
+              <path d="M83 108 H98 L96 165 H85 Z" fill={colorFor(recovery.legs.pct)} />
+              {/* Dizler */}
+              <circle cx="69" cy="172" r="5" fill="#1e2330" />
+              <circle cx="91" cy="172" r="5" fill="#1e2330" />
+              {/* Kalf (Alt Bacak) */}
+              <path d="M64 179 H74 L72 232 H66 Z" fill={colorFor(recovery.legs.pct)} />
+              <path d="M86 179 H96 L94 232 H88 Z" fill={colorFor(recovery.legs.pct)} />
+              {/* Ayaklar */}
+              <path d="M62 233 H74 L76 244 H59 Z" rx="2" fill="#1e2330" />
+              <path d="M86 233 H98 L101 244 H84 Z" rx="2" fill="#1e2330" />
             </g>
           </svg>
         </div>
 
-        {/* Kas Grubu Listesi */}
-        <div className="fx-muscleList">
-          {Object.values(recovery).map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              className={`fx-muscleRow ${selected === m.id ? 'active' : ''}`}
-              onClick={() => setSelected(m.id)}
-            >
-              <div className="fx-muscleRowTop">
-                <b>{m.label}</b>
-                <span style={{ color: colorFor(m.pct) }}>%{m.pct}</span>
-              </div>
-              <div className="fx-muscleBar">
-                <span style={{ width: `${m.pct}%`, background: colorFor(m.pct) }} />
-              </div>
-              <small className="fx-muted">
-                {statusLabel(m.pct)}
-                {m.lastTrained ? ` · Son: ${m.lastTrained}` : ''}
-                {m.soreReported ? ' · Ağrı bildirildi' : ''}
-              </small>
-            </button>
-          ))}
+        {/* 6 Kas Grubu Listesi */}
+        <div className="fx-muscleListGrid">
+          {Object.values(recovery).map((m) => {
+            const active = selected === m.id;
+            const c = colorFor(m.pct);
+            return (
+              <button
+                key={m.id}
+                type="button"
+                className={`fx-muscleTile ${active ? 'active' : ''}`}
+                onClick={() => handleSelect(m.id)}
+              >
+                <div className="fx-muscleTileHead">
+                  <b>{m.label}</b>
+                  <strong style={{ color: c }}>%{m.pct}</strong>
+                </div>
+                <div className="fx-muscleMiniTrack">
+                  <span style={{ width: `${m.pct}%`, backgroundColor: c }} />
+                </div>
+                <small className="fx-muscleTileStatus">{statusLabel(m.pct)}</small>
+              </button>
+            );
+          })}
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

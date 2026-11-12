@@ -79,16 +79,18 @@ export default function DailyTelemetryCard({
             onNavigate('nutrition');
           }}
         >
-          <Ring value={totals.calories} max={targetCalories} size={76} stroke={7} color="#c8ff00">
-            <b className="fx-monoVal">{calPct}%</b>
+          <Ring value={totals.calories} max={targetCalories} size={74} stroke={7} color="#c8ff00">
+            <span className="fx-ringPct">{calPct}%</span>
           </Ring>
           <div className="fx-zenRingMeta">
-            <small>ENERJİ</small>
-            <strong className="fx-monoBig" style={{ color: '#c8ff00' }}>
-              {totals.calories}
-            </strong>
-            <span>/ {targetCalories} kcal</span>
-            <span className="fx-zenRemTag">Kalan: {remCalories}</span>
+            <small className="fx-zenRingCat">ENERJİ</small>
+            <div className="fx-zenRingValuesRow">
+              <strong className="fx-monoBig" style={{ color: '#c8ff00' }}>
+                {totals.calories}
+              </strong>
+              <span className="fx-zenTargetSpan">/ {targetCalories} kcal</span>
+            </div>
+            <span className="fx-zenRemTag">Kalan: {remCalories} kcal</span>
           </div>
         </button>
 
@@ -101,15 +103,17 @@ export default function DailyTelemetryCard({
             onNavigate('nutrition');
           }}
         >
-          <Ring value={totals.protein} max={targetProtein} size={76} stroke={7} color="#00f0ff">
-            <b className="fx-monoVal">{proPct}%</b>
+          <Ring value={totals.protein} max={targetProtein} size={74} stroke={7} color="#00f0ff">
+            <span className="fx-ringPct">{proPct}%</span>
           </Ring>
           <div className="fx-zenRingMeta">
-            <small>PROTEİN</small>
-            <strong className="fx-monoBig" style={{ color: '#00f0ff' }}>
-              {totals.protein}g
-            </strong>
-            <span>/ {targetProtein}g</span>
+            <small className="fx-zenRingCat">PROTEİN</small>
+            <div className="fx-zenRingValuesRow">
+              <strong className="fx-monoBig" style={{ color: '#00f0ff' }}>
+                {totals.protein}g
+              </strong>
+              <span className="fx-zenTargetSpan">/ {targetProtein}g</span>
+            </div>
             <span className="fx-zenRemTag">Kalan: {remProtein}g</span>
           </div>
         </button>
@@ -120,15 +124,17 @@ export default function DailyTelemetryCard({
           className="fx-zenRingPod"
           onClick={() => handleAddWater(250)}
         >
-          <Ring value={water} max={targetWater} size={76} stroke={7} color="#38bdf8">
-            <b className="fx-monoVal">{waterPct}%</b>
+          <Ring value={water} max={targetWater} size={74} stroke={7} color="#38bdf8">
+            <span className="fx-ringPct">{waterPct}%</span>
           </Ring>
           <div className="fx-zenRingMeta">
-            <small>HİDRASYON</small>
-            <strong className="fx-monoBig" style={{ color: '#38bdf8' }}>
-              {(water / 1000).toFixed(water % 1000 ? 2 : 1)}L
-            </strong>
-            <span>/ {(targetWater / 1000).toFixed(1)}L</span>
+            <small className="fx-zenRingCat">HİDRASYON</small>
+            <div className="fx-zenRingValuesRow">
+              <strong className="fx-monoBig" style={{ color: '#38bdf8' }}>
+                {(water / 1000).toFixed(water % 1000 ? 2 : 1)}L
+              </strong>
+              <span className="fx-zenTargetSpan">/ {(targetWater / 1000).toFixed(1)}L</span>
+            </div>
             <span className="fx-zenRemTag">
               {remWater > 0 ? `Kalan: ${remWater.toFixed(1)}L` : 'Hedefe Ulaşıldı!'}
             </span>
