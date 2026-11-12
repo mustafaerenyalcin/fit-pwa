@@ -161,11 +161,11 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
     if (navigator.clipboard) {
       try {
         await navigator.clipboard.writeText(text);
-        setCopiedCode(true);
-        setTimeout(() => setCopiedCode(false), 2400);
+        setNudgeSent(`📋 İddia mesajı kopyalandı! ${buddyName}'a dilediğin kanaldan gönderebilirsin.`);
+        setTimeout(() => setNudgeSent(''), 3500);
+        return;
       } catch {}
     }
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   useEffect(() => {
@@ -202,10 +202,14 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
       try {
         await navigator.clipboard.writeText(text);
         setCopiedCode(true);
-        setTimeout(() => setCopiedCode(false), 2400);
+        setNudgeSent(`📋 Davet metni kopyalandı! Arkadaşına WhatsApp veya dilediğin uygulamadan gönderebilirsin.`);
+        setTimeout(() => {
+          setCopiedCode(false);
+          setNudgeSent('');
+        }, 3500);
+        return;
       } catch {}
     }
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleOpenAddModal = () => {

@@ -29,6 +29,7 @@ const CoachView = lazy(() => import('./views/CoachView.jsx'));
 const SettingsView = lazy(() => import('./views/SettingsView.jsx'));
 
 import { targets, today, calculateCalories } from './lib/calculations.js';
+import { calculateStreak } from './lib/streaks.js';
 import { DEFAULT_PROFILE } from './lib/constants.js';
 import { getSetting, setSetting, list, add, remove, subscribe } from './lib/store.js';
 import { scheduleSync, getAuthState, getSyncState } from './lib/supabase.js';
@@ -181,6 +182,7 @@ function MainApp() {
   }, []);
 
   const target = useMemo(() => targets(profile), [profile]);
+  const streak = useMemo(() => calculateStreak(entries), [entries]);
   const todayMeals = useMemo(() => entries.meal.filter((x) => x.day === day), [entries.meal, day]);
   const totals = useMemo(
     () =>

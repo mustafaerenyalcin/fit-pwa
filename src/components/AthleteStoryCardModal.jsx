@@ -18,6 +18,7 @@ export default function AthleteStoryCardModal({
   const durationMins = Math.round((workoutResult.durationSeconds || 3600) / 60);
   const volumeKg = workoutResult.totalVolume || 8450;
   const userName = profile?.name || 'Şampiyon';
+  const streakDays = typeof streak === 'object' ? (streak?.current ?? 0) : (streak ?? 0);
 
   // Render high-res canvas and trigger Web Share API or download
   const handleExportStory = async () => {
@@ -101,7 +102,7 @@ export default function AthleteStoryCardModal({
       // 3-Metric Horizontal Row
       const metrics = [
         { label: 'SÜRE', val: `${durationMins} DK`, color: '#c8ff00' },
-        { label: 'SERİ', val: `${streak} GÜN`, color: '#ff4d1c' },
+        { label: 'SERİ', val: `${streakDays} GÜN`, color: '#ff4d1c' },
         { label: 'HAZIRLIK', val: `%${readinessScore}`, color: '#00f0ff' }
       ];
 
@@ -246,7 +247,7 @@ export default function AthleteStoryCardModal({
               </div>
               <div className="fx-storyTrioBox">
                 <small>SERİ</small>
-                <b style={{ color: '#ff4d1c' }}>{streak} gün</b>
+                <b style={{ color: '#ff4d1c' }}>{streakDays} gün</b>
               </div>
               <div className="fx-storyTrioBox">
                 <small>HAZIRLIK</small>
