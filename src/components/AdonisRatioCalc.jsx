@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Target, Award, Sparkles, TrendingUp, Check, Shield } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 
@@ -7,23 +7,7 @@ export default function AdonisRatioCalc({ profile }) {
   const [waist, setWaist] = useState(79);
   const [chest, setChest] = useState(104);
   const [arm, setArm] = useState(38);
-
-  // Adonis Index = Shoulder / Waist (Target = 1.618)
-  const currentRatio = useMemo(() => {
-    if (!waist || waist <= 0) return 0;
-    return Number((shoulder / waist).toFixed(3));
-  }, [shoulder, waist]);
-
-  // Score out of 100%
-  const matchPct = useMemo(() => {
-    if (!currentRatio) return 0;
-    const diff = Math.abs(currentRatio - 1.618);
-    return Math.max(50, Math.min(100, Math.round(100 - diff * 120)));
-  }, [currentRatio]);
-
-  // Calculations for ideal waist & ideal shoulder
-  const idealWaistForCurrentShoulder = Math.round(shoulder / 1.618);
-  const idealShoulderForCurrentWaist = Math.round(waist * 1.618);
+  const [result, setResult] = useState(null);
 
   const getTier = (ratio) => {
     if (ratio >= 1.58 && ratio <= 1.65) return { label: 'Adonis Zirve Altın Oran 1.618 (Grecian Ideal)', color: '#c8ff00' };
@@ -32,10 +16,36 @@ export default function AdonisRatioCalc({ profile }) {
     return { label: 'Başlangıç V-Taper Fazı', color: '#94a3b8' };
   };
 
-  const tier = getTier(currentRatio);
+  const handleCalculate = () => {
+    sounds.success();
+    const s = Number(shoulder) || 0;
+    const w = Number(waist) || 0;
+
+    if (w <= 0 || s <= 0) {
+      setResult(null);
+      return;
+    }
+
+    const currentRatio = Number((s / w).toFixed(3));
+    const diff = Math.abs(currentRatio - 1.618);
+    const matchPct = Math.max(50, Math.min(100, Math.round(100 - diff * 120)));
+    const idealWaist = Math.round(s / 1.618);
+    const idealShoulder = Math.round(w * 1.618);
+    const tier = getTier(currentRatio);
+
+    setResult({
+      currentRatio,
+      matchPct,
+      idealWaist,
+      idealShoulder,
+      tier,
+      calcShoulder: s,
+      calcWaist: w
+    });
+  };
 
   return (
-    <div className="fx-stack fx-adonisStudio">
+    <div className="fx-stack fx-adonisStudio animate-fade-in">
       <div className="fx-cardHead">
         <div>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
@@ -99,26 +109,43 @@ export default function AdonisRatioCalc({ profile }) {
               />
             </label>
           </div>
+
+          <button
+            type="button"
+            className="fx-btn fx-solarBtn fx-btn--block fx-btn--lg"
+            onClick={handleCalculate}
+            style={{ marginTop: 14, fontWeight: 800 }}
+          >
+            <Sparkles size={16} /> Altın Oranı &amp; V-Taper Formunu Hesapla
+          </button>
         </div>
 
         {/* SAĞ: HESAPLANAN SKOR KARTI */}
         <div className="fx-card fx-glassModule fx-adonisHeroCard">
           <small>MEVCUT OMUZ / BEL ORANIN</small>
           <div className="fx-adonisRatioVal">
-            <b className="fx-monoVal">{currentRatio}</b>
+            <b className="fx-monoVal">{result ? result.currentRatio : '—'}</b>
             <span>/ 1.618</span>
           </div>
 
-          <div className="fx-adonisStatusBadge" style={{ borderColor: tier.color, color: tier.color }}>
-            <span>{tier.label}</span>
-          </div>
+          {result ? (
+            <div className="animate-fade-in">
+              <div className="fx-adonisStatusBadge" style={{ borderColor: result.tier.color, color: result.tier.color }}>
+                <span>{result.tier.label}</span>
+              </div>
 
-          <div className="fx-adonisProgressBar">
-            <span style={{ width: `${matchPct}%`, background: tier.color }} />
-          </div>
-          <small style={{ marginTop: 6, color: 'var(--fx-muted)' }}>
-            Altın Orana Yakınlık Skoru: <b>%{matchPct}</b>
-          </small>
+              <div className="fx-adonisProgressBar">
+                <span style={{ width: `${result.matchPct}%`, background: result.tier.color }} />
+              </div>
+              <small style={{ marginTop: 6, color: 'var(--fx-muted)', display: 'block' }}>
+                Altın Orana Yakınlık Skoru: <b>%{result.matchPct}</b>
+              </small>
+            </div>
+          ) : (
+            <p style={{ margin: '14px 0 0', color: 'var(--fx-muted)', fontSize: 13 }}>
+              Ölçülerini girip "Altın Oranı Hesapla" butonuna dokun.
+            </p>
+          )}
         </div>
       </div>
 
@@ -127,24 +154,30 @@ export default function AdonisRatioCalc({ profile }) {
         <h4 style={{ margin: '0 0 12px 0', fontSize: 14, color: 'var(--fx-muted)' }}>
           1.618 ALTIN ORANA ULAŞMAK İÇİN HEDEF MATRİSİ
         </h4>
-        <div className="fx-grid2">
-          <div className="fx-roadmapBox">
-            <small>SENARYO A: MEVCUT OMUZLA ALTIN ORAN</small>
-            <b>Hedef Bel: {idealWaistForCurrentShoulder} cm</b>
-            <p>
-              Omuz genişliğini korurken bel çevresini {Math.abs(waist - idealWaistForCurrentShoulder)} cm{' '}
-              {waist > idealWaistForCurrentShoulder ? 'inceltmen' : 'genişletmen'} gerekir.
-            </p>
-          </div>
+        {result ? (
+          <div className="fx-grid2 animate-fade-in">
+            <div className="fx-roadmapBox">
+              <small>SENARYO A: MEVCUT OMUZLA ALTIN ORAN</small>
+              <b>Hedef Bel: {result.idealWaist} cm</b>
+              <p>
+                Omuz genişliğini korurken bel çevresini {Math.abs(result.calcWaist - result.idealWaist)} cm{' '}
+                {result.calcWaist > result.idealWaist ? 'inceltmen' : 'genişletmen'} gerekir.
+              </p>
+            </div>
 
-          <div className="fx-roadmapBox">
-            <small>SENARYO B: MEVCUT BELLE ALTIN ORAN</small>
-            <b>Hedef Omuz: {idealShoulderForCurrentWaist} cm</b>
-            <p>
-              Belini korurken omuz başlarına {Math.abs(idealShoulderForCurrentWaist - shoulder)} cm kütle eklemen gerekir.
-            </p>
+            <div className="fx-roadmapBox">
+              <small>SENARYO B: MEVCUT BELLE ALTIN ORAN</small>
+              <b>Hedef Omuz: {result.idealShoulder} cm</b>
+              <p>
+                Belini korurken omuz başlarına {Math.abs(result.idealShoulder - result.calcShoulder)} cm kütle eklemen gerekir.
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="fx-muted fx-small" style={{ margin: 0, textAlign: 'center', padding: '14px' }}>
+            Hedef bel ve omuz yol haritasını görmek için yukarıdaki "Altın Oranı Hesapla" butonuna bas.
+          </p>
+        )}
       </div>
 
       {/* KLASİK ESTETİK ANATOMİSİ: STEVE REEVES KANONU */}

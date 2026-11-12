@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Flame, Calculator, Sparkles, Target, Check, ChevronRight } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 
@@ -9,52 +9,74 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
   const [weight, setWeight] = useState(profile?.weight || 78);
   const [activity, setActivity] = useState(profile?.activity || 'medium');
   const [goalType, setGoalType] = useState('recomp'); // 'cut' | 'hard_cut' | 'recomp' | 'bulk'
+  const [result, setResult] = useState(null);
 
-  // BMR calculation (Mifflin-St Jeor)
-  const bmr = useMemo(() => {
-    let base = 10 * weight + 6.25 * height - 5 * age;
-    return Math.round(sex === 'female' ? base - 161 : base + 5);
-  }, [weight, height, age, sex]);
+  const computeMetrics = (a, s, h, w, act, goal) => {
+    let base = 10 * w + 6.25 * h - 5 * a;
+    const bmr = Math.round(s === 'female' ? base - 161 : base + 5);
 
-  // Activity multipliers
-  const actMult = {
-    low: 1.2,
-    medium: 1.45,
-    high: 1.725
-  }[activity] || 1.45;
+    const actMult = {
+      low: 1.2,
+      medium: 1.45,
+      high: 1.725
+    }[act] || 1.45;
 
-  const tdee = useMemo(() => Math.round(bmr * actMult), [bmr, actMult]);
+    const tdee = Math.round(bmr * actMult);
 
-  // Target kcal
-  const targetKcal = useMemo(() => {
-    switch (goalType) {
+    let targetKcal;
+    switch (goal) {
       case 'hard_cut':
-        return Math.round(tdee - 600);
+        targetKcal = Math.round(tdee - 600);
+        break;
       case 'cut':
-        return Math.round(tdee - 400);
+        targetKcal = Math.round(tdee - 400);
+        break;
       case 'bulk':
-        return Math.round(tdee + 350);
+        targetKcal = Math.round(tdee + 350);
+        break;
       case 'recomp':
       default:
-        return Math.round(tdee - 100);
+        targetKcal = Math.round(tdee - 100);
+        break;
     }
-  }, [tdee, goalType]);
 
-  // Macro calculation
-  const macros = useMemo(() => {
-    const proteinGrams = Math.round(weight * 2.2); // ~2.2g per kg
-    const fatGrams = Math.round((targetKcal * 0.25) / 9); // 25% fat
+    const proteinGrams = Math.round(w * 2.2);
+    const fatGrams = Math.round((targetKcal * 0.25) / 9);
     const carbKcal = targetKcal - proteinGrams * 4 - fatGrams * 9;
     const carbGrams = Math.max(50, Math.round(carbKcal / 4));
+
     return {
-      protein: proteinGrams,
-      fat: fatGrams,
-      carbs: carbGrams
+      bmr,
+      tdee,
+      targetKcal,
+      macros: {
+        protein: proteinGrams,
+        fat: fatGrams,
+        carbs: carbGrams
+      }
     };
-  }, [weight, targetKcal]);
+  };
+
+  const handleCalculate = (nextGoal = goalType) => {
+    sounds.success();
+    const a = Number(age) || 26;
+    const h = Number(height) || 180;
+    const w = Number(weight) || 78;
+
+    const res = computeMetrics(a, sex, h, w, activity, nextGoal);
+    setResult(res);
+  };
+
+  const changeGoal = (g) => {
+    sounds.tap();
+    setGoalType(g);
+    if (result) {
+      handleCalculate(g);
+    }
+  };
 
   return (
-    <div className="fx-stack fx-metabolicStudio">
+    <div className="fx-stack fx-metabolicStudio animate-fade-in">
       <div className="fx-cardHead">
         <div>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
@@ -122,6 +144,15 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
               <option value="high">Yüksek Yoğunluklu Atlet · Haftada 6+ Gün (1.72)</option>
             </select>
           </div>
+
+          <button
+            type="button"
+            className="fx-btn fx-solarBtn fx-btn--block fx-btn--lg"
+            onClick={() => handleCalculate(goalType)}
+            style={{ marginTop: 14, fontWeight: 800 }}
+          >
+            <Flame size={16} /> BMR ve Günlük Kalori İhtiyacını Hesapla
+          </button>
         </div>
 
         {/* SAĞ: HESAPLANAN ENERJİ TABLOSU */}
@@ -129,102 +160,101 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
           <div className="fx-metabolicTopRow">
             <div>
               <small>BAZAL METABOLİZMA (BMR)</small>
-              <b className="fx-monoVal">{bmr}</b> <span>kcal</span>
+              <b className="fx-monoVal">{result ? result.bmr : '—'}</b> <span>kcal</span>
             </div>
             <div>
               <small>GÜNLÜK TÜKETİM (TDEE)</small>
-              <b className="fx-monoVal" style={{ color: '#00f0ff' }}>{tdee}</b> <span>kcal</span>
+              <b className="fx-monoVal" style={{ color: '#00f0ff' }}>{result ? result.tdee : '—'}</b> <span>kcal</span>
             </div>
           </div>
 
           <div className="fx-goalTypeSelector" style={{ marginTop: 14 }}>
-            <span className="fx-subLabel">HEDEF SEÇİMİ:</span>
-            <div className="fx-miniPillPair" style={{ marginTop: 6, flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                className={goalType === 'cut' ? 'active' : ''}
-                onClick={() => setGoalType('cut')}
-              >
-                Definasyon (-400)
-              </button>
-              <button
-                type="button"
-                className={goalType === 'recomp' ? 'active' : ''}
-                onClick={() => setGoalType('recomp')}
-              >
-                Rekompozisyon (-100)
-              </button>
-              <button
-                type="button"
-                className={goalType === 'bulk' ? 'active' : ''}
-                onClick={() => setGoalType('bulk')}
-              >
-                Temiz Bulk (+350)
-              </button>
-              <button
-                type="button"
-                className={goalType === 'hard_cut' ? 'active' : ''}
-                onClick={() => setGoalType('hard_cut')}
-              >
-                Agresif Cut (-600)
-              </button>
+            <span className="fx-subLabel">SPORCU STRATEJİNİ SEÇ:</span>
+            <div className="fx-goalPillGroup" style={{ marginTop: 6 }}>
+              {[
+                { id: 'hard_cut', label: 'Agresif Definasyon (-600)' },
+                { id: 'cut', label: 'Temiz Yağ Yakımı (-400)' },
+                { id: 'recomp', label: 'Lean Recomp (-100)' },
+                { id: 'bulk', label: 'Temiz Kas Kazanımı (+350)' }
+              ].map((g) => (
+                <button
+                  key={g.id}
+                  type="button"
+                  className={goalType === g.id ? 'active' : ''}
+                  onClick={() => changeGoal(g.id)}
+                >
+                  {g.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="fx-targetKcalBig" style={{ marginTop: 14 }}>
-            <small>ÖNERİLEN GÜNLÜK HEDEF ENERJİ</small>
-            <div className="fx-targetDigits">
-              <b className="fx-monoVal">{targetKcal}</b> <span>KCAL / GÜN</span>
+          <div className="fx-targetKcalHero" style={{ marginTop: 16 }}>
+            <small>GÜNLÜK HEDEF ENERJİ ALIMI</small>
+            <div className="fx-targetKcalVal">
+              <b className="fx-monoVal">{result ? result.targetKcal : '—'}</b> <span>KCAL / GÜN</span>
             </div>
+            <p>
+              {result
+                ? `${goalType === 'bulk' ? 'Kas hipertrofisi için kalori fazlası' : 'Yağ yakımı için hedeflenen kalori açığı'} uygulandı.`
+                : 'Verilerini girip yukarıdaki "Hesapla" butonuna bas.'}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* MAKRO BESİN DAĞILIMI */}
+      {/* MAKRO AYRIŞIMI KARTLARI */}
       <div className="fx-card">
         <h4 style={{ margin: '0 0 12px 0', fontSize: 14, color: 'var(--fx-muted)' }}>
-          HEDEFE ÖZEL GÜNLÜK MAKRO DAĞILIMI
+          GÜNLÜK ÖNERİLEN MAKRO BESİN DAĞILIMI
         </h4>
-        <div className="fx-grid3 fx-macroTrioGrid">
-          <div className="fx-macroBox" style={{ borderColor: 'rgba(0, 240, 255, 0.4)' }}>
-            <small style={{ color: '#00f0ff' }}>PROTEİN SENTEZİ</small>
-            <b>{macros.protein} g</b>
-            <span>{macros.protein * 4} kcal (%{Math.round((macros.protein * 400) / targetKcal)})</span>
+        {result ? (
+          <div className="fx-grid3 animate-fade-in">
+            <div className="fx-macroCard protein">
+              <span className="fx-macroType">PROTEİN (2.2g / KG)</span>
+              <strong>{result.macros.protein} g</strong>
+              <small>{result.macros.protein * 4} kcal · Kas onarımı &amp; toparlanma</small>
+            </div>
+            <div className="fx-macroCard carbs">
+              <span className="fx-macroType">KOMPLEKS KARBONHİDRAT</span>
+              <strong>{result.macros.carbs} g</strong>
+              <small>{result.macros.carbs * 4} kcal · Glikojen &amp; antrenman yakıtı</small>
+            </div>
+            <div className="fx-macroCard fat">
+              <span className="fx-macroType">SAĞLIKLI YAĞ (%25)</span>
+              <strong>{result.macros.fat} g</strong>
+              <small>{result.macros.fat * 9} kcal · Hormon dengesi &amp; eklemler</small>
+            </div>
           </div>
-
-          <div className="fx-macroBox" style={{ borderColor: 'rgba(200, 255, 0, 0.4)' }}>
-            <small style={{ color: '#c8ff00' }}>KOMPLEKS KARBONHİDRAT</small>
-            <b>{macros.carbs} g</b>
-            <span>{macros.carbs * 4} kcal (%{Math.round((macros.carbs * 400) / targetKcal)})</span>
-          </div>
-
-          <div className="fx-macroBox" style={{ borderColor: 'rgba(255, 77, 28, 0.4)' }}>
-            <small style={{ color: '#ff4d1c' }}>ESANSİYEL SAĞLIKLI YAĞ</small>
-            <b>{macros.fat} g</b>
-            <span>{macros.fat * 9} kcal (%{Math.round((macros.fat * 900) / targetKcal)})</span>
-          </div>
-        </div>
+        ) : (
+          <p className="fx-muted fx-small" style={{ margin: 0, textAlign: 'center', padding: '14px' }}>
+            Önerilen makro ayrışımını görmek için "BMR ve Günlük Kalori İhtiyacını Hesapla" butonuna dokun.
+          </p>
+        )}
       </div>
 
-      {/* METABOLİK BİYOKİMYA: TEF & NEAT GERÇEKLERİ */}
+      {/* KLİNİK METABOLİZMA BİLİMİ: BMR & METABOLİK ADAPTASYON */}
       <div className="fx-card fx-scienceGuideBox">
         <div className="fx-scienceHead">
           <Sparkles size={16} color="#ff4d1c" />
-          <b>METABOLİZMA BİLİMİ: TEF &amp; NEAT GİZLİ YAKIT MOTORLARI</b>
+          <b>KLİNİK METABOLİZMA PROTOKOLÜ (MIFFLIN-ST JEOR &amp; ADAPTİF TERMOGENEZ)</b>
         </div>
         <div className="fx-scienceGrid">
           <div className="fx-scienceCol">
-            <h4>🥩 TEF (Besinlerin Termik Etkisi)</h4>
+            <h4>🔬 Mifflin-St Jeor Neden Altın Standart?</h4>
             <p>
-              Yediğin her 100 kalori proteinin <b>25-30 kalorisi</b> sadece o proteini sindirmek ve amino asitlere parçalamak için harcanır!
-              Karbonhidratta bu oran %5-10, yağda ise yalnızca %0-3'tür. Bu nedenle yüksek proteinli beslenmek dinlenirken metabolizmayı hızlandırır.
+              Amerikan Diyetetik Derneği (ADA) klinik araştırmalarına göre Mifflin-St Jeor formülü, 
+              eski Harris-Benedict formülüne kıyasla <b>%5 daha yüksek doğruluk payına</b> sahiptir. 
+              Kas kütlesi arttıkça BMR doğal olarak yükselir çünkü 1 kg kas dokusu dinlenirken bile yağ dokusunun 
+              3 katı kalori tüketir.
             </p>
           </div>
           <div className="fx-scienceCol">
-            <h4>🚶 NEAT (Egzersiz Dışı Aktivite Termogenezi)</h4>
+            <h4>🛑 "Açlık Modu" Efsanesi &amp; NEAT Enerjisi</h4>
             <p>
-              Günde 1 saat salonda basarak 350-450 kcal yakarsın. Ancak gün içinde atılan 10.000 adım, ayakta durmak ve hareket etmek 
-              <b> 600-900 kcal ek enerji harcatır</b>. Yağ yakımını asıl belirleyen spor salonundaki 1 saat değil, geriye kalan 23 saattir!
+              Metabolizma bir gecede durmaz. Aşırı düşük kalorili diyetlerde yaşanan duraklamanın asıl sebebi 
+              metabolizmanın çökmesi değil, vücudun bilinçsizce <b>NEAT (Egzersiz Dışı Aktivite Termogenezi)</b> 
+              enerjisini (hareketlilik, kıpırdanma, adımlar) %40'a varan oranda kısmasıdır.
             </p>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Droplets, Plus, Zap, Heart, Sparkles, Check, Flame } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 
@@ -6,16 +6,23 @@ export default function HydrationSmartLab({ profile, entries, target }) {
   const [weight, setWeight] = useState(profile?.weight || 75);
   const [workoutMins, setWorkoutMins] = useState(45);
   const [tempMode, setTempMode] = useState('moderate'); // 'cool' | 'moderate' | 'hot'
-
-  // Hydration calculation: base (35ml/kg) + workout sweat (12ml/min) + climate adjustment
-  const calculatedTarget = useMemo(() => {
-    let base = weight * 35;
-    let sweat = workoutMins * 12;
-    let tempBonus = tempMode === 'hot' ? 600 : tempMode === 'cool' ? 0 : 250;
-    return Math.round(base + sweat + tempBonus);
-  }, [weight, workoutMins, tempMode]);
-
+  const [calculatedTarget, setCalculatedTarget] = useState(null);
   const [currentWater, setCurrentWater] = useState(1750);
+
+  const computeTarget = (w, mins, temp) => {
+    let base = w * 35;
+    let sweat = mins * 12;
+    let tempBonus = temp === 'hot' ? 600 : temp === 'cool' ? 0 : 250;
+    return Math.round(base + sweat + tempBonus);
+  };
+
+  const handleCalculate = () => {
+    sounds.success();
+    const w = Number(weight) || 75;
+    const mins = Number(workoutMins) || 0;
+    const t = computeTarget(w, mins, tempMode);
+    setCalculatedTarget(t);
+  };
 
   const addWater = (amount) => {
     sounds.tap();
@@ -27,10 +34,11 @@ export default function HydrationSmartLab({ profile, entries, target }) {
     setCurrentWater(0);
   };
 
-  const progressPct = Math.min(100, Math.round((currentWater / calculatedTarget) * 100));
+  const effectiveTarget = calculatedTarget || 2800;
+  const progressPct = Math.min(100, Math.round((currentWater / effectiveTarget) * 100));
 
   return (
-    <div className="fx-stack fx-hydrationStudio">
+    <div className="fx-stack fx-hydrationStudio animate-fade-in">
       <div className="fx-cardHead">
         <div>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
@@ -99,95 +107,85 @@ export default function HydrationSmartLab({ profile, entries, target }) {
                 className={tempMode === 'hot' ? 'active' : ''}
                 onClick={() => setTempMode('hot')}
               >
-                Sıcak / Yoğun Ter
+                Sıcak
               </button>
             </div>
           </div>
+
+          <button
+            type="button"
+            className="fx-btn fx-solarBtn fx-btn--block fx-btn--lg"
+            onClick={handleCalculate}
+            style={{ marginTop: 14, fontWeight: 800 }}
+          >
+            <Droplets size={16} /> Günlük Su İhtiyacını Hesapla
+          </button>
         </div>
 
-        {/* SAĞ: CANLI SU TANKI / ANİMASYONLU GÖSTERGE */}
-        <div className="fx-card fx-glassModule fx-waterTankCard">
-          <div className="fx-waterTankTop">
+        {/* SAĞ: HİDRASYON SU VE DALGA KARTI */}
+        <div className="fx-card fx-glassModule fx-hydrationWaveCard">
+          <div className="fx-hydrationWaveVisual">
+            <div className="fx-waveFill" style={{ height: `${progressPct}%` }} />
+            <div className="fx-waveContent">
+              <span className="fx-wavePct">%{progressPct}</span>
+              <small>HÜCRESEL HİDRASYON</small>
+            </div>
+          </div>
+
+          <div className="fx-hydrationMetaRow" style={{ marginTop: 16 }}>
             <div>
-              <small>HESAPLANAN GÜNLÜK HEDEF</small>
-              <div className="fx-waterTankTargetVal">
-                <b className="fx-monoVal">{(calculatedTarget / 1000).toFixed(2)}</b> <span>LİTRE</span>
-              </div>
+              <small>GÜNCEL İÇİLEN</small>
+              <b className="fx-monoVal">{currentWater}</b> <span>ML</span>
             </div>
-            <div className="fx-waterCurrentBadge">
-              <span>ŞU AN: <b>{(currentWater / 1000).toFixed(2)}L</b> (%{progressPct})</span>
-            </div>
-          </div>
-
-          {/* DİKEY SU HAZNESİ */}
-          <div className="fx-waterBeakerContainer">
-            <div className="fx-waterWaveFill" style={{ height: `${progressPct}%` }}>
-              <div className="fx-waterWave" />
-            </div>
-            <div className="fx-waterMarks">
-              <span>%100</span>
-              <span>%75</span>
-              <span>%50</span>
-              <span>%25</span>
+            <div>
+              <small>HESAPLANAN HEDEF</small>
+              <b className="fx-monoVal" style={{ color: '#00f0ff' }}>
+                {calculatedTarget ? `${calculatedTarget} ML` : '—'}
+              </b>
             </div>
           </div>
 
-          {/* HIZLI EKLE BUTONLARI */}
-          <div className="fx-quickWaterRow">
-            <button type="button" className="fx-quickWaterBtn" onClick={() => addWater(200)}>
-              <Plus size={13} /> 200ml (Bardak)
-            </button>
-            <button type="button" className="fx-quickWaterBtn" onClick={() => addWater(330)}>
-              <Plus size={13} /> 330ml (Şişe)
-            </button>
-            <button type="button" className="fx-quickWaterBtn" onClick={() => addWater(500)}>
-              <Plus size={13} /> 500ml (Matara)
-            </button>
-            <button type="button" className="fx-btn fx-btn--ghost fx-btn--sm" onClick={resetWater}>
-              Sıfırla
-            </button>
-          </div>
+          {calculatedTarget ? (
+            <div className="fx-quickWaterRow animate-fade-in" style={{ marginTop: 14 }}>
+              <button type="button" className="fx-btn fx-btn--ghost fx-btn--sm" onClick={() => addWater(250)}>
+                <Plus size={13} /> 250 ml
+              </button>
+              <button type="button" className="fx-btn fx-btn--ghost fx-btn--sm" onClick={() => addWater(500)}>
+                <Plus size={13} /> 500 ml
+              </button>
+              <button type="button" className="fx-btn fx-btn--ghost fx-btn--sm" onClick={resetWater}>
+                Sıfırla
+              </button>
+            </div>
+          ) : (
+            <p style={{ margin: '14px 0 0', color: 'var(--fx-muted)', fontSize: 13, textAlign: 'center' }}>
+              Hedefini görmek için soldaki "Hesapla" butonuna dokun.
+            </p>
+          )}
         </div>
       </div>
 
-      {/* ELEKTROLİT REHBERİ */}
-      <div className="fx-card">
-        <h4 style={{ margin: '0 0 12px 0', fontSize: 14, color: 'var(--fx-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Zap size={15} color="#c8ff00" /> KAS KRAMPI VE YORGUNLUK ÖNLEME ELEKTROLİT PROTOKOLÜ
-        </h4>
-        <div className="fx-grid2">
-          <div className="fx-electrolyteBox">
-            <b>Sodyum (Na+) · ~1000-2000 mg</b>
-            <p>Terleme ile kaybedilen birincil mineral. Antrenman suyuna bir çimdik kaliteli kaya/deniz tuzu eklemek kas pompalamasını ve dayanıklılığı artırır.</p>
-          </div>
-          <div className="fx-electrolyteBox">
-            <b>Potasyum (K+) &amp; Magnezyum (Mg2+)</b>
-            <p>Kas kasılmaları ve kalp ritmi dengesi. 1 adet maden suyu veya muz ile antrenman sonrası tükenmiş depoları yenileyin.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* DR. ANDY GALPIN & HUCELLULAR HİDRASYON BİLİMİ */}
+      {/* SPORCU HİDRASYONU & ELEKTROLİT DENGE BİLİMİ */}
       <div className="fx-card fx-scienceGuideBox">
         <div className="fx-scienceHead">
           <Sparkles size={16} color="#00b4d8" />
-          <b>HÜCRE İÇİ OZMOLALİTE: NEDEN SADECE SU İÇMEK YETMEZ? (DR. ANDY GALPIN)</b>
+          <b>SPORCU HİDRASYONU &amp; ELEKTROLİT KANONU (ACSM BİLİMSEL PROTOKOLÜ)</b>
         </div>
         <div className="fx-scienceGrid">
           <div className="fx-scienceCol">
-            <h4>🧠 %2 Susuzluk = %11 Güç Kaybı</h4>
+            <h4>⚡ %2 Sıvı Kaybı = %15 Güç Düşüşü</h4>
             <p>
-              Kinesiyoloji araştırmaları, vücut ağırlığının yalnızca <b>%2'si kadar dehidrasyona</b> uğrandığında, 
-              merkezi sinir sistemi reaksiyon süresinin %20 yavaşladığını ve Bench Press/Squat maksimum gücünün 
-              <b> %11 düştüğünü</b> kanıtlamıştır.
+              Amerikan Spor Hekimliği Koleji (ACSM) araştırmalarına göre, vücut ağırlığının sadece 
+              <b> %2'si kadar su kaybedildiğinde</b> kas krampları başlar ve bench press / squat kuvveti 
+              <b> %10 ila %15 düşer</b>. Hücreler dehidre olduğunda protein sentezi yavaşlar ve glikojen depolanması durur.
             </p>
           </div>
           <div className="fx-scienceCol">
-            <h4>⚡ Sodyum-Potasyum Pompası (Na+/K+-ATPase)</h4>
+            <h4>🧂 Sodyum, Potasyum &amp; Magnezyum Dengesi</h4>
             <p>
-              Saf su içildiğinde kan plazması seyrelebilir ve su hücre içine giremeden idrarla atılır. 
-              Kas hücresinin suyu tutup hacim kazanması (hücresel şişme / pump) için suyun yanında mutlaka 
-              <b> sodyum ve potasyum iyonları</b> bulunmalıdır.
+              Sadece saf su içmek yetmez; terle birlikte atılan sodyum ve potasyumu yerine koymak için 
+              yoğun antrenman günlerinde <b>1 litre suya 1 çimdik Himalaya tuzu ve yarım limon</b> ekleyin. 
+              Bu formül, kas içi osmotik basıncı koruyarak hücresel pompalamayı (pump) maksimuma taşır.
             </p>
           </div>
         </div>

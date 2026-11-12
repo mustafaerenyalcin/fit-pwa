@@ -19,11 +19,9 @@ import ExerciseVisual from '../components/ExerciseVisual.jsx';
 import RestTimer from '../components/RestTimer.jsx';
 import EmptyState from '../components/EmptyState.jsx';
 import { homePlans, gymPlans, getCustomTrainingDays } from '../lib/workoutPlans.js';
-import {
-  calculatePersonalRecords,
-  getProgressiveOverloadAdvice
-} from '../lib/exerciseStats.js';
+import { calculatePersonalRecords, getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
+import { sounds } from '../lib/audio.js';
 
 export default function TrainingView({
   day,
@@ -43,14 +41,13 @@ export default function TrainingView({
   // 1RM Calculator State
   const [calcWeight, setCalcWeight] = useState(15);
   const [calcReps, setCalcReps] = useState(10);
+  const [calculated1RM, setCalculated1RM] = useState(null);
 
   const customDays = getCustomTrainingDays();
   const effectiveMode = planMode === 'ai' && !customDays.length ? profile.training || 'home' : planMode;
   const currentPlans = effectiveMode === 'ai' ? customDays : effectiveMode === 'gym' ? gymPlans : homePlans;
   const personalRecords = calculatePersonalRecords(entries.workout);
   const prEntries = Object.entries(personalRecords).filter(([_, data]) => data.maxWeight > 0);
-
-  const calculated1RM = calculateOneRepMax(calcWeight, calcReps);
 
   return (
     <div className="trainingView">
@@ -338,17 +335,35 @@ export default function TrainingView({
               </label>
             </div>
 
-            <div className="oneRmResults">
+            <button
+              type="button"
+              className="fx-btn fx-solarBtn fx-btn--block fx-btn--sm"
+              onClick={() => {
+                sounds.tap();
+                setCalculated1RM(calculateOneRepMax(calcWeight, calcReps));
+              }}
+              style={{ marginTop: 10 }}
+            >
+              <Calculator size={14} /> 1RM Hesapla
+            </button>
+
+            <div className="oneRmResults" style={{ marginTop: 14 }}>
               <div className="oneRmMain">
                 <span>Tahmini 1RM:</span>
-                <strong>{calculated1RM} kg</strong>
+                <strong>{calculated1RM !== null ? `${calculated1RM} kg` : '—'}</strong>
               </div>
 
-              <div className="oneRmPercentages">
-                <div><span>%85 (5RM):</span> <b>{Math.round(calculated1RM * 0.85 * 10) / 10} kg</b></div>
-                <div><span>%75 (10RM):</span> <b>{Math.round(calculated1RM * 0.75 * 10) / 10} kg</b></div>
-                <div><span>%65 (15RM):</span> <b>{Math.round(calculated1RM * 0.65 * 10) / 10} kg</b></div>
-              </div>
+              {calculated1RM !== null ? (
+                <div className="oneRmPercentages animate-fade-in">
+                  <div><span>%85 (5RM):</span> <b>{Math.round(calculated1RM * 0.85 * 10) / 10} kg</b></div>
+                  <div><span>%75 (10RM):</span> <b>{Math.round(calculated1RM * 0.75 * 10) / 10} kg</b></div>
+                  <div><span>%65 (15RM):</span> <b>{Math.round(calculated1RM * 0.65 * 10) / 10} kg</b></div>
+                </div>
+              ) : (
+                <p className="fx-muted fx-small" style={{ margin: '8px 0 0' }}>
+                  Ağırlık ve tekrar girip "1RM Hesapla" butonuna bas.
+                </p>
+              )}
             </div>
           </div>
         </Panel>
