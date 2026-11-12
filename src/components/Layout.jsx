@@ -19,6 +19,7 @@ import { getTheme, setTheme } from '../lib/notifications.js';
 import { useI18n } from '../lib/i18n.js';
 import LanguageDropdown from './LanguageDropdown.jsx';
 import UserAvatar from './UserAvatar.jsx';
+import { sounds } from '../lib/audio.js';
 
 export const TABS = [
   ['today', 'nav.today', Activity, '01'],
@@ -94,7 +95,10 @@ export default function Layout({ tab, setTab, day, setDay, profile, online = tru
                   key={id}
                   type="button"
                   className={`fx-spatialNavPill fx-atelierNavBtn ${active ? 'active' : ''}`}
-                  onClick={() => setTab(id)}
+                  onClick={() => {
+                    sounds.tap();
+                    setTab(id);
+                  }}
                 >
                   <small className="fx-navIndex">{num}</small>
                   <span>{t(key)}</span>
@@ -171,11 +175,15 @@ export default function Layout({ tab, setTab, day, setDay, profile, online = tru
                 key={id}
                 type="button"
                 className={`fx-dockItem ${active ? 'active' : ''}`}
-                onClick={() => setTab(id)}
+                onClick={() => {
+                  sounds.tap();
+                  setTab(id);
+                }}
                 aria-current={active ? 'page' : undefined}
               >
                 <div className="fx-dockIconBox">
-                  <Icon size={19} strokeWidth={active ? 2.5 : 1.9} />
+                  <Icon size={20} strokeWidth={active ? 2.5 : 1.8} />
+                  {active && <span className="fx-dockActiveGlowDot" />}
                 </div>
                 <span>{t(key)}</span>
               </button>

@@ -22,6 +22,10 @@ import UserAvatar from '../components/UserAvatar.jsx';
 import ReadinessCockpitCard from '../components/ReadinessCockpitCard.jsx';
 import AiEnergyPill from '../components/AiEnergyPill.jsx';
 import SubscriptionModal from '../components/SubscriptionModal.jsx';
+import AthleteStatusHUD from '../components/AthleteStatusHUD.jsx';
+import DailyAthleteMissions from '../components/DailyAthleteMissions.jsx';
+import AthleteQuickLaunchBar from '../components/AthleteQuickLaunchBar.jsx';
+import BarcodeScannerModal from '../components/BarcodeScannerModal.jsx';
 import { Ring } from '../components/ui.jsx';
 import { getWorkoutForDay } from '../lib/workoutPlans.js';
 import { calculateCalories, today } from '../lib/calculations.js';
@@ -42,6 +46,7 @@ export default function TodayView({
 }) {
   const { t } = useI18n();
   const [showSubModal, setShowSubModal] = useState(false);
+  const [showBarcodeModal, setShowBarcodeModal] = useState(false);
   const dayIndex = (new Date(day + 'T12:00:00').getDay() + 6) % 7;
   const plan = getWorkoutForDay(profile.training || 'home', dayIndex);
   const isRest = !plan || plan.rest || !plan.moves;
@@ -80,50 +85,32 @@ export default function TodayView({
           : t('today.greetEvening');
 
   return (
-    <div className="fx-cockpit">
-      {/* Üst Editoryal Karşılama Bloğu */}
-      <section className="fx-cockpitHeroBar fx-atelierHeroBar">
-        <div className="fx-cockpitGreetCol">
-          <div className="fx-atelierEyebrow">
-            <span>[ATELIER EDITION // 01]</span> · GÜNLÜK PERFORMANS ÖZETİ
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <UserAvatar avatarUrl={profile?.avatarUrl} name={profile?.name || t('today.champ')} size={48} />
-            <div>
-              <h2 className="fx-cockpitGreeting fx-atelierDisplay" style={{ margin: 0 }}>
-                {greeting}, <span>{profile.name || t('today.champ')}</span>.
-              </h2>
-              <p className="fx-cockpitSub" style={{ margin: 0 }}>
-                {remProtein > 0
-                  ? t('today.remSub', { pro: remProtein, cal: remCalories })
-                  : t('today.doneSub')}
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="fx-cockpit animate-fade-in">
+      {/* 1. SEVİYE, RÜTBE & XP SPORCU HUD KARTI */}
+      <AthleteStatusHUD entries={entries} profile={profile} target={target} />
 
-        <div className="fx-cockpitQuickTriggers">
-          <AiEnergyPill onOpenSubscription={() => setShowSubModal(true)} />
-          {!doneToday.length && !isRest && (
-            <button
-              type="button"
-              className="fx-neonActionBtn fx-solarBtn"
-              onClick={() => onStartWorkout(plan)}
-            >
-              <Play size={15} fill="currentColor" /> {t('today.startWorkout')}
-            </button>
-          )}
-          <button
-            type="button"
-            className="fx-spatialCoachBtn fx-ivoryBtn"
-            onClick={() => onNavigate('coach')}
-          >
-            <Sparkles size={15} /> {t('today.askCoach')}
-          </button>
-        </div>
-      </section>
+      {/* 2. APP STORE / PLAY STORE TARZI HIZLI FIRLATMA ÇUBUĞU */}
+      <AthleteQuickLaunchBar
+        plan={plan}
+        onStartWorkout={onStartWorkout}
+        onOpenBarcode={() => setShowBarcodeModal(true)}
+        onNavigate={onNavigate}
+        onQuickWaterAdd={onQuickWaterAdd}
+      />
 
-      {/* GÜNLÜK ATLETİK HAZIRLIK TELEMETRİSİ (WHOOP & MACROFACTOR KÖPRÜSÜ) */}
+      {/* 3. GÜNLÜK SPORCU GÖREVLERİ & MEYDAN OKUMALARI */}
+      <DailyAthleteMissions
+        plan={plan}
+        doneToday={doneToday}
+        totals={totals}
+        target={target}
+        water={water}
+        onStartWorkout={onStartWorkout}
+        onNavigate={onNavigate}
+        onQuickWaterAdd={onQuickWaterAdd}
+      />
+
+      {/* 4. GÜNLÜK ATLETİK HAZIRLIK TELEMETRİSİ (WHOOP & MACROFACTOR KÖPRÜSÜ) */}
       <ReadinessCockpitCard
         entries={entries}
         profile={profile}
@@ -365,6 +352,25 @@ export default function TodayView({
 
       {showSubModal && (
         <SubscriptionModal onClose={() => setShowSubModal(false)} />
+      )}
+
+      {showBarcodeModal && (
+        <BarcodeScannerModal
+          onAddMeal={(foodItem) => {
+            if (onQuickMealAdd) {
+              onQuickMealAdd({
+                category: 'Öğün',
+                name: foodItem.name,
+                calories: foodItem.calories,
+                protein: foodItem.protein,
+                carbs: foodItem.carbs,
+                fat: foodItem.fat
+              });
+            }
+            setShowBarcodeModal(false);
+          }}
+          onClose={() => setShowBarcodeModal(false)}
+        />
       )}
     </div>
   );
