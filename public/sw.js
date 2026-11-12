@@ -1,10 +1,10 @@
 /**
- * Fit PWA Service Worker v2.1.0 (FIT. ATELIER)
+ * Fit PWA Service Worker v2.2.0 (FIT. ATELIER - ELITE ATHLETE & SQUAD WAGERS)
  * Offline-first caching with stale-while-revalidate for static assets
  * and immediate network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-atelier-v2.1.0';
+const CACHE_NAME = 'fit-atelier-v2.2.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

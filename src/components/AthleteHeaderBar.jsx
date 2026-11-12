@@ -4,6 +4,7 @@ import { calculateGamification } from '../lib/streaks.js';
 import UserAvatar from './UserAvatar.jsx';
 import AiEnergyPill from './AiEnergyPill.jsx';
 import BadgesModal from './BadgesModal.jsx';
+import StreakVaultModal from './StreakVaultModal.jsx';
 import { sounds } from '../lib/audio.js';
 
 export default function AthleteHeaderBar({
@@ -14,6 +15,7 @@ export default function AthleteHeaderBar({
   onOpenSubscription
 }) {
   const [showBadges, setShowBadges] = useState(false);
+  const [showStreakVault, setShowStreakVault] = useState(false);
   const g = useMemo(() => calculateGamification(entries, target), [entries, target]);
   const { streak, level, title, currentLevelXp, nextLevelXp, badges, xp } = g;
 
@@ -26,6 +28,11 @@ export default function AthleteHeaderBar({
   const handleOpenBadges = () => {
     sounds.tap();
     setShowBadges(true);
+  };
+
+  const handleOpenStreakVault = () => {
+    sounds.tap();
+    setShowStreakVault(true);
   };
 
   return (
@@ -54,10 +61,12 @@ export default function AthleteHeaderBar({
 
         {/* SAĞ: SERİ + AI ENERJİ + ROZETLER */}
         <div className="fx-zenHeaderActions">
-          {/* SERİ FLAME PİLL */}
-          <div
-            className={`fx-zenStreakPill ${streak.current > 0 ? 'active' : ''}`}
-            title={`${streak.current} Gün Kesintisiz Seri · ${streak.shieldsRemaining} Kalkan Hazır`}
+          {/* SERİ FLAME PİLL (KASAYI AÇAR) */}
+          <button
+            type="button"
+            className={`fx-zenStreakPill ${streak.current > 0 ? 'active' : ''} ${!streak.loggedToday && streak.current > 0 ? 'at-risk' : ''}`}
+            onClick={handleOpenStreakVault}
+            title={`${streak.current} Gün Kesintisiz Seri · Kasayı Açmak İçin Dokun`}
           >
             <Flame size={15} className={streak.current > 0 ? 'pulse' : ''} />
             <b>{streak.current}</b>
@@ -65,7 +74,7 @@ export default function AthleteHeaderBar({
             {streak.shieldUsed && (
               <Shield size={11} color="#00f0ff" title="Dinlenme kalkanı devrede" />
             )}
-          </div>
+          </button>
 
           {/* AI HAKKI / ENERJİ DÜĞMESİ */}
           <AiEnergyPill onOpenModal={onOpenSubscription} />
@@ -82,6 +91,14 @@ export default function AthleteHeaderBar({
           </button>
         </div>
       </header>
+
+      {/* SERİ & KALKAN KASASI MODALI */}
+      {showStreakVault && (
+        <StreakVaultModal
+          streak={streak}
+          onClose={() => setShowStreakVault(false)}
+        />
+      )}
 
       {/* ROZETLER MODALI */}
       {showBadges && (

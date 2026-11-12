@@ -8298,10 +8298,10 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-zenTodayContainer {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  max-width: 980px;
+  gap: 16px;
+  max-width: 740px;
   margin: 0 auto;
-  padding-bottom: 24px;
+  padding-bottom: 32px;
 }
 
 /* 1. ATHLETE COMPACT HEADER BAR */
@@ -9157,6 +9157,574 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
     flex: 1 1 calc(50% - 8px);
     justify-content: center;
   }
+}
+
+/* =====================================================================
+   KUTSAL SERİ ŞERİDİ (DYNAMIC STREAK AURA BAR) & STREAK VAULT
+   ===================================================================== */
+.fx-streakAuraBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 77, 28, 0.08) 0%, rgba(245, 196, 81, 0.04) 50%, rgba(13, 16, 23, 0.9) 100%);
+  border: 1px solid rgba(255, 77, 28, 0.22);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+.fx-streakAuraBar:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 77, 28, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 77, 28, 0.15);
+}
+.fx-streakAuraBar.risk {
+  background: linear-gradient(135deg, rgba(255, 0, 85, 0.12) 0%, rgba(255, 77, 28, 0.08) 50%, rgba(13, 16, 23, 0.9) 100%);
+  border-color: rgba(255, 0, 85, 0.35);
+  animation: pulseRisk 2.4s infinite ease-in-out;
+}
+@keyframes pulseRisk {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
+  50% { box-shadow: 0 0 16px 2px rgba(255, 0, 85, 0.25); }
+}
+
+.fx-streakAuraLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.fx-streakMiniFlame {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(255, 77, 28, 0.12);
+  border: 1px solid rgba(255, 77, 28, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.fx-streakMiniFlame .flame-safe {
+  color: #ff4d1c;
+  animation: pulse 1.8s infinite ease-in-out;
+}
+.fx-streakMiniFlame .flame-risk {
+  color: #ff0055;
+  animation: bounce 1.2s infinite ease-in-out;
+}
+.fx-streakAuraTitle {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #fff;
+  display: block;
+}
+.fx-streakAuraSub {
+  font-size: 11.5px;
+  color: var(--fx-muted);
+  display: block;
+  margin-top: 1px;
+}
+.fx-streakAuraActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.fx-streakAuraActionBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #00f0ff;
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+/* STREAK VAULT MODAL */
+.fx-streakVaultModal {
+  max-width: 480px;
+  padding: 26px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #131722 0%, #0a0c12 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 77, 28, 0.15);
+}
+.fx-vaultHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 22px;
+}
+.fx-vaultFlameAura {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  background: radial-gradient(circle, rgba(255, 77, 28, 0.25) 0%, rgba(245, 196, 81, 0.08) 50%, transparent 70%);
+}
+.fx-vaultFlamePulse {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 77, 28, 0.2), rgba(245, 196, 81, 0.2));
+  border: 1px solid rgba(255, 77, 28, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fx-vaultBigFlame {
+  color: #ff4d1c;
+  filter: drop-shadow(0 0 12px #ff4d1c);
+  animation: pulse 1.6s infinite ease-in-out;
+}
+.fx-vaultCount {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.fx-vaultCount strong {
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: #fff;
+  line-height: 1;
+}
+.fx-vaultCount span {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ff4d1c;
+}
+
+.fx-vaultStatusBeacon {
+  margin-top: 4px;
+}
+.fx-statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+.fx-statusPill.safe {
+  background: rgba(200, 255, 0, 0.12);
+  color: #c8ff00;
+  border: 1px solid rgba(200, 255, 0, 0.3);
+}
+.fx-statusPill.shielded {
+  background: rgba(0, 240, 255, 0.12);
+  color: #00f0ff;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+.fx-statusPill.danger {
+  background: rgba(255, 0, 85, 0.15);
+  color: #ff3366;
+  border: 1px solid rgba(255, 0, 85, 0.35);
+  animation: pulseRisk 2s infinite ease-in-out;
+}
+.fx-statusPill.neutral {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* 7 GÜNLÜK SERİ ZİNCİRİ */
+.fx-vaultWeekTrack {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.fx-vaultSubLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+.fx-vaultDaysRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.fx-vaultDayCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.fx-vaultDayCell.today {
+  border-color: rgba(255, 77, 28, 0.4);
+  background: rgba(255, 77, 28, 0.06);
+}
+.fx-vaultDayCell.active {
+  background: rgba(255, 77, 28, 0.12);
+  border-color: rgba(255, 77, 28, 0.3);
+}
+.fx-vaultDayName {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--fx-muted);
+}
+.fx-vaultEmptyDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: block;
+  margin: 5px auto;
+}
+
+/* KALKAN KASASI */
+.fx-vaultShieldPod {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.08) 0%, rgba(20, 28, 40, 0.6) 100%);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.fx-shieldPodHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.fx-shieldTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fx-shieldTitleRow h4 {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #fff;
+}
+.fx-shieldBadge {
+  font-size: 10.5px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(0, 240, 255, 0.15);
+  color: #00f0ff;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+.fx-shieldDesc {
+  font-size: 12px;
+  color: var(--fx-muted);
+  line-height: 1.45;
+  margin: 0 0 12px;
+}
+.fx-shieldBtn {
+  background: linear-gradient(135deg, #00f0ff 0%, #0077b6 100%);
+  color: #090a0f;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 10px 14px;
+}
+.fx-shieldBtn.active {
+  background: rgba(0, 240, 255, 0.12);
+  color: #00f0ff;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  cursor: default;
+}
+.fx-shieldSuccessBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(0, 240, 255, 0.12);
+  color: #00f0ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fx-vaultMetaFooter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.fx-vaultRecordItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.fx-vaultRecordItem small {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  letter-spacing: 0.6px;
+}
+.fx-vaultRecordItem b {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  margin-top: 1px;
+}
+
+/* =====================================================================
+   BİYOMETRİK GEÇİŞLİ KAPSÜL (RECOVERY HARİTASI VS 20 SN CHECKIN)
+   ===================================================================== */
+.fx-biometricTabHeader {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.fx-biometricTabGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+.fx-biometricTabBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  color: var(--fx-muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.fx-biometricTabBtn:hover {
+  color: #fff;
+}
+.fx-biometricTabBtn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* =====================================================================
+   HAFTALIK SQUAD İDDİASI & CEZA ODASI (WAGER ARENA)
+   ===================================================================== */
+.fx-squadWagerCard {
+  padding: 22px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(245, 196, 81, 0.07) 0%, rgba(255, 77, 28, 0.09) 50%, #0d1017 100%);
+  border: 1px solid rgba(245, 196, 81, 0.28);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+  margin-bottom: 24px;
+}
+.fx-wagerTagRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.fx-wagerTag {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #f5c451;
+  letter-spacing: 0.8px;
+}
+.fx-wagerGoalTag {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fx-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.fx-wagerTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 6px;
+}
+.fx-wagerSub {
+  font-size: 13px;
+  color: var(--fx-muted);
+  line-height: 1.45;
+  margin: 0 0 16px;
+}
+
+.fx-wagerSelectorGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 18px;
+}
+@media (max-width: 680px) {
+  .fx-wagerSelectorGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.fx-wagerStakeBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+}
+.fx-wagerStakeBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.fx-wagerStakeBtn.active {
+  background: rgba(245, 196, 81, 0.12);
+  border-color: rgba(245, 196, 81, 0.45);
+}
+.fx-stakeIcon {
+  font-size: 20px;
+}
+.fx-stakeMeta b {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #fff;
+}
+.fx-stakeMeta small {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #f5c451;
+  margin-top: 1px;
+}
+
+/* SQUAD ÜYELERİNİN İDDİA DURUM LİSTESİ */
+.fx-wagerTrackSection {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 14px;
+}
+.fx-wagerTrackLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+.fx-wagerMembersGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+@media (max-width: 580px) {
+  .fx-wagerMembersGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.fx-wagerMemberCell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.fx-wagerMemberCell.safe {
+  border-color: rgba(200, 255, 0, 0.25);
+  background: rgba(200, 255, 0, 0.04);
+}
+.fx-wagerMemberCell.danger {
+  border-color: rgba(255, 0, 85, 0.25);
+  background: rgba(255, 0, 85, 0.05);
+}
+.fx-wagerMemberIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fx-wagerAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+}
+.fx-wagerMemberIdentity strong {
+  display: block;
+  font-size: 12.5px;
+  color: #fff;
+}
+.fx-wagerMemberIdentity small {
+  display: block;
+  font-size: 11px;
+  color: var(--fx-muted);
+}
+.fx-wagerActionGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fx-wagerStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+.fx-wagerStatusBadge.safe {
+  background: rgba(200, 255, 0, 0.12);
+  color: #c8ff00;
+}
+.fx-wagerStatusBadge.danger {
+  background: rgba(255, 0, 85, 0.14);
+  color: #ff3366;
+}
+.fx-wagerBanterBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  gap: 4px;
+}
+.fx-wagerBanterBtn:hover {
+  background: #ff4d1c;
+  color: #fff;
+  border-color: #ff4d1c;
 }
 
 /* Hareket azaltma tercihi */

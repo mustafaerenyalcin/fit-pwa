@@ -17,7 +17,10 @@ import {
   Shield,
   MessageSquare,
   TrendingUp,
-  Activity
+  Activity,
+  Coffee,
+  Gift,
+  AlertCircle
 } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 import { getMaxGymBuddies, getAiMembership } from '../lib/aiQuota.js';
@@ -25,6 +28,42 @@ import SubscriptionModal from './SubscriptionModal.jsx';
 
 const SQUAD_STORAGE_KEY = 'fit-gym-squad-v2';
 const OLD_STORAGE_KEY = 'fit-gym-buddy-v1';
+const WAGER_STORAGE_KEY = 'fit-squad-wager-stake-v1';
+
+const WAGER_STAKES = {
+  coffee: {
+    id: 'coffee',
+    title: 'Bütün Takıma Filtre Kahve',
+    icon: '☕',
+    badge: 'EN POPÜLER İDDİA',
+    desc: 'Haftalık 4 antrenman hedefini tutturamayan, pazar akşamı tüm squad ekibine filtre kahve ısmarlar.',
+    penaltyNote: 'Kahveleri hazırla kanka!'
+  },
+  protein: {
+    id: 'protein',
+    title: '1 Kutu Protein Bar Stoğu',
+    icon: '🍫',
+    badge: 'ŞAMPİYON ÖDÜLÜ',
+    desc: 'Haftalık XP ve antrenman liderlik tablosunu 1. bitiren şampiyona tüm takım protein bar hediye eder.',
+    penaltyNote: 'Bar borcun var kanka!'
+  },
+  pushups: {
+    id: 'pushups',
+    title: 'Salonda 100 Şınav Cezası',
+    icon: '🏋️',
+    badge: 'DİSİPLİN CEZASI',
+    desc: 'Hedefe ulaşamayan üye sonraki ortak bacak/göğüs antrenmanında 100 şınav cezasını çeker.',
+    penaltyNote: '100 şınav seni bekliyor!'
+  },
+  cheat: {
+    id: 'cheat',
+    title: 'Hafta Sonu Cheat Meal Ismarlama',
+    icon: '🍕',
+    badge: 'BÜYÜK HESAP',
+    desc: 'Haftayı sonuncu sırada kapatan, pazar akşamı ekibe burger / pizza ziyafeti çeker.',
+    penaltyNote: 'Menüyü hazırla kanka!'
+  }
+};
 
 const NUDGE_MESSAGES = [
   'Hadi şampiyon, ağırlıklar salonda bizi bekliyor! 🚀',
@@ -76,6 +115,32 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
   const [formGoal, setFormGoal] = useState('Hipertrofi & Kas Kütlesi');
   const [formFrequency, setFormFrequency] = useState(4);
   const [formStatus, setFormStatus] = useState('waiting');
+
+  // Squad Wagers & Stakes State
+  const [wagerStakeKey, setWagerStakeKey] = useState(() => {
+    try {
+      return localStorage.getItem(WAGER_STORAGE_KEY) || 'coffee';
+    } catch {
+      return 'coffee';
+    }
+  });
+
+  const handleSelectWager = (key) => {
+    sounds.tap();
+    setWagerStakeKey(key);
+    try {
+      localStorage.setItem(WAGER_STORAGE_KEY, key);
+    } catch {}
+  };
+
+  const handleWagerBanter = (buddyName) => {
+    sounds.tap();
+    const stake = WAGER_STAKES[wagerStakeKey] || WAGER_STAKES.coffee;
+    const text = encodeURIComponent(
+      `Kanka Gym Squad'daki "${stake.title}" iddiamızda durumun kritik! ${stake.penaltyNote} ☕🔥 Güncel skora bak: ${inviteUrl}`
+    );
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  };
 
   const maxBuddiesAllowed = getMaxGymBuddies();
   const membership = getAiMembership();
@@ -405,7 +470,104 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
         </div>
       </div>
 
-      {/* 3. SQUAD XP LİDERLİK TABLOSU & HAFTALIK AKIŞ */}
+      {/* 3. HAFTALIK SQUAD İDDİASI & CEZA ODASI (WAGER ARENA) */}
+      <div className="fx-card fx-squadWagerCard">
+        <div className="fx-wagerHead">
+          <div>
+            <div className="fx-wagerTagRow">
+              <span className="fx-wagerTag">🔥 HAFTALIK REKABET &amp; İDDİA</span>
+              <span className="fx-wagerGoalTag">HEDEF: 4 SEANS / HAFTA</span>
+            </div>
+            <h3 className="fx-wagerTitle">
+              {WAGER_STAKES[wagerStakeKey]?.icon} {WAGER_STAKES[wagerStakeKey]?.title}
+            </h3>
+            <p className="fx-wagerSub">
+              {WAGER_STAKES[wagerStakeKey]?.desc}
+            </p>
+          </div>
+        </div>
+
+        {/* İDDİA ÇEŞİDİ SEÇİCİ KAPSÜLLERİ */}
+        <div className="fx-wagerSelectorGrid">
+          {Object.values(WAGER_STAKES).map((stake) => (
+            <button
+              key={stake.id}
+              type="button"
+              className={`fx-wagerStakeBtn ${wagerStakeKey === stake.id ? 'active' : ''}`}
+              onClick={() => handleSelectWager(stake.id)}
+            >
+              <span className="fx-stakeIcon">{stake.icon}</span>
+              <div className="fx-stakeMeta">
+                <b>{stake.title}</b>
+                <small>{stake.badge}</small>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* TAKIMIN İDDİA DURUMU (KİM GÜVENDE, KİM CEZA TEHLİKESİNDE?) */}
+        <div className="fx-wagerTrackSection">
+          <span className="fx-wagerTrackLabel">TAKIMIN GÜNCEL İDDİA DURUMU:</span>
+          <div className="fx-wagerMembersGrid">
+            {/* KAPTAN (SEN) */}
+            <div className="fx-wagerMemberCell safe">
+              <div className="fx-wagerMemberIdentity">
+                <span className="fx-wagerAvatar">👑</span>
+                <div>
+                  <strong>{profile?.name || 'Sen (Kaptan)'}</strong>
+                  <small>4 / 4 Seans Tamamlandı</small>
+                </div>
+              </div>
+              <span className="fx-wagerStatusBadge safe">
+                <Check size={12} /> GÜVENDE
+              </span>
+            </div>
+
+            {/* DİĞER SQUAD ÜYELERİ */}
+            {buddies.map((b) => {
+              const completed = b.completedThisWeek || 1;
+              const isSafe = completed >= 4;
+              return (
+                <div
+                  key={b.id}
+                  className={`fx-wagerMemberCell ${isSafe ? 'safe' : 'danger'}`}
+                >
+                  <div className="fx-wagerMemberIdentity">
+                    <span className="fx-wagerAvatar">{b.name.charAt(0)}</span>
+                    <div>
+                      <strong>{b.name}</strong>
+                      <small>{completed} / 4 Seans Tamamlandı</small>
+                    </div>
+                  </div>
+                  <div className="fx-wagerActionGroup">
+                    {isSafe ? (
+                      <span className="fx-wagerStatusBadge safe">
+                        <Check size={12} /> KAZANDI
+                      </span>
+                    ) : (
+                      <>
+                        <span className="fx-wagerStatusBadge danger">
+                          <AlertCircle size={12} /> CEZA TEHLİKESİNDE
+                        </span>
+                        <button
+                          type="button"
+                          className="fx-btn fx-btn--xs fx-wagerBanterBtn"
+                          onClick={() => handleWagerBanter(b.name)}
+                          title="Arkadaşa cezasını WhatsApp'tan hatırlat"
+                        >
+                          <Coffee size={12} /> Dürt
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* 4. SQUAD XP LİDERLİK TABLOSU & HAFTALIK AKIŞ */}
       <div className="fx-squadBottomGrid">
         {/* SOL: HAFTALIK SQUAD LİDERLİK PANOSU */}
         <div className="fx-card fx-squadLeaderboard">
