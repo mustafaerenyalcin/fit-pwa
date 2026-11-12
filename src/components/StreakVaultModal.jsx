@@ -30,17 +30,32 @@ export default function StreakVaultModal({ streak = {}, onClose, onUseShield }) 
           ✕
         </button>
 
-        {/* ALEV ANİMASYONLU KOR BAŞLIK */}
-        <div className="fx-vaultHeader">
-          <div className="fx-vaultFlameAura">
-            <div className={`fx-vaultFlamePulse ${isAtRisk ? 'risk' : 'flaming'}`}>
-              <Flame size={54} className="fx-vaultBigFlame" />
+        {/* DUOLINGO TARZI YAŞAYAN ALEV & KOR SAHNESİ (FOTOĞRAFSIZ, SAF ANİMASYON) */}
+        <div className="fx-duoStreakStage">
+          {/* Pulsing Ember Aura Shockwaves */}
+          <div className="fx-duoShockwave fx-duoShockwave--1" />
+          <div className="fx-duoShockwave fx-duoShockwave--2" />
+
+          {/* Floating Fire Embers */}
+          <div className="fx-duoEmbers">
+            <span className="fx-duoSpark sp-1" />
+            <span className="fx-duoSpark sp-2" />
+            <span className="fx-duoSpark sp-3" />
+            <span className="fx-duoSpark sp-4" />
+            <span className="fx-duoSpark sp-5" />
+          </div>
+
+          {/* Duolingo Squash & Stretch Dancing Flame */}
+          <div className={`fx-duoFlameHero ${isAtRisk ? 'risk' : 'active'}`}>
+            <div className="fx-duoFlameCore">
+              <Flame size={76} className="fx-duoFlameSvg" />
             </div>
           </div>
 
-          <div className="fx-vaultCount">
-            <strong>{streak.current || 0}</strong>
-            <span>GÜN SERİ</span>
+          {/* Duolingo Fiery Streak Counter */}
+          <div className="fx-duoStreakNumber">
+            <span className="fx-duoDigits">{streak.current || 0}</span>
+            <span className="fx-duoLabel">GÜN SERİ</span>
           </div>
 
           {/* SERİ DURUM PİLİ */}

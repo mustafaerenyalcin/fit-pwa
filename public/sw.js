@@ -4,7 +4,7 @@
  * and immediate network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-atelier-v2.5.0';
+const CACHE_NAME = 'fit-atelier-v2.7.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -16,7 +16,6 @@ const STATIC_ASSETS = [
   '/images/workout-bg.jpg',
   '/images/nutrition-bg.jpg',
   '/images/squad-bg.jpg',
-  '/images/streak-bg.jpg',
   '/images/recovery-bg.jpg',
   '/images/tools/fasting-v2.jpg',
   '/images/tools/fasting.jpg',
@@ -24,7 +23,9 @@ const STATIC_ASSETS = [
   '/images/tools/1rm.jpg',
   '/images/tools/tabata.jpg',
   '/images/tools/hydration.jpg',
+  '/images/tools/adonis-v2.jpg',
   '/images/tools/adonis.jpg',
+  '/images/tools/metabolic-v2.jpg',
   '/images/tools/metabolic.jpg',
   '/images/tools/recovery.jpg',
   '/images/tools/body.jpg',

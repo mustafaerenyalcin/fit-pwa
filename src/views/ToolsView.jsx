@@ -92,7 +92,7 @@ const TOOLS_CONFIG = [
     category: 'biometrics',
     badge: 'Altın Oran',
     color: '#eab308',
-    image: '/images/tools/adonis.jpg',
+    image: '/images/tools/adonis-v2.jpg',
     bg: 'linear-gradient(135deg, rgba(234, 179, 8, 0.16), rgba(234, 179, 8, 0.02))'
   },
   {
@@ -103,7 +103,7 @@ const TOOLS_CONFIG = [
     category: 'nutrition',
     badge: 'BMR & TDEE',
     color: '#ff4d1c',
-    image: '/images/tools/metabolic.jpg',
+    image: '/images/tools/metabolic-v2.jpg',
     bg: 'linear-gradient(135deg, rgba(255, 77, 28, 0.16), rgba(255, 77, 28, 0.02))'
   },
   {
