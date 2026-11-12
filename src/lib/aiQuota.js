@@ -37,11 +37,13 @@ export function getAiMembership() {
 }
 
 /**
- * Upgrade to Atelier Black (Pro)
+ * Upgrade to Atelier Black (Pro / Family Squad)
+ * Supports 'monthly', 'yearly', and 'family' (4-person Squad)
  */
 export function upgradeToPro(plan = 'yearly') {
   if (typeof window === 'undefined') return;
-  const expiresAt = Date.now() + (plan === 'yearly' ? 365 : 30) * 24 * 60 * 60 * 1000;
+  const isYearly = plan === 'yearly' || plan === 'family_yearly';
+  const expiresAt = Date.now() + (isYearly ? 365 : 30) * 24 * 60 * 60 * 1000;
   const data = {
     isPro: true,
     plan,
@@ -50,6 +52,19 @@ export function upgradeToPro(plan = 'yearly') {
   };
   localStorage.setItem(STORAGE_MEMBERSHIP_KEY, JSON.stringify(data));
   notifyChange();
+}
+
+/**
+ * Returns the maximum number of Gym Buddies allowed for the current subscription.
+ * - Free Tier: 1 Buddy (1-on-1 accountability)
+ * - Pro Individual: 2 Buddies
+ * - Family & Gym Squad: 4 Buddies (Full 4-person squad telemetry)
+ */
+export function getMaxGymBuddies() {
+  const membership = getAiMembership();
+  if (membership.plan === 'family' || membership.plan === 'squad') return 4;
+  if (membership.isPro) return 2;
+  return 1; // Free tier allows 1 gym buddy
 }
 
 /**
