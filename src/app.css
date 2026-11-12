@@ -3050,7 +3050,8 @@ body {
 }
 
 h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpHeadline {
-  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 /* Uzamsal Arka Plan (Spatial Aurora & Dot Telemetry Mesh) */
@@ -3939,7 +3940,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-atelierDisplay,
 .fx-launchpadTitle,
 .fx-totemBlock strong {
-  font-family: 'Syne', 'Plus Jakarta Sans', sans-serif !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   letter-spacing: -0.03em;
 }
 
@@ -3953,7 +3954,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-monoBig,
 .fx-monoVal,
 .fx-moveIndex {
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 
 /* Arka Plan: Sıcak Diyagonal Güneş Hüzmesi + Dev Heykelsi Tipografi Filigranı */
@@ -3982,7 +3983,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   position: absolute;
   bottom: -4vw;
   left: -1vw;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: clamp(120px, 21vw, 340px);
   font-weight: 800;
   line-height: 0.8;
@@ -4014,7 +4015,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   align-items: center;
   gap: 24px;
   white-space: nowrap;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.5px;
@@ -4263,7 +4264,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 
 .fx-quizTag {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -4281,7 +4282,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-quizProgressMeta {
   display: flex;
   justify-content: space-between;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   color: var(--fx-muted);
 }
@@ -4330,7 +4331,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   gap: 3px;
 }
 .fx-stripPod small {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 10px;
   letter-spacing: 0.8px;
   color: var(--fx-muted);
@@ -4363,7 +4364,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 
 .fx-stepBadge {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.2px;
@@ -4372,7 +4373,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 
 .fx-stepHeadline {
   margin: 0;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: clamp(26px, 3.2vw, 38px);
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -4430,7 +4431,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 
 .fx-cardTag {
   align-self: flex-start;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.8px;
@@ -4511,7 +4512,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 .fx-quizInputRow span,
 .fx-quizField span {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.8px;
@@ -4562,7 +4563,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   background: #141418;
   border: 1.5px solid var(--fx-border);
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 1px;
@@ -4596,7 +4597,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   gap: 10px;
 }
 .fx-subLabel {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -4673,7 +4674,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   background: rgba(255, 77, 28, 0.16);
   border: 1px solid rgba(255, 77, 28, 0.4);
   color: #ff4d1c;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 1px;
@@ -4725,14 +4726,14 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   background: rgba(255, 77, 28, 0.16);
   border: 1px solid rgba(255, 77, 28, 0.4);
   color: #ff4d1c;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.2px;
 }
 .fx-blueprintTitle {
   margin: 0;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: clamp(26px, 3.4vw, 40px);
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -4770,7 +4771,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border-color: rgba(255, 77, 28, 0.45);
 }
 .fx-matrixCol small {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -4806,7 +4807,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 12px;
   letter-spacing: 1px;
   color: #f4f2ed;
@@ -4835,7 +4836,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   background: rgba(255, 77, 28, 0.08);
 }
 .fx-phaseNumber {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   font-weight: 800;
   color: #d4ff33;
@@ -4998,7 +4999,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border: 1px solid rgba(255, 77, 28, 0.3);
   padding: 1px 5px;
   border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-langPill--interactive:hover,
 .fx-langPill--interactive.active {
@@ -5138,7 +5139,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   color: #fff;
   font-size: 32px;
   font-weight: 800;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-avatarPresetPreview {
   font-size: 34px;
@@ -5167,7 +5168,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   margin: 0 0 4px 0;
   font-size: 17px;
   font-weight: 800;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-avatarPickerMeta p {
   margin: 0 0 12px 0;
@@ -5290,7 +5291,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   margin: 6px 0 8px;
   font-size: 26px;
   font-weight: 800;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: -0.5px;
 }
 .fx-buddyHeroTitle span {
@@ -5326,7 +5327,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   gap: 10px;
 }
 .fx-inviteCode {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 16px;
   font-weight: 800;
   color: #00f0ff;
@@ -5539,7 +5540,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 .fx-matrixBox b {
   font-size: 20px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   margin: 4px 0 2px;
 }
 .fx-matrixBox span {
@@ -5611,7 +5612,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-1rmHeroVal {
   margin: 6px 0;
   font-size: 38px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
   color: #fff;
 }
@@ -5659,7 +5660,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border-radius: 5px;
   font-size: 10px;
   font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   color: #fff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
@@ -5687,7 +5688,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 11.5px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-platePill b {
   color: #00f0ff;
@@ -5813,7 +5814,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-toolMicroBadge {
   font-size: 10px;
   font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   padding: 4px 9px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.06);
@@ -5828,7 +5829,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   margin: 0 0 6px 0;
   font-size: 17px;
   font-weight: 800;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: -0.3px;
   color: #fff;
 }
@@ -6096,7 +6097,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 .fx-tabataBigDigits {
   font-size: 88px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -2px;
@@ -6177,7 +6178,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 .fx-waterTankTargetVal {
   font-size: 28px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
   color: #fff;
 }
@@ -6229,7 +6230,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   flex-direction: column;
   justify-content: space-between;
   font-size: 9.5px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   color: rgba(255, 255, 255, 0.4);
 }
 .fx-quickWaterRow {
@@ -6284,7 +6285,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-adonisRatioVal {
   margin: 8px 0;
   font-size: 42px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
   color: #fff;
 }
@@ -6343,7 +6344,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-targetDigits {
   margin-top: 4px;
   font-size: 32px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
   color: #fff;
 }
@@ -6377,7 +6378,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 .fx-macroBox b {
   font-size: 22px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   color: #fff;
   margin: 4px 0 2px;
 }
@@ -6478,7 +6479,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 .fx-factorPill b {
   font-size: 13px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   color: #fff;
 }
 .fx-readinessAdviceRow {
@@ -6518,7 +6519,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-bridgeTag {
   font-size: 9px;
   font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   padding: 2px 7px;
   border-radius: 999px;
   background: #ff4d1c;
@@ -6616,7 +6617,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-weight: 800;
   color: #00f0ff;
   margin-top: 2px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .guideToggleBtn.active-accent {
   background: rgba(255, 77, 28, 0.2) !important;
@@ -6670,7 +6671,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
 }
 .fx-storyEyebrow {
@@ -6724,7 +6725,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 32px;
   font-weight: 900;
   color: #fff;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-volumeDigits span {
   font-size: 14px;
@@ -6753,7 +6754,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-storyTrioBox b {
   font-size: 15px;
   font-weight: 900;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   display: block;
   margin-top: 2px;
 }
@@ -6778,7 +6779,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 8.5px;
   color: #64748b;
   letter-spacing: 1px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-storyActionsRow {
   margin-top: 14px;
@@ -6984,7 +6985,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 18px;
   font-weight: 900;
   color: #fff;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   display: block;
   margin-top: 4px;
 }
@@ -7160,7 +7161,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 13px;
   font-weight: 800;
   color: #c8ff00;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-formTipRow p {
   margin: 0;
@@ -7221,7 +7222,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   gap: 2px;
 }
 .fx-energyPillText b {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
 }
 .fx-energyPillUpgradeTag {
@@ -7274,7 +7275,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   padding: 4px 12px;
   border-radius: 999px;
   letter-spacing: 1px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   margin-bottom: 10px;
 }
 .fx-subTitle {
@@ -7353,7 +7354,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 26px;
   font-weight: 900;
   color: #fff;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-subPriceRow small {
   font-size: 11px;
@@ -7466,7 +7467,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   padding: 2px 8px;
   border-radius: 999px;
   letter-spacing: 0.8px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-membershipBadge.free {
   background: rgba(255, 255, 255, 0.08);
@@ -7548,7 +7549,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   padding: 1px 6px;
   border-radius: 999px;
   letter-spacing: 0.6px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
   white-space: nowrap;
 }
@@ -7562,7 +7563,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-weight: 800;
   letter-spacing: 1px;
   color: #f5c451;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   display: block;
 }
 .fx-hudRankTitle b {
@@ -7575,7 +7576,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-hudTotalXp {
   font-size: 11px;
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -7610,7 +7611,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-hudStreakDigits b {
   font-size: 18px;
   font-weight: 900;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-hudStreakDigits small {
   font-size: 8px;
@@ -7637,7 +7638,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 .fx-hudXpLabels b {
   color: #fff;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-hudProgressBar {
   width: 100%;
@@ -7769,7 +7770,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-weight: 800;
   letter-spacing: 0.8px;
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-quickLaunchBody b {
   font-size: 13.5px;
@@ -7812,7 +7813,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-weight: 800;
   letter-spacing: 0.8px;
   color: #ff4d1c;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-missionsHeadRow h3 {
   margin: 0;
@@ -7827,7 +7828,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border-radius: 999px;
   font-size: 11px;
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-missionsProgressPill b {
   color: #c8ff00;
@@ -7877,7 +7878,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 11px;
   font-weight: 800;
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-missionLabelRow {
   display: flex;
@@ -7897,7 +7898,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-weight: 900;
   padding: 1px 6px;
   border-radius: 6px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-missionItem p {
   margin: 2px 0 0;
@@ -7916,7 +7917,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border: 1px solid rgba(200, 255, 0, 0.3);
   padding: 3px 8px;
   border-radius: 999px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-btn.fx-hydroBtn {
   background: linear-gradient(135deg, rgba(0, 180, 216, 0.2), rgba(0, 119, 182, 0.3));
@@ -8005,7 +8006,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 9px;
   font-weight: 800;
   color: #f5c451;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* =====================================================================
@@ -8081,7 +8082,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   padding: 0 5px;
   border-radius: 999px;
   letter-spacing: 0.4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
   border: 1.5px solid #090a0f;
 }
@@ -8116,7 +8117,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 10px;
   font-weight: 800;
   color: #f5c451;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: 0.5px;
 }
 .fx-zenXpProgressMini {
@@ -8135,7 +8136,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-zenXpDigits {
   font-size: 9.5px;
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .fx-zenHeaderActions {
@@ -8153,7 +8154,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   padding: 5px 10px;
   border-radius: 999px;
   color: #94a3b8;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
 }
 .fx-zenStreakPill.active {
@@ -8181,7 +8182,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   color: #f5c451;
   font-size: 11px;
   font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -8215,7 +8216,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 10.5px;
   font-weight: 800;
   color: #ff4d1c;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: 0.8px;
 }
 
@@ -8228,7 +8229,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   padding: 5px 12px;
   border-radius: 999px;
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   cursor: pointer;
   color: #fff;
   transition: all 0.2s ease;
@@ -8272,7 +8273,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-zenFactorCell b {
   font-size: 12px;
   color: #fff;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-zenReadinessAdvice {
   margin: 0;
@@ -8395,7 +8396,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   align-items: center;
   gap: 8px;
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   color: var(--fx-muted);
 }
 .fx-zenMissionsCount {
@@ -8414,7 +8415,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-zenXpReward {
   color: #f5c451;
   font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-zenMissionsDropdown {
   margin-top: 10px;
@@ -8440,7 +8441,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   margin-left: auto;
   font-size: 10.5px;
   color: #f5c451;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* 3. DAILY GOALS & TELEMETRY (3 RINGS & QUICK FUEL) */
@@ -8465,7 +8466,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 10.5px;
   font-weight: 800;
   color: #00f0ff;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: 0.8px;
 }
 .fx-zenLinkMini {
@@ -8526,7 +8527,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-zenRingMeta span {
   font-size: 11px;
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .fx-zenRemTag {
   font-size: 9.5px;
@@ -8597,7 +8598,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 10.5px;
   font-weight: 800;
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: 0.8px;
 }
 .fx-zenToolsGrid {
@@ -8640,7 +8641,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-zenToolBadge {
   font-size: 9px;
   font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   padding: 2px 6px;
   border-radius: 6px;
   border: 1px solid;
@@ -8694,7 +8695,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-weight: 800;
   color: var(--fx-muted);
   letter-spacing: 0.8px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .fx-zenMissionsCountPill {
@@ -8728,7 +8729,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 .fx-zenTargetSpan {
   font-size: 11px;
   color: var(--fx-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* KAS TOPARLANMA HARİTASI (RADAR) KARTI */
@@ -8755,7 +8756,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   font-size: 9.5px;
   font-weight: 800;
   color: #c8ff00;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: 0.8px;
   display: block;
 }
@@ -8774,7 +8775,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   gap: 5px;
   font-size: 10.5px;
   font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.04);
@@ -8823,7 +8824,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 
 .fx-muscleTileHead strong {
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .fx-muscleMiniTrack {
@@ -8895,3 +8896,4 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
