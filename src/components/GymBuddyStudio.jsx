@@ -133,21 +133,40 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
     } catch {}
   };
 
-  const handleWagerBanter = (buddyName) => {
-    sounds.tap();
-    const stake = WAGER_STAKES[wagerStakeKey] || WAGER_STAKES.coffee;
-    const text = encodeURIComponent(
-      `Kanka Gym Squad'daki "${stake.title}" iddiamızda durumun kritik! ${stake.penaltyNote} ☕🔥 Güncel skora bak: ${inviteUrl}`
-    );
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-  };
-
   const maxBuddiesAllowed = getMaxGymBuddies();
   const membership = getAiMembership();
   const isFamilySquad = membership.plan === 'family' || membership.plan === 'squad';
 
   const myInviteCode = 'FIT-' + (profile?.name ? profile.name.slice(0, 3).toUpperCase() : 'PRO') + '9K2';
-  const inviteUrl = `https://lighthearted-gaufre-61028a.netlify.app/?squad=${myInviteCode}`;
+  const inviteUrl = typeof window !== 'undefined' ? `${window.location.origin}/#tools` : 'https://fitpwa.app';
+
+  const handleWagerBanter = async (buddyName) => {
+    sounds.tap();
+    const stake = WAGER_STAKES[wagerStakeKey] || WAGER_STAKES.coffee;
+    const text = `Kanka Gym Squad'daki "${stake.title}" iddiamızda durumun kritik! ${stake.penaltyNote} ☕🔥 Güncel skora bak: ${inviteUrl}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'FIT. Squad İddia Durumu',
+          text,
+          url: inviteUrl
+        });
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(text);
+        setCopiedCode(true);
+        setTimeout(() => setCopiedCode(false), 2400);
+      } catch {}
+    }
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  };
 
   useEffect(() => {
     try {
@@ -162,12 +181,31 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
     setTimeout(() => setCopiedCode(false), 2400);
   };
 
-  const handleShareWhatsApp = () => {
+  const handleShareWhatsApp = async () => {
     sounds.tap();
-    const text = encodeURIComponent(
-      `Kanka FIT. uygulamasını indir, bizim Gym Buddy Squad'a katıl, ortak antrenman serisi yapalım! Katılım kodum: ${myInviteCode} 👉 ${inviteUrl}`
-    );
-    window.open(`https://wa.me/?text=${text}`, '_blank');
+    const text = `Kanka FIT. uygulamasını aç, bizim Gym Buddy Squad'a katıl, ortak antrenman serisi yapalım! Katılım kodum: ${myInviteCode} 👉 ${inviteUrl}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'FIT. Gym Squad Daveti',
+          text,
+          url: inviteUrl
+        });
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(text);
+        setCopiedCode(true);
+        setTimeout(() => setCopiedCode(false), 2400);
+      } catch {}
+    }
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleOpenAddModal = () => {

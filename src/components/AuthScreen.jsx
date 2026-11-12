@@ -18,6 +18,7 @@ import {
 import { signin, signup, signinWithGoogle, resetPassword, continueAsLocalUser } from '../lib/supabase.js';
 import { hasUnclaimedLegacyData } from '../lib/store.js';
 import { useI18n } from '../lib/i18n.js';
+import LegalModal from './LegalModal.jsx';
 
 const translateError = (msg = '') => {
   const m = msg.toLowerCase();
@@ -156,6 +157,7 @@ export default function AuthScreen() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [legalModalType, setLegalModalType] = useState(null);
   const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -520,13 +522,29 @@ export default function AuthScreen() {
                     />
                     <span>
                       {c.termsPrefix}
-                      <a href="/gizlilik.html" target="_blank" rel="noreferrer">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setLegalModalType('privacy');
+                        }}
+                        style={{ background: 'none', border: 'none', color: '#c8ff00', textDecoration: 'underline', padding: 0, cursor: 'pointer', font: 'inherit' }}
+                      >
                         {c.termsPrivacy}
-                      </a>
+                      </button>
                       {c.termsMid}
-                      <a href="/kosullar.html" target="_blank" rel="noreferrer">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setLegalModalType('terms');
+                        }}
+                        style={{ background: 'none', border: 'none', color: '#c8ff00', textDecoration: 'underline', padding: 0, cursor: 'pointer', font: 'inherit' }}
+                      >
                         {c.termsService}
-                      </a>
+                      </button>
                       {c.termsSuffix}
                     </span>
                   </label>
@@ -599,6 +617,13 @@ export default function AuthScreen() {
           </div>
         </section>
       </div>
+
+      {legalModalType && (
+        <LegalModal
+          type={legalModalType}
+          onClose={() => setLegalModalType(null)}
+        />
+      )}
     </div>
   );
 }

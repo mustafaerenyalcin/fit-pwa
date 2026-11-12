@@ -3,6 +3,7 @@ import { Cloud, RefreshCw, Download, Upload, LogOut, Trash2, Smartphone, Shield,
 import ProfileView from './ProfileView.jsx';
 import AvatarPicker from '../components/AvatarPicker.jsx';
 import SubscriptionModal from '../components/SubscriptionModal.jsx';
+import LegalModal from '../components/LegalModal.jsx';
 import { Segmented, Card } from '../components/ui.jsx';
 import { getAuthState, getSyncState, sync, signout, deleteAccount } from '../lib/supabase.js';
 import { exportBackup, importBackup } from '../lib/store.js';
@@ -21,6 +22,7 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
   const [membership, setMembership] = useState(getAiMembership);
   const [quota, setQuota] = useState(getAiQuota);
   const [showSubModal, setShowSubModal] = useState(false);
+  const [legalModalType, setLegalModalType] = useState(null); // 'privacy' | 'terms' | null
   const { user } = getAuthState();
   const syncState = getSyncState();
 
@@ -285,12 +287,20 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
 
           <Card>
             <div className="fx-listLinks">
-              <a href="/gizlilik.html" target="_blank" rel="noreferrer">
-                <Shield size={16} /> Gizlilik Politikası
-              </a>
-              <a href="/kosullar.html" target="_blank" rel="noreferrer">
+              <button
+                type="button"
+                onClick={() => setLegalModalType('privacy')}
+                style={{ textAlign: 'left', width: '100%', display: 'flex', alignItems: 'center', gap: 8 }}
+              >
+                <Shield size={16} /> Gizlilik Politikası (KVKK)
+              </button>
+              <button
+                type="button"
+                onClick={() => setLegalModalType('terms')}
+                style={{ textAlign: 'left', width: '100%', display: 'flex', alignItems: 'center', gap: 8 }}
+              >
                 <FileText size={16} /> Kullanım Koşulları
-              </a>
+              </button>
               <button type="button" onClick={() => signout()}>
                 <LogOut size={16} /> Çıkış yap
               </button>
@@ -306,6 +316,13 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
 
       {showSubModal && (
         <SubscriptionModal onClose={() => setShowSubModal(false)} />
+      )}
+
+      {legalModalType && (
+        <LegalModal
+          type={legalModalType}
+          onClose={() => setLegalModalType(null)}
+        />
       )}
     </div>
   );
