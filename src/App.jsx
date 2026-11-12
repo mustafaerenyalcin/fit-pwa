@@ -118,6 +118,7 @@ function MainApp() {
 
   const [activeWorkoutPlan, setActiveWorkoutPlan] = useState(null);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
+  const [activeToolId, setActiveToolId] = useState(null);
 
   const profile = useMemo(() => ({ ...DEFAULT_PROFILE, ...(storedProfile || {}) }), [storedProfile]);
 
@@ -127,8 +128,15 @@ function MainApp() {
     if (msg) toastTimer.current = setTimeout(() => setToast(''), ms);
   }, []);
 
-  const setTab = useCallback((t) => {
+  const setTab = useCallback((t, subFeature = null) => {
     setTabState(t);
+    if (t === 'tools' && subFeature) {
+      setActiveToolId(subFeature);
+    } else if (t === 'nutrition' && subFeature) {
+      setNutritionSection(subFeature);
+    } else if (t === 'training' && subFeature) {
+      setTrainingSection(subFeature);
+    }
     if (window.location.hash !== `#${t}`) {
       window.history.replaceState(null, '', t === 'today' ? window.location.pathname : `#${t}`);
     }
@@ -388,6 +396,8 @@ function MainApp() {
           profile={profile}
           entries={entries}
           target={target}
+          initialToolId={activeToolId}
+          onClearInitialTool={() => setActiveToolId(null)}
           onStartWorkout={(plan) => setActiveWorkoutPlan(plan)}
         />
       )}

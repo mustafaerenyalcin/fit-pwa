@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Clock,
   Users,
@@ -37,6 +37,7 @@ const TOOLS_CONFIG = [
     category: 'nutrition',
     badge: '16:8 Fazı',
     color: '#00f0ff',
+    image: '/images/tools/fasting.jpg',
     bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(0, 240, 255, 0.02))'
   },
   {
@@ -47,6 +48,7 @@ const TOOLS_CONFIG = [
     category: 'training',
     badge: 'Ortak Seri',
     color: '#ff4d1c',
+    image: '/images/tools/buddy.jpg',
     bg: 'linear-gradient(135deg, rgba(255, 77, 28, 0.18), rgba(255, 77, 28, 0.02))'
   },
   {
@@ -57,6 +59,7 @@ const TOOLS_CONFIG = [
     category: 'training',
     badge: 'Olimpik Bar',
     color: '#f5c451',
+    image: '/images/tools/1rm.jpg',
     bg: 'linear-gradient(135deg, rgba(245, 196, 81, 0.16), rgba(245, 196, 81, 0.02))'
   },
   {
@@ -67,6 +70,7 @@ const TOOLS_CONFIG = [
     category: 'training',
     badge: '8 Tur · 4 Dk',
     color: '#c8ff00',
+    image: '/images/tools/tabata.jpg',
     bg: 'linear-gradient(135deg, rgba(200, 255, 0, 0.16), rgba(200, 255, 0, 0.02))'
   },
   {
@@ -77,6 +81,7 @@ const TOOLS_CONFIG = [
     category: 'nutrition',
     badge: 'Canlı Dalga',
     color: '#00b4d8',
+    image: '/images/tools/hydration.jpg',
     bg: 'linear-gradient(135deg, rgba(0, 180, 216, 0.16), rgba(0, 180, 216, 0.02))'
   },
   {
@@ -87,6 +92,7 @@ const TOOLS_CONFIG = [
     category: 'biometrics',
     badge: 'Altın Oran',
     color: '#eab308',
+    image: '/images/tools/adonis.jpg',
     bg: 'linear-gradient(135deg, rgba(234, 179, 8, 0.16), rgba(234, 179, 8, 0.02))'
   },
   {
@@ -97,6 +103,7 @@ const TOOLS_CONFIG = [
     category: 'nutrition',
     badge: 'BMR & TDEE',
     color: '#ff4d1c',
+    image: '/images/tools/metabolic.jpg',
     bg: 'linear-gradient(135deg, rgba(255, 77, 28, 0.16), rgba(255, 77, 28, 0.02))'
   },
   {
@@ -107,6 +114,7 @@ const TOOLS_CONFIG = [
     category: 'biometrics',
     badge: 'HRV Telemetri',
     color: '#a855f7',
+    image: '/images/tools/recovery.jpg',
     bg: 'linear-gradient(135deg, rgba(168, 85, 247, 0.16), rgba(168, 85, 247, 0.02))'
   },
   {
@@ -117,6 +125,7 @@ const TOOLS_CONFIG = [
     category: 'biometrics',
     badge: 'Before / After',
     color: '#94a3b8',
+    image: '/images/tools/body.jpg',
     bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.16), rgba(148, 163, 184, 0.02))'
   },
   {
@@ -127,13 +136,28 @@ const TOOLS_CONFIG = [
     category: 'training',
     badge: 'AI Biyomekanik',
     color: '#00f0ff',
+    image: '/images/tools/form_check.jpg',
     bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(0, 240, 255, 0.02))'
   }
 ];
 
-export default function ToolsView({ profile, entries, target, onStartWorkout }) {
-  const [selectedToolId, setSelectedToolId] = useState(null); // null = launchpad grid, string = active tool
+export default function ToolsView({
+  profile,
+  entries,
+  target,
+  initialToolId = null,
+  onClearInitialTool,
+  onStartWorkout
+}) {
+  const [selectedToolId, setSelectedToolId] = useState(initialToolId);
   const [categoryFilter, setCategoryFilter] = useState('all');
+
+  useEffect(() => {
+    if (initialToolId) {
+      setSelectedToolId(initialToolId);
+      if (onClearInitialTool) onClearInitialTool();
+    }
+  }, [initialToolId]);
 
   const filteredTools = TOOLS_CONFIG.filter((t) => {
     if (categoryFilter === 'all') return true;
@@ -228,7 +252,8 @@ export default function ToolsView({ profile, entries, target, onStartWorkout }) 
                 onClick={() => openTool(t.id)}
                 style={{
                   '--card-accent': t.color,
-                  '--card-bg': t.bg
+                  '--card-bg': t.bg,
+                  '--card-image': `url('${t.image}')`
                 }}
               >
                 <div className="fx-squareToolTop">

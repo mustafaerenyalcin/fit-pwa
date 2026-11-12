@@ -20,7 +20,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       sub: 'Squat & Deadlift biyomekanik açı analizi',
       badge: 'Biyomekanik',
       color: '#c8ff00',
-      action: () => onNavigate('tools')
+      action: () => onNavigate('tools', 'form_check')
     },
     {
       id: 'fasting',
@@ -29,7 +29,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       sub: '16:8 Protokolü ve metabolik yağ yakım fazı',
       badge: 'Metabolik Faz',
       color: '#ff4d1c',
-      action: () => onNavigate('tools')
+      action: () => onNavigate('tools', 'fasting')
     },
     {
       id: 'coach',
@@ -54,7 +54,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
             onNavigate('tools');
           }}
         >
-          Tüm Araçlar ({12}) <ChevronRight size={13} />
+          Tüm Araçlar (10) <ChevronRight size={13} />
         </button>
       </div>
 

@@ -6028,11 +6028,13 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 
 .fx-squareToolCard {
   aspect-ratio: 1 / 1;
-  min-height: 200px;
-  background: var(--card-bg, rgba(255, 255, 255, 0.03));
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 22px;
-  padding: 20px;
+  min-height: 205px;
+  background:
+    linear-gradient(180deg, rgba(14, 18, 28, 0.72) 0%, rgba(9, 11, 17, 0.92) 65%, rgba(7, 9, 14, 0.98) 100%),
+    var(--card-image, none) center center / cover no-repeat;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -6041,7 +6043,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s, border-color 0.22s;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .fx-squareToolCard::before {
   content: '';
@@ -8622,6 +8624,97 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border-color: rgba(255, 77, 28, 0.25);
   color: #ff4d1c;
   font-weight: 800;
+}
+.fx-zenMoveChip--btn {
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.fx-zenMoveChip--btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* TÜM HAREKETLER LİSTESİ ÇEKMECESİ */
+.fx-zenMovesWrap {
+  margin-top: 10px;
+}
+.fx-zenAllMovesDrawer {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(6, 8, 12, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+}
+.fx-allMovesHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #ff4d1c;
+}
+.fx-closeMovesBtn {
+  background: transparent;
+  border: none;
+  color: var(--fx-muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 6px;
+}
+.fx-closeMovesBtn:hover {
+  color: #fff;
+}
+.fx-allMovesList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fx-moveDetailRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.fx-moveNum {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 77, 28, 0.15);
+  color: #ff4d1c;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.fx-moveMeta b {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+}
+.fx-moveMeta small {
+  display: block;
+  font-size: 11px;
+  color: var(--fx-muted);
+  margin-top: 1px;
+}
+.fx-moveTip {
+  display: block;
+  font-size: 10.5px;
+  color: #c8ff00;
+  margin-top: 3px;
+  font-style: italic;
 }
 
 .fx-zenHeroActions {

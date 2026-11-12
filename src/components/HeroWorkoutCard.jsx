@@ -32,6 +32,7 @@ export default function HeroWorkoutCard({
 }) {
   const [showReadinessDetails, setShowReadinessDetails] = useState(false);
   const [showMissions, setShowMissions] = useState(false);
+  const [showAllMoves, setShowAllMoves] = useState(false);
 
   const readiness = calculateReadiness(entries, profile, target);
   const workoutDone = doneToday.length > 0;
@@ -140,19 +141,73 @@ export default function HeroWorkoutCard({
           )}
         </p>
 
-        {/* HAREKET ÖNİZLEME ETİKETLERİ */}
+        {/* HAREKET ÖNİZLEME ETİKETLERİ & AÇILIR LİSTE */}
         {!workoutDone && !isRest && plan?.moves?.length > 0 && (
-          <div className="fx-zenMoveChips">
-            {plan.moves.slice(0, 4).map((m, idx) => (
-              <span key={m.name || idx} className="fx-zenMoveChip">
-                <b>{m.name}</b>
-                <small>{m.sets || '3x10'}</small>
-              </span>
-            ))}
-            {plan.moves.length > 4 && (
-              <span className="fx-zenMoveChip fx-zenMoveChip--more">
-                +{plan.moves.length - 4} hareket
-              </span>
+          <div className="fx-zenMovesWrap">
+            <div className="fx-zenMoveChips">
+              {plan.moves.slice(0, 4).map((m, idx) => (
+                <button
+                  key={m.name || idx}
+                  type="button"
+                  className="fx-zenMoveChip fx-zenMoveChip--btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    sounds.tap();
+                    setShowAllMoves((prev) => !prev);
+                  }}
+                  title="Tüm hareketleri ve setleri gör"
+                >
+                  <b>{m.name}</b>
+                  <small>{m.sets || '3x10'}</small>
+                </button>
+              ))}
+              {plan.moves.length > 4 && (
+                <button
+                  type="button"
+                  className="fx-zenMoveChip fx-zenMoveChip--more fx-zenMoveChip--btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    sounds.tap();
+                    setShowAllMoves((prev) => !prev);
+                  }}
+                  title="Tüm hareketleri aç / kapat"
+                >
+                  {showAllMoves ? '▲ Kapat' : `+${plan.moves.length - 4} hareket`}
+                </button>
+              )}
+            </div>
+
+            {/* TÜM HAREKETLER LİSTESİ ÇEKMECESİ */}
+            {showAllMoves && (
+              <div className="fx-zenAllMovesDrawer animate-scale-in">
+                <div className="fx-allMovesHead">
+                  <span>GÜNÜN TÜM EGZERSİZLERİ ({plan.moves.length} HAREKET):</span>
+                  <button
+                    type="button"
+                    className="fx-closeMovesBtn"
+                    onClick={() => setShowAllMoves(false)}
+                    aria-label="Kapat"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="fx-allMovesList">
+                  {plan.moves.map((m, idx) => (
+                    <div key={m.name || idx} className="fx-moveDetailRow">
+                      <span className="fx-moveNum">{idx + 1}</span>
+                      <div className="fx-moveMeta">
+                        <b>{m.name}</b>
+                        <small>
+                          {m.muscle ? `${m.muscle} · ` : ''}
+                          {m.sets || '3 × 10-12'}
+                          {m.suggestedKg && m.suggestedKg !== '0' ? ` (${m.suggestedKg} kg)` : ''}
+                        </small>
+                        {m.tip && <span className="fx-moveTip">💡 {m.tip}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         )}
