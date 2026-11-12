@@ -30,7 +30,7 @@ export default function TodayView({
   onSaveCheckin,
   onRemoveCheckin
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [showSubModal, setShowSubModal] = useState(false);
   const [showBarcodeModal, setShowBarcodeModal] = useState(false);
   const [showStoryModal, setShowStoryModal] = useState(false);
@@ -73,21 +73,21 @@ export default function TodayView({
   const streak = g.streak || { current: 0 };
   const hasStreakAtRisk = !streak.loggedToday && !streak.shieldUsed && streak.current > 0;
 
-  // Günün Türkçe / Yerel Tarih Başlığı (Örn: "12 KASIM ÇARŞAMBA")
+  // Günün Yerel Tarih Başlığı (Örn: "12 KASIM ÇARŞAMBA" / "THURSDAY, NOV 12")
   const dateFormatted = new Date(day + 'T12:00:00')
-    .toLocaleDateString('tr-TR', {
+    .toLocaleDateString(locale || 'tr-TR', {
       day: 'numeric',
       month: 'long',
       weekday: 'long'
     })
-    .toLocaleUpperCase('tr-TR');
+    .toLocaleUpperCase(locale || 'tr-TR');
 
   return (
     <div className="fx-zenTodayContainer animate-fade-in">
       {/* 0. ANA SAYFA MİKRO KOKPİT ŞERİDİ */}
       <div className="fx-homeEyebrowBar">
         <span className="fx-homeDateBadge">{dateFormatted}</span>
-        <span className="fx-homeTag">SPORCU KOMUTA MERKEZİ</span>
+        <span className="fx-homeTag">{t('home.commandCenter')}</span>
       </div>
 
       {/* 1. SEVİYE, SERİ & AI ENERJİ SPORCU BAŞLIĞI */}
@@ -116,16 +116,16 @@ export default function TodayView({
             </div>
             <div>
               <strong className="fx-streakAuraTitle">
-                {streak.current} Günlük Seri Tehlikede!
+                {t('home.streakRiskTitle', { count: streak.current })}
               </strong>
               <small className="fx-streakAuraSub">
-                Bugün henüz seans kaydetmedin · Serini korumak için antrenmana başla veya dinlenme kalkanı kullan.
+                {t('home.streakRiskSub')}
               </small>
             </div>
           </div>
           <button type="button" className="fx-streakAuraActionBtn">
             <Shield size={13} />
-            <span>Kalkanı Aç</span>
+            <span>{t('home.openShield')}</span>
           </button>
         </div>
       )}
@@ -177,7 +177,7 @@ export default function TodayView({
               }}
             >
               <Activity size={14} />
-              <span>Kas Toparlanma Haritası</span>
+              <span>{t('home.recoveryMapTab')}</span>
             </button>
             {isToday && (
               <button
@@ -189,7 +189,7 @@ export default function TodayView({
                 }}
               >
                 <Sparkles size={14} />
-                <span>20 Sn Check-in</span>
+                <span>{t('home.checkinTab')}</span>
               </button>
             )}
           </div>

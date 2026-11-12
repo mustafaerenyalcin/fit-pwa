@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ShieldCheck, Activity } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
+import { useI18n } from '../lib/i18n.js';
 
 function detectMuscleGroups(exName = '', muscleTag = '') {
   const s = `${exName} ${muscleTag}`.toLocaleLowerCase('tr-TR');
@@ -26,6 +27,7 @@ const MUSCLE_META = {
 };
 
 export default function MuscleRecoveryMap({ entries = {}, day }) {
+  const { t } = useI18n();
   const [selected, setSelected] = useState('shoulders');
 
   const recovery = useMemo(() => {
@@ -33,7 +35,7 @@ export default function MuscleRecoveryMap({ entries = {}, day }) {
     const result = {};
 
     for (const [id, meta] of Object.entries(MUSCLE_META)) {
-      result[id] = { id, label: meta.label, pct: 100, lastTrained: null, setsDone: 0 };
+      result[id] = { id, label: t(`recovery.${id}`), pct: 100, lastTrained: null, setsDone: 0 };
     }
 
     const recentWorkouts = (entries.workout || []).slice(0, 10);
@@ -79,7 +81,7 @@ export default function MuscleRecoveryMap({ entries = {}, day }) {
     }
 
     return result;
-  }, [entries.workout, entries.checkin, day]);
+  }, [entries.workout, entries.checkin, day, t]);
 
   const colorFor = (pct) => {
     if (pct >= 80) return '#c8ff00'; // Hazır (Volt)
@@ -88,9 +90,9 @@ export default function MuscleRecoveryMap({ entries = {}, day }) {
   };
 
   const statusLabel = (pct) => {
-    if (pct >= 80) return 'Antrenmana Hazır';
-    if (pct >= 50) return 'Toparlanıyor';
-    return 'Dinlenmeli';
+    if (pct >= 80) return t('recovery.ready');
+    if (pct >= 50) return t('recovery.recovering');
+    return t('recovery.rest');
   };
 
   const activeMuscle = recovery[selected] || recovery.shoulders;
@@ -104,12 +106,12 @@ export default function MuscleRecoveryMap({ entries = {}, day }) {
     <div className="fx-card fx-muscleRecoveryCard">
       <div className="fx-muscleHeadRow">
         <div>
-          <span className="fx-zenModuleEyebrow">TOPARLANMA RADARI</span>
-          <h3 className="fx-muscleTitle">Kas Toparlanma Haritası</h3>
+          <span className="fx-zenModuleEyebrow">{t('recovery.eyebrow')}</span>
+          <h3 className="fx-muscleTitle">{t('recovery.title')}</h3>
         </div>
         <span className="fx-muscleActiveTag" style={{ color: colorFor(activeMuscle.pct), borderColor: `${colorFor(activeMuscle.pct)}40` }}>
           <ShieldCheck size={12} />
-          {activeMuscle.label}: %{activeMuscle.pct} ({statusLabel(activeMuscle.pct)})
+          {activeMuscle.label}: {activeMuscle.pct}% ({statusLabel(activeMuscle.pct)})
         </span>
       </div>
 

@@ -1,15 +1,17 @@
 import React from 'react';
 import { Scan, Sparkles, Clock, Bot, ChevronRight } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
+  const { t } = useI18n();
   const tools = [
     {
       id: 'barcode',
       icon: Scan,
-      title: 'Barkod Tara',
-      sub: 'Kamerayla anında besin ve makro ekle',
-      badge: 'Sıfır Paywall',
+      title: t('launchpad.barcodeTitle'),
+      sub: t('launchpad.barcodeSub'),
+      badge: t('launchpad.barcodeBadge'),
       color: '#00f0ff',
       image: '/images/nutrition-bg.jpg',
       action: () => onOpenBarcode()
@@ -17,9 +19,9 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
     {
       id: 'formcheck',
       icon: Sparkles,
-      title: 'AI Form Check',
-      sub: 'Squat & Deadlift biyomekanik açı analizi',
-      badge: 'Biyomekanik',
+      title: t('launchpad.formTitle'),
+      sub: t('launchpad.formSub'),
+      badge: t('launchpad.formBadge'),
       color: '#c8ff00',
       image: '/images/tools/form_check.jpg',
       action: () => onNavigate('tools', 'form_check')
@@ -27,9 +29,9 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
     {
       id: 'fasting',
       icon: Clock,
-      title: 'Aralıklı Oruç',
-      sub: '16:8 Protokolü ve metabolik yağ yakım fazı',
-      badge: 'Metabolik Faz',
+      title: t('launchpad.fastingTitle'),
+      sub: t('launchpad.fastingSub'),
+      badge: t('launchpad.fastingBadge'),
       color: '#ff4d1c',
       image: '/images/tools/fasting-v2.jpg',
       action: () => onNavigate('tools', 'fasting')
@@ -37,9 +39,9 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
     {
       id: 'coach',
       icon: Bot,
-      title: 'AI Performans Koçu',
-      sub: 'Biyometrik analiz ve kişisel seans uyarlaması',
-      badge: 'Yapay Zeka',
+      title: t('launchpad.coachTitle'),
+      sub: t('launchpad.coachSub'),
+      badge: t('launchpad.coachBadge'),
       color: '#a855f7',
       image: '/images/tools/buddy.jpg',
       action: () => onNavigate('coach')
@@ -49,7 +51,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
   return (
     <section className="fx-zenToolsSection">
       <div className="fx-zenToolsHeader">
-        <span className="fx-zenToolsEyebrow">HIZLI SPORCU ARAÇLARI &amp; LABORATUVAR</span>
+        <span className="fx-zenToolsEyebrow">{t('launchpad.eyebrow')}</span>
         <button
           type="button"
           className="fx-zenLinkMini"
@@ -58,7 +60,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
             onNavigate('tools');
           }}
         >
-          Tüm Araçlar (10) <ChevronRight size={13} />
+          {t('launchpad.allTools')} <ChevronRight size={13} />
         </button>
       </div>
 

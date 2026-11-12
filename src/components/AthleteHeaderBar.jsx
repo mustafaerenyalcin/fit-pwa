@@ -8,6 +8,7 @@ import StreakVaultModal from './StreakVaultModal.jsx';
 import AthletePassportModal from './AthletePassportModal.jsx';
 import { sounds } from '../lib/audio.js';
 import { celebration } from '../lib/celebration.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function AthleteHeaderBar({
   entries = {},
@@ -16,6 +17,7 @@ export default function AthleteHeaderBar({
   greeting = 'Merhaba',
   onOpenSubscription
 }) {
+  const { t, locale } = useI18n();
   const [showBadges, setShowBadges] = useState(false);
   const [showStreakVault, setShowStreakVault] = useState(false);
   const [showPassport, setShowPassport] = useState(false);
@@ -26,7 +28,7 @@ export default function AthleteHeaderBar({
   const unlockedBadges = badges.filter((b) => b.unlocked).length;
 
   // Baş harfi büyük yap (örn. "iyi geceler" -> "İyi geceler")
-  const capGreeting = greeting ? greeting.charAt(0).toLocaleUpperCase('tr-TR') + greeting.slice(1) : 'Merhaba';
+  const capGreeting = greeting ? greeting.charAt(0).toLocaleUpperCase(locale || 'tr-TR') + greeting.slice(1) : 'Merhaba';
 
   const handleOpenBadges = (e = null) => {
     sounds.xpGain();
@@ -87,25 +89,25 @@ export default function AthleteHeaderBar({
             type="button"
             className={`fx-zenStreakPill ${streak.current > 0 ? 'active' : ''} ${!streak.loggedToday && streak.current > 0 ? 'at-risk' : ''}`}
             onClick={handleOpenStreakVault}
-            title={`${streak.current} Gün Kesintisiz Seri · Kasayı Açmak İçin Dokun`}
+            title={`${streak.current} ${t('header.dayShort')}`}
           >
             <Flame size={15} className={streak.current > 0 ? 'pulse' : ''} />
             <b>{streak.current}</b>
-            <small>GÜN</small>
+            <small>{t('header.dayShort')}</small>
             {streak.shieldUsed && (
-              <Shield size={11} color="#00f0ff" title="Dinlenme kalkanı devrede" />
+              <Shield size={11} color="#00f0ff" title="Shield Active" />
             )}
           </button>
 
           {/* AI HAKKI / ENERJİ DÜĞMESİ */}
-          <AiEnergyPill onOpenModal={onOpenSubscription} />
+          <AiEnergyPill onOpenSubscription={onOpenSubscription} />
 
           {/* BAŞARIM ROZETLERİ DÜĞMESİ */}
           <button
             type="button"
             className="fx-zenBadgeBtn"
             onClick={handleOpenBadges}
-            title={`${unlockedBadges}/${badges.length} Başarım Rozeti Açıldı`}
+            title={`${unlockedBadges}/${badges.length}`}
           >
             <Trophy size={14} color="#f5c451" />
             <span>{unlockedBadges}</span>
@@ -119,10 +121,10 @@ export default function AthleteHeaderBar({
               sounds.tap();
               setShowPassport(true);
             }}
-            title="Resmi Dijital Sporcu Pasaportu"
+            title={t('header.passport')}
           >
             <ShieldCheck size={14} color="#00f0ff" />
-            <span>Pasaport</span>
+            <span>{t('header.passport')}</span>
           </button>
         </div>
       </header>

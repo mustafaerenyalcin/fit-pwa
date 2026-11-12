@@ -70,19 +70,19 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
         <div className="fx-membershipStatusCol">
           <div className="fx-membershipBadgeRow">
             <span className={`fx-membershipBadge ${membership.isPro ? 'pro' : 'free'}`}>
-              {membership.isPro ? '👑 ATELIER BLACK (PRO)' : 'CORE ATHLETE (ÜCRETSİZ)'}
+              {membership.isPro ? '👑 ATELIER BLACK (PRO)' : 'CORE ATHLETE (FREE)'}
             </span>
             {!membership.isPro && (
               <span style={{ fontSize: 11, color: 'var(--fx-muted)' }}>
-                ⚡ Günlük AI Enerjisi: {quota.remaining}/{quota.max}
+                ⚡ {t('header.aiEnergy')}: {quota.remaining}/{quota.max}
               </span>
             )}
           </div>
-          <h4>{membership.isPro ? 'Sınırsız Elit Sporcu Erişimi Aktif' : 'Atelier Black Pass ile Sınırlardan Kurtul'}</h4>
+          <h4>{membership.isPro ? t('settings.proTitle') : t('settings.freeTitle')}</h4>
           <p>
             {membership.isPro
-              ? 'Tüm Gemini Vision görsel öğün analizi ve kamera biyomekanik form taraması sınırsız.'
-              : 'Fotoğrafla sınırsız besin analizi, sakatlık önleyici AI form taraması ve haftalık deload.'}
+              ? t('settings.proSub')
+              : t('settings.freeSub')}
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
           style={{ whiteSpace: 'nowrap', fontWeight: 800 }}
           onClick={() => setShowSubModal(true)}
         >
-          {membership.isPro ? 'Aboneliği İncele' : 'Black’e Yüksel (₺129/ay) →'}
+          {membership.isPro ? t('settings.manageSub') : t('settings.upgradeBtn')}
         </button>
       </div>
 
@@ -121,8 +121,8 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
       {onRetakeOnboarding && (
         <div className="fx-recalibrateBanner">
           <div>
-            <h4>🎯 Biyometrik Testi & 90 Günlük Blueprint'i Yeniden Başlat</h4>
-            <p>Yeni bir hedef, kilo, vücut tipi veya ekipman düzenine geçtiysen 8 aşamalı testi tekrar çözüp sistemi kalibre et.</p>
+            <h4>{t('settings.recalibrateTitle')}</h4>
+            <p>{t('settings.recalibrateSub')}</p>
           </div>
           <button
             type="button"
@@ -130,7 +130,7 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
             onClick={onRetakeOnboarding}
             style={{ whiteSpace: 'nowrap' }}
           >
-            Testi Başlat →
+            {t('settings.recalibrateBtn')}
           </button>
         </div>
       )}
@@ -139,8 +139,8 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
         value={section}
         onChange={setSection}
         options={[
-          ['profile', 'Profil ve hedefler'],
-          ['account', 'Hesap ve veriler']
+          ['profile', t('settings.tabProfile')],
+          ['account', t('settings.tabAccount')]
         ]}
       />
 

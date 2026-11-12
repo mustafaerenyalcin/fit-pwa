@@ -28,6 +28,7 @@ import BeforeAfterSlider from '../components/BeforeAfterSlider.jsx';
 import AiFormCheckStudio from '../components/AiFormCheckStudio.jsx';
 import GeneticPotentialCalc from '../components/GeneticPotentialCalc.jsx';
 import { sounds } from '../lib/audio.js';
+import { useI18n } from '../lib/i18n.js';
 
 const TOOLS_CONFIG = [
   {
@@ -161,6 +162,7 @@ export default function ToolsView({
   onClearInitialTool,
   onStartWorkout
 }) {
+  const { t } = useI18n();
   const [selectedToolId, setSelectedToolId] = useState(initialToolId);
   const [categoryFilter, setCategoryFilter] = useState('all');
 
@@ -171,12 +173,21 @@ export default function ToolsView({
     }
   }, [initialToolId]);
 
-  const filteredTools = TOOLS_CONFIG.filter((t) => {
-    if (categoryFilter === 'all') return true;
-    return t.category === categoryFilter;
+  const localizedTools = TOOLS_CONFIG.map((tool) => {
+    const key = tool.id === 'form_check' ? 'form' : tool.id;
+    return {
+      ...tool,
+      title: t(`tools.t_${key}_title`),
+      subtitle: t(`tools.t_${key}_sub`)
+    };
   });
 
-  const activeTool = TOOLS_CONFIG.find((t) => t.id === selectedToolId);
+  const filteredTools = localizedTools.filter((tool) => {
+    if (categoryFilter === 'all') return true;
+    return tool.category === categoryFilter;
+  });
+
+  const activeTool = localizedTools.find((tool) => tool.id === selectedToolId);
 
   const openTool = (id) => {
     sounds.tap();
@@ -199,13 +210,13 @@ export default function ToolsView({
           <section className="fx-cockpitHeroBar fx-atelierHeroBar">
             <div className="fx-cockpitGreetCol">
               <div className="fx-atelierEyebrow">
-                <span>[LABORATORY // 04]</span> · BİYOMETRİK VE PERFORMANS MERKEZİ
+                <span>[LABORATORY // 04]</span> · {t('tools.eyebrow')}
               </div>
               <h2 className="fx-cockpitGreeting fx-atelierDisplay">
-                Araçlar <span>&amp; Stüdyo Launchpad</span>
+                {t('tools.title1')} <span>{t('tools.title2')}</span>
               </h2>
               <p className="fx-cockpitSub">
-                Performansını, biyometrik ölçümlerini ve antrenmanlarını optimize eden 11 adet özel laboratuvar aracı.
+                {t('tools.sub')}
               </p>
             </div>
           </section>
@@ -220,7 +231,7 @@ export default function ToolsView({
                 setCategoryFilter('all');
               }}
             >
-              <span>Tüm Araçlar ({TOOLS_CONFIG.length})</span>
+              <span>{t('tools.filterAll')} ({TOOLS_CONFIG.length})</span>
             </button>
             <button
               type="button"
@@ -230,7 +241,7 @@ export default function ToolsView({
                 setCategoryFilter('training');
               }}
             >
-              <span>⚡ Antrenman &amp; Güç</span>
+              <span>⚡ {t('tools.filterTraining')}</span>
             </button>
             <button
               type="button"
@@ -240,7 +251,7 @@ export default function ToolsView({
                 setCategoryFilter('nutrition');
               }}
             >
-              <span>⏳ Oruç &amp; Beslenme</span>
+              <span>⏳ {t('tools.filterNutrition')}</span>
             </button>
             <button
               type="button"
@@ -250,39 +261,39 @@ export default function ToolsView({
                 setCategoryFilter('biometrics');
               }}
             >
-              <span>🏛️ Biyometri &amp; Form</span>
+              <span>🏛️ {t('tools.filterBiometrics')}</span>
             </button>
           </div>
 
           {/* KARE BENTO IZGARA (SQUARE BENTO TILES GRID) */}
           <div className="fx-toolsBentoGrid">
-            {filteredTools.map((t) => (
+            {filteredTools.map((tool) => (
               <button
-                key={t.id}
+                key={tool.id}
                 type="button"
                 className="fx-squareToolCard"
-                onClick={() => openTool(t.id)}
+                onClick={() => openTool(tool.id)}
                 style={{
-                  '--card-accent': t.color,
-                  '--card-bg': t.bg,
-                  '--card-image': `url('${t.image}')`
+                  '--card-accent': tool.color,
+                  '--card-bg': tool.bg,
+                  '--card-image': `url('${tool.image}')`
                 }}
               >
                 <div className="fx-squareToolTop">
                   <div className="fx-squareToolSymbolBox">
-                    <span className="fx-toolSymbol">{t.symbol}</span>
+                    <span className="fx-toolSymbol">{tool.symbol}</span>
                   </div>
-                  <span className="fx-toolMicroBadge">{t.badge}</span>
+                  <span className="fx-toolMicroBadge">{tool.badge}</span>
                 </div>
 
                 <div className="fx-squareToolBody">
-                  <h3 className="fx-squareToolTitle">{t.title}</h3>
-                  <p className="fx-squareToolSub">{t.subtitle}</p>
+                  <h3 className="fx-squareToolTitle">{tool.title}</h3>
+                  <p className="fx-squareToolSub">{tool.subtitle}</p>
                 </div>
 
                 <div className="fx-squareToolBottom">
                   <span className="fx-openToolLink">
-                    Aracı Aç <ChevronRight size={13} />
+                    {t('tools.openTool')} <ChevronRight size={13} />
                   </span>
                 </div>
               </button>
@@ -298,26 +309,26 @@ export default function ToolsView({
               type="button"
               className="fx-toolsBackBtn"
               onClick={closeTool}
-              title="Tüm Araçlara Geri Dön"
+              title={t('tools.allToolsBtn')}
             >
               <ArrowLeft size={16} />
-              <span>Tüm Araçlar</span>
+              <span>{t('tools.allToolsBtn')}</span>
             </button>
 
             {/* DİĞER ARAÇLARA TEK TIKLA ATLAMAYI SAĞLAYAN YATAY KARE KISAYOL DOKU */}
-            <div className="fx-toolsMiniDock" aria-label="Araçlar Hızlı Geçiş">
-              {TOOLS_CONFIG.map((t) => {
-                const isActive = t.id === selectedToolId;
+            <div className="fx-toolsMiniDock" aria-label={t('tools.allToolsBtn')}>
+              {localizedTools.map((tool) => {
+                const isActive = tool.id === selectedToolId;
                 return (
                   <button
-                    key={t.id}
+                    key={tool.id}
                     type="button"
                     className={`fx-miniToolSquare ${isActive ? 'active' : ''}`}
-                    onClick={() => openTool(t.id)}
-                    title={t.title}
-                    style={{ '--mini-accent': t.color }}
+                    onClick={() => openTool(tool.id)}
+                    title={tool.title}
+                    style={{ '--mini-accent': tool.color }}
                   >
-                    <span className="fx-miniSymbol">{t.symbol}</span>
+                    <span className="fx-miniSymbol">{tool.symbol}</span>
                   </button>
                 );
               })}

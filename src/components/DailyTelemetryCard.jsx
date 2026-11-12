@@ -11,6 +11,7 @@ import {
 import { Ring } from './ui.jsx';
 import { sounds } from '../lib/audio.js';
 import { celebration } from '../lib/celebration.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function DailyTelemetryCard({
   totals = { calories: 0, protein: 0 },
@@ -23,6 +24,7 @@ export default function DailyTelemetryCard({
   onOpenBarcode,
   onNavigate
 }) {
+  const { t } = useI18n();
   const remCalories = Math.max(0, targetCalories - totals.calories);
   const remProtein = Math.max(0, targetProtein - totals.protein);
   const remWater = Math.max(0, (targetWater - water) / 1000);
@@ -41,7 +43,7 @@ export default function DailyTelemetryCard({
     }
     celebration.waterSplash({ x, y });
     celebration.floatingBadge({
-      text: `+${amount} ml Su`,
+      text: `+${amount} ml`,
       x,
       y: y - 20,
       icon: '💧',
@@ -69,7 +71,7 @@ export default function DailyTelemetryCard({
     sounds.xpGain();
     if (onQuickMealAdd) {
       onQuickMealAdd({
-        name: '1 Ölçek Whey Protein Shake',
+        name: '1 Scoop Whey Protein Shake',
         calories: 130,
         protein: 26,
         carbs: 3,
@@ -84,7 +86,7 @@ export default function DailyTelemetryCard({
       <div className="fx-zenGoalsTopRow">
         <div className="fx-zenGoalsBadge">
           <Utensils size={13} color="#00f0ff" />
-          <span>GÜNLÜK MAKRO &amp; HİDRASYON TELEMETRİSİ</span>
+          <span>{t('telemetry.badge')}</span>
         </div>
         <button
           type="button"
@@ -94,7 +96,7 @@ export default function DailyTelemetryCard({
             onNavigate('nutrition');
           }}
         >
-          Beslenme Günlüğü <ChevronRight size={13} />
+          {t('telemetry.journalLink')} <ChevronRight size={13} />
         </button>
       </div>
 
@@ -113,14 +115,14 @@ export default function DailyTelemetryCard({
             <span className="fx-ringPct">{calPct}%</span>
           </Ring>
           <div className="fx-zenRingMeta">
-            <small className="fx-zenRingCat">ENERJİ</small>
+            <small className="fx-zenRingCat">{t('telemetry.energy')}</small>
             <div className="fx-zenRingValuesRow">
               <strong className="fx-monoBig" style={{ color: '#c8ff00' }}>
                 {totals.calories}
               </strong>
               <span className="fx-zenTargetSpan">/ {targetCalories} kcal</span>
             </div>
-            <span className="fx-zenRemTag">Kalan: {remCalories} kcal</span>
+            <span className="fx-zenRemTag">{t('telemetry.remaining')}: {remCalories} kcal</span>
           </div>
         </button>
 
@@ -137,14 +139,14 @@ export default function DailyTelemetryCard({
             <span className="fx-ringPct">{proPct}%</span>
           </Ring>
           <div className="fx-zenRingMeta">
-            <small className="fx-zenRingCat">PROTEİN</small>
+            <small className="fx-zenRingCat">{t('telemetry.protein')}</small>
             <div className="fx-zenRingValuesRow">
               <strong className="fx-monoBig" style={{ color: '#00f0ff' }}>
                 {totals.protein}g
               </strong>
               <span className="fx-zenTargetSpan">/ {targetProtein}g</span>
             </div>
-            <span className="fx-zenRemTag">Kalan: {remProtein}g</span>
+            <span className="fx-zenRemTag">{t('telemetry.remaining')}: {remProtein}g</span>
           </div>
         </button>
 
@@ -158,7 +160,7 @@ export default function DailyTelemetryCard({
             <span className="fx-ringPct">{waterPct}%</span>
           </Ring>
           <div className="fx-zenRingMeta">
-            <small className="fx-zenRingCat">HİDRASYON</small>
+            <small className="fx-zenRingCat">{t('telemetry.hydration')}</small>
             <div className="fx-zenRingValuesRow">
               <strong className="fx-monoBig" style={{ color: '#38bdf8' }}>
                 {(water / 1000).toFixed(water % 1000 ? 2 : 1)}L
@@ -166,7 +168,7 @@ export default function DailyTelemetryCard({
               <span className="fx-zenTargetSpan">/ {(targetWater / 1000).toFixed(1)}L</span>
             </div>
             <span className="fx-zenRemTag">
-              {remWater > 0 ? `Kalan: ${remWater.toFixed(1)}L` : 'Hedefe Ulaşıldı!'}
+              {remWater > 0 ? `${t('telemetry.remaining')}: ${remWater.toFixed(1)}L` : t('telemetry.goalReached')}
             </span>
           </div>
         </button>
@@ -179,21 +181,21 @@ export default function DailyTelemetryCard({
           className="fx-zenFuelPill fx-zenFuelPill--water"
           onClick={(e) => handleAddWater(250, e)}
         >
-          <Droplets size={13} /> +250ml Su
+          <Droplets size={13} /> {t('telemetry.water250')}
         </button>
         <button
           type="button"
           className="fx-zenFuelPill fx-zenFuelPill--water"
           onClick={(e) => handleAddWater(500, e)}
         >
-          <Droplets size={13} /> +500ml Su
+          <Droplets size={13} /> {t('telemetry.water500')}
         </button>
         <button
           type="button"
           className="fx-zenFuelPill fx-zenFuelPill--whey"
           onClick={(e) => handleAddWhey(e)}
         >
-          <Zap size={13} /> +26g Whey
+          <Zap size={13} /> {t('telemetry.whey26')}
         </button>
         <button
           type="button"
@@ -203,7 +205,7 @@ export default function DailyTelemetryCard({
             onOpenBarcode();
           }}
         >
-          <Scan size={13} /> Barkod Tara
+          <Scan size={13} /> {t('telemetry.scanBarcode')}
         </button>
         <button
           type="button"
@@ -213,7 +215,7 @@ export default function DailyTelemetryCard({
             onNavigate('nutrition');
           }}
         >
-          <Plus size={13} /> Öğün Ekle
+          <Plus size={13} /> {t('telemetry.logMeal')}
         </button>
       </div>
     </section>

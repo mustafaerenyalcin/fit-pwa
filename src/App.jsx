@@ -327,8 +327,8 @@ function MainApp() {
             value={trainingSection}
             onChange={setTrainingSection}
             options={[
-              ['session', 'Günün Seansı'],
-              ['builder', 'Program Mimarisi'],
+              ['session', t('sub.session')],
+              ['builder', t('sub.builder')],
               ['week', t('sub.week')]
             ]}
           />
@@ -349,8 +349,8 @@ function MainApp() {
                 value={builderMode}
                 onChange={setBuilderMode}
                 options={[
-                  ['ai', '⚡ AI Otonom Program'],
-                  ['custom', '🛠️ Özel Rutin Oluşturucu']
+                  ['ai', t('sub.aiBuilder')],
+                  ['custom', t('sub.customBuilder')]
                 ]}
               />
               {builderMode === 'ai' ? (
@@ -378,9 +378,9 @@ function MainApp() {
             value={nutritionSection}
             onChange={setNutritionSection}
             options={[
-              ['log', 'Günlük Öğün & Makro'],
-              ['ai', '🍲 Akıllı AI Şef & Fotoğraf'],
-              ['coach', '🧬 Adaptif Makro Koçu']
+              ['log', t('sub.nutritionLog')],
+              ['ai', t('sub.nutritionAi')],
+              ['coach', t('sub.nutritionCoach')]
             ]}
           />
           {nutritionSection === 'log' && (

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 import { celebration } from '../lib/celebration.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function QuickActionDock({
   onQuickWaterAdd,
@@ -18,6 +19,7 @@ export default function QuickActionDock({
   onOpenBarcode,
   todayPlan
 }) {
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -107,8 +109,8 @@ export default function QuickActionDock({
                 <Droplets size={18} />
               </div>
               <div className="fx-quickDialText">
-                <strong>+250 ml Su Ekle</strong>
-                <small>Tek Tıkla Hidrasyon</small>
+                <strong>{t('quick.waterTitle')}</strong>
+                <small>{t('quick.waterSub')}</small>
               </div>
             </button>
 
@@ -123,8 +125,8 @@ export default function QuickActionDock({
                 <Dumbbell size={18} />
               </div>
               <div className="fx-quickDialText">
-                <strong>{todayPlan?.name ? `Başlat: ${todayPlan.name}` : 'Antrenmana Başla'}</strong>
-                <small>Canlı Seans &amp; Tempo Metronomu</small>
+                <strong>{todayPlan?.name ? `${t('quick.workoutStart')}: ${todayPlan.name}` : t('hero.startBtn')}</strong>
+                <small>{t('quick.workoutSub')}</small>
               </div>
             </button>
 
@@ -139,8 +141,8 @@ export default function QuickActionDock({
                 <Sparkles size={18} />
               </div>
               <div className="fx-quickDialText">
-                <strong>20 Sn Sabah Check-in</strong>
-                <small>Biyometrik Hazırbulunuşluk</small>
+                <strong>{t('quick.checkinTitle')}</strong>
+                <small>{t('quick.checkinSub')}</small>
               </div>
             </button>
 
@@ -155,8 +157,8 @@ export default function QuickActionDock({
                 <Utensils size={18} />
               </div>
               <div className="fx-quickDialText">
-                <strong>Hızlı Öğün / Barkod Tara</strong>
-                <small>Fotoğrafla veya Barkodla Kaydet</small>
+                <strong>{t('quick.mealTitle')}</strong>
+                <small>{t('quick.mealSub')}</small>
               </div>
             </button>
           </div>
@@ -167,15 +169,15 @@ export default function QuickActionDock({
           type="button"
           className={`fx-quickMainFab ${isOpen ? 'active' : ''}`}
           onClick={toggleOpen}
-          aria-label={isOpen ? 'Hızlı Eylemleri Kapat' : 'Hızlı Eylem Çekmecesini Aç'}
+          aria-label={t('quick.label')}
           aria-expanded={isOpen}
-          title="Hızlı Eylem & Kayıt"
+          title={t('quick.label')}
         >
           <div className="fx-fabGlowHalo" />
           <div className="fx-fabIconWrap">
             {isOpen ? <X size={22} /> : <Zap size={22} />}
           </div>
-          <span className="fx-fabLabel">HIZLI EYLEM</span>
+          <span className="fx-fabLabel">{t('quick.label')}</span>
         </button>
       </div>
     </>

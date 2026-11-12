@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 import { calculateReadiness } from '../lib/readinessEngine.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function HeroWorkoutCard({
   plan,
@@ -30,6 +31,7 @@ export default function HeroWorkoutCard({
   onNavigate,
   onOpenStoryCard
 }) {
+  const { t } = useI18n();
   const [showReadinessDetails, setShowReadinessDetails] = useState(false);
   const [showMissions, setShowMissions] = useState(false);
   const [showAllMoves, setShowAllMoves] = useState(false);
@@ -44,7 +46,7 @@ export default function HeroWorkoutCard({
 
   const workoutName = workoutDone
     ? doneToday.map((w) => w.payload?.name).join(', ')
-    : plan?.name || 'Günün Seansı';
+    : plan?.name || t('sub.todaySession');
 
   const moveCount = plan?.moves?.length || 0;
 
@@ -65,7 +67,7 @@ export default function HeroWorkoutCard({
       <div className="fx-zenHeroTopRow">
         <div className="fx-zenHeroBadge">
           <Dumbbell size={13} color="#ff4d1c" />
-          <span>{isRest ? 'DİNLENME & TOPARLANMA' : 'GÜNÜN ANTRENMANI'}</span>
+          <span>{isRest ? t('hero.restTitle') : t('hero.workoutTitle')}</span>
         </div>
 
         {/* HAZIRLIK SKORU PİLLİ */}
@@ -73,14 +75,14 @@ export default function HeroWorkoutCard({
           type="button"
           className="fx-zenReadinessPill"
           onClick={toggleReadiness}
-          title="Hazırlık faktörlerini ve toparlanma detaylarını incele"
+          title={t('hero.readyPct')}
           style={{ borderColor: readiness.color }}
         >
           <Activity size={12} color={readiness.color} />
-          <b style={{ color: readiness.color }}>%{readiness.score} Hazır</b>
+          <b style={{ color: readiness.color }}>{readiness.score}% {t('hero.readyPct')}</b>
           <span className="fx-zenDotSep">·</span>
           <span className="fx-zenReadinessTier">
-            {readiness.tier === 'PEAK' ? 'Zirve Form' : readiness.tier === 'OPTIMAL' ? 'Optimum' : 'Toparlanma'}
+            {readiness.tier === 'PEAK' ? t('hero.tierPeak') : readiness.tier === 'OPTIMAL' ? t('hero.tierOptimal') : t('hero.tierRecovery')}
           </span>
           {showReadinessDetails ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
         </button>
@@ -93,28 +95,28 @@ export default function HeroWorkoutCard({
             <div className="fx-zenFactorCell">
               <Moon size={13} color="#00f0ff" />
               <div>
-                <small>UYKU</small>
+                <small>{t('hero.sleep')}</small>
                 <b>{readiness.factors.sleep.val}</b>
               </div>
             </div>
             <div className="fx-zenFactorCell">
               <Utensils size={13} color="#ff4d1c" />
               <div>
-                <small>PROTEİN</small>
+                <small>{t('hero.protein')}</small>
                 <b>{readiness.factors.nutrition.val}</b>
               </div>
             </div>
             <div className="fx-zenFactorCell">
               <Flame size={13} color="#c8ff00" />
               <div>
-                <small>YÜK</small>
+                <small>{t('hero.load')}</small>
                 <b>{readiness.factors.fatigue.val}</b>
               </div>
             </div>
             <div className="fx-zenFactorCell">
               <Droplets size={13} color="#00b4d8" />
               <div>
-                <small>HİDRASYON</small>
+                <small>{t('hero.hydration')}</small>
                 <b>{readiness.factors.hydration.val}</b>
               </div>
             </div>
@@ -132,12 +134,12 @@ export default function HeroWorkoutCard({
         <p className="fx-zenHeroSub">
           {workoutDone ? (
             <span className="fx-zenDoneText">
-              <CheckCircle2 size={15} color="#c8ff00" /> Seans başarıyla tamamlandı. Kas adaptasyonu ve protein sentezi devrede!
+              <CheckCircle2 size={15} color="#c8ff00" /> {t('hero.doneText')}
             </span>
           ) : isRest ? (
-            plan?.tips?.[0] || 'Bugün aktif toparlanma günü. Kas liflerinin onarılması ve sinir sisteminin dinlenmesi için kritik.'
+            plan?.tips?.[0] || t('hero.restDefaultSub')
           ) : (
-            `${moveCount} biyomekanik hareket · Otomatik RPE & dinlenme sayacı`
+            `${moveCount} ${t('hero.movesMeta')}`
           )}
         </p>
 
@@ -155,7 +157,6 @@ export default function HeroWorkoutCard({
                     sounds.tap();
                     setShowAllMoves((prev) => !prev);
                   }}
-                  title="Tüm hareketleri ve setleri gör"
                 >
                   <b>{m.name}</b>
                   <small>{m.sets || '3x10'}</small>
@@ -170,9 +171,8 @@ export default function HeroWorkoutCard({
                     sounds.tap();
                     setShowAllMoves((prev) => !prev);
                   }}
-                  title="Tüm hareketleri aç / kapat"
                 >
-                  {showAllMoves ? '▲ Kapat' : `+${plan.moves.length - 4} hareket`}
+                  {showAllMoves ? t('hero.close') : `+${plan.moves.length - 4} ${t('hero.moreMoves')}`}
                 </button>
               )}
             </div>
@@ -181,12 +181,12 @@ export default function HeroWorkoutCard({
             {showAllMoves && (
               <div className="fx-zenAllMovesDrawer animate-scale-in">
                 <div className="fx-allMovesHead">
-                  <span>GÜNÜN TÜM EGZERSİZLERİ ({plan.moves.length} HAREKET):</span>
+                  <span>{t('hero.allMovesHead')} ({plan.moves.length}):</span>
                   <button
                     type="button"
                     className="fx-closeMovesBtn"
                     onClick={() => setShowAllMoves(false)}
-                    aria-label="Kapat"
+                    aria-label="Close"
                   >
                     ✕
                   </button>
@@ -221,12 +221,12 @@ export default function HeroWorkoutCard({
             className="fx-neonActionBtn fx-solarBtn fx-btn--block"
             onClick={handleStart}
           >
-            <Play size={18} fill="currentColor" /> Antrenmana Başla
+            <Play size={18} fill="currentColor" /> {t('hero.startBtn')}
           </button>
         ) : workoutDone ? (
           <div className="fx-zenDoneButtonRow">
             <span className="fx-zenCompletedBadge">
-              <CheckCircle2 size={16} /> Seans Tamamlandı
+              <CheckCircle2 size={16} /> {t('hero.completedBtn')}
             </span>
             {onOpenStoryCard && (
               <button
@@ -237,7 +237,7 @@ export default function HeroWorkoutCard({
                   onOpenStoryCard();
                 }}
               >
-                <Share2 size={15} color="#00f0ff" /> Story Kartı Paylaş
+                <Share2 size={15} color="#00f0ff" /> {t('hero.shareStory')}
               </button>
             )}
           </div>
@@ -247,7 +247,7 @@ export default function HeroWorkoutCard({
             className="fx-btn fx-btn--ghost fx-btn--block"
             onClick={() => onNavigate('training')}
           >
-            <Moon size={15} /> Dinlenme &amp; Program Detayları →
+            <Moon size={15} /> {t('hero.restDetailsBtn')}
           </button>
         )}
       </div>
@@ -264,9 +264,9 @@ export default function HeroWorkoutCard({
         >
           <div className="fx-zenMissionsLeft">
             <Target size={13} color="#ff4d1c" />
-            <span className="fx-zenMissionsEyebrow">GÜNLÜK GÖREVLER</span>
+            <span className="fx-zenMissionsEyebrow">{t('hero.dailyMissions')}</span>
             <span className="fx-zenMissionsCountPill">
-              <b>{completedMissions}/3</b> Tamamlandı
+              <b>{completedMissions}/3</b> {t('hero.completedCount')}
             </span>
           </div>
           <div className="fx-zenMissionsRight">
@@ -279,17 +279,17 @@ export default function HeroWorkoutCard({
           <div className="fx-zenMissionsDropdown animate-fade-in">
             <div className={`fx-zenMissionRow ${workoutDone ? 'done' : ''}`}>
               <CheckCircle2 size={14} color={workoutDone ? '#c8ff00' : 'var(--fx-muted)'} />
-              <span>Günün Seansını Tamamla</span>
+              <span>{t('hero.missionWorkout')}</span>
               <b>+120 XP</b>
             </div>
             <div className={`fx-zenMissionRow ${isProteinDone ? 'done' : ''}`}>
               <CheckCircle2 size={14} color={isProteinDone ? '#c8ff00' : 'var(--fx-muted)'} />
-              <span>Günlük Protein Hedefine Ulaş (%90+)</span>
+              <span>{t('hero.missionProtein')}</span>
               <b>+80 XP</b>
             </div>
             <div className={`fx-zenMissionRow ${isWaterDone ? 'done' : ''}`}>
               <CheckCircle2 size={14} color={isWaterDone ? '#c8ff00' : 'var(--fx-muted)'} />
-              <span>Hidrasyon Hedefini Doldur (2.5L)</span>
+              <span>{t('hero.missionWater')}</span>
               <b>+60 XP</b>
             </div>
           </div>
