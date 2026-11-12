@@ -21,7 +21,7 @@ import LanguageDropdown from './LanguageDropdown.jsx';
 import UserAvatar from './UserAvatar.jsx';
 import { sounds } from '../lib/audio.js';
 
-export const TABS = [
+const TABS = [
   ['today', 'nav.today', Activity, '01'],
   ['training', 'nav.training', Dumbbell, '02'],
   ['nutrition', 'nav.nutrition', Utensils, '03'],
