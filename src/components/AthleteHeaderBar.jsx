@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Flame, Trophy, Shield, Zap, Sparkles, Award } from 'lucide-react';
+import { Flame, Trophy, Shield, Zap, Sparkles, Award, ShieldCheck } from 'lucide-react';
 import { calculateGamification } from '../lib/streaks.js';
 import UserAvatar from './UserAvatar.jsx';
 import AiEnergyPill from './AiEnergyPill.jsx';
 import BadgesModal from './BadgesModal.jsx';
 import StreakVaultModal from './StreakVaultModal.jsx';
+import AthletePassportModal from './AthletePassportModal.jsx';
 import { sounds } from '../lib/audio.js';
 
 export default function AthleteHeaderBar({
@@ -16,6 +17,7 @@ export default function AthleteHeaderBar({
 }) {
   const [showBadges, setShowBadges] = useState(false);
   const [showStreakVault, setShowStreakVault] = useState(false);
+  const [showPassport, setShowPassport] = useState(false);
   const g = useMemo(() => calculateGamification(entries, target), [entries, target]);
   const { streak, level, title, currentLevelXp, nextLevelXp, badges, xp } = g;
 
@@ -89,6 +91,20 @@ export default function AthleteHeaderBar({
             <Trophy size={14} color="#f5c451" />
             <span>{unlockedBadges}</span>
           </button>
+
+          {/* DİJİTAL SPORCU PASAPORTU DÜĞMESİ */}
+          <button
+            type="button"
+            className="fx-zenPassportBtn"
+            onClick={() => {
+              sounds.tap();
+              setShowPassport(true);
+            }}
+            title="Resmi Dijital Sporcu Pasaportu"
+          >
+            <ShieldCheck size={14} color="#00f0ff" />
+            <span>Pasaport</span>
+          </button>
         </div>
       </header>
 
@@ -107,6 +123,17 @@ export default function AthleteHeaderBar({
           xp={xp}
           level={level}
           onClose={() => setShowBadges(false)}
+        />
+      )}
+
+      {/* DİJİTAL SPORCU PASAPORTU MODALI */}
+      {showPassport && (
+        <AthletePassportModal
+          profile={profile}
+          streak={streak}
+          readiness={g.readiness}
+          entries={entries}
+          onClose={() => setShowPassport(false)}
         />
       )}
     </>

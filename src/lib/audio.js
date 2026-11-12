@@ -109,6 +109,76 @@ class SoundEngine {
     }
   }
 
+  // Hipertrofi Tempo Metronomu (3-1-1-0 Ritim Tıklaması)
+  tempoTick(phase = 'down') {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      const freq = phase === 'up' ? 880 : phase === 'pause' ? 580 : 380;
+      const dur = phase === 'up' ? 0.12 : 0.06;
+      const vol = phase === 'up' ? 0.35 : 0.18;
+
+      osc.type = phase === 'up' ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(vol, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + dur);
+      this.haptic(phase === 'up' ? [20, 30] : 15);
+    } catch {}
+  }
+
+  // 40Hz Nöral Odaklanma Dalgası (PR Öncesi Sinir Sistemi Uyarımı)
+  neuralPulse(durationSec = 4) {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const carrier = this.ctx.createOscillator();
+      const mod = this.ctx.createOscillator();
+      const modGain = this.ctx.createGain();
+      const masterGain = this.ctx.createGain();
+
+      // 40Hz Gamma frequency modulation for peak athletic focus
+      carrier.type = 'sine';
+      carrier.frequency.setValueAtTime(216, now); // Alpha-Beta bridge carrier
+
+      mod.type = 'sine';
+      mod.frequency.setValueAtTime(40, now); // 40Hz Gamma
+
+      modGain.gain.setValueAtTime(0.4, now);
+      mod.connect(modGain.gain);
+
+      masterGain.gain.setValueAtTime(0.0001, now);
+      masterGain.gain.linearRampToValueAtTime(0.22, now + 0.8);
+      masterGain.gain.setValueAtTime(0.22, now + durationSec - 0.8);
+      masterGain.gain.linearRampToValueAtTime(0.0001, now + durationSec);
+
+      carrier.connect(masterGain);
+      masterGain.connect(this.ctx.destination);
+
+      mod.start(now);
+      carrier.start(now);
+      mod.stop(now + durationSec);
+      carrier.stop(now + durationSec);
+
+      this.haptic([40, 60, 40, 60, 80]);
+    } catch {}
+  }
+
   // Kulaklık İçi Sesli Antrenör (In-Ear Voice Coach via Web Speech API)
   speak(text, lang = 'tr-TR') {
     if (!this.enabled || typeof window === 'undefined') return;

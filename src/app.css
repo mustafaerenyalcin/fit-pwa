@@ -10096,6 +10096,421 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border-color: #ff4d1c;
 }
 
+/* =====================================================================
+   ATELIER ELITE VIRAL & VIP SHOWSTOPPERS
+   Holographic Passport, Wager Contract, Genetic Potential & Tempo Metronome
+   ===================================================================== */
+
+/* 1. DİJİTAL SPORCU PASAPORTU DÜĞMESİ & MODALI */
+.fx-zenPassportBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.28);
+  border-radius: 999px;
+  padding: 6px 12px;
+  color: #00f0ff;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fx-zenPassportBtn:hover {
+  background: rgba(0, 240, 255, 0.16);
+  border-color: #00f0ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 240, 255, 0.25);
+}
+
+.fx-passportModal {
+  max-width: 540px !important;
+  background: #090a0f !important;
+  border: 1px solid rgba(0, 240, 255, 0.25) !important;
+}
+
+.fx-passportTiltStage {
+  perspective: 1000px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.fx-holographicCard {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  min-height: 290px;
+  background: linear-gradient(135deg, #0e121d 0%, #080a0f 60%, #151a28 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(0, 240, 255, 0.15);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
+
+.fx-holoShine {
+  position: absolute;
+  inset: -100%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(0, 240, 255, 0.15) 30%,
+    rgba(255, 77, 28, 0.15) 50%,
+    rgba(200, 255, 0, 0.15) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+.fx-passportTopHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.fx-passportEyebrow {
+  font-family: var(--fx-font-mono, monospace);
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #00f0ff;
+  letter-spacing: 0.08em;
+}
+.fx-passportSerial {
+  font-family: var(--fx-font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fx-muted);
+}
+
+.fx-passportAthleteRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.fx-passportName {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+.fx-passportTierBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #c8ff00;
+  background: rgba(200, 255, 0, 0.12);
+  border: 1px solid rgba(200, 255, 0, 0.3);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+.fx-passportMetricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.fx-passportPod {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+.fx-passportPod small {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.fx-podDigits {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fx-podDigits b {
+  font-size: 15px;
+  font-weight: 800;
+  font-family: var(--fx-font-mono, monospace);
+}
+
+.fx-passportFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 12px;
+}
+.fx-passportSeal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  letter-spacing: 0.08em;
+}
+.fx-passportBrand b {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.fx-passportBrand span {
+  color: #ff4d1c;
+}
+
+/* 2. RESMİ SQUAD İDDİA SÖZLEŞMESİ & DÜELLO MODALI */
+.fx-contractModal {
+  max-width: 580px !important;
+  background: #090b10 !important;
+  border: 1px solid rgba(245, 196, 81, 0.3) !important;
+}
+.fx-contractBody {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 10px;
+}
+.fx-contractStamp {
+  display: inline-block;
+  font-family: var(--fx-font-mono, monospace);
+  font-size: 10px;
+  font-weight: 800;
+  color: #f5c451;
+  background: rgba(245, 196, 81, 0.1);
+  border: 1px solid rgba(245, 196, 81, 0.28);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+.fx-contractDuelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.fx-partyBox {
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+}
+.fx-partyBox.left {
+  background: rgba(0, 240, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+}
+.fx-partyBox.right {
+  background: rgba(255, 77, 28, 0.06);
+  border: 1px solid rgba(255, 77, 28, 0.25);
+}
+.fx-partyRole {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  margin-bottom: 4px;
+}
+.fx-partyBox strong {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+}
+.fx-duelVsCircle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(245, 196, 81, 0.15);
+  border: 1px solid #f5c451;
+  color: #f5c451;
+  font-weight: 900;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fx-contractClauseBox {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.fx-contractClauseBox h4 {
+  margin: 0 0 6px 0;
+  font-size: 11px;
+  font-weight: 800;
+  color: #f5c451;
+  letter-spacing: 0.05em;
+}
+.fx-contractClauseBox p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--fx-muted);
+}
+.fx-contractClauseBox b {
+  color: #fff;
+}
+.fx-contractSignatureRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+.fx-signatureBox {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.fx-signatureBox.signed {
+  border-color: #00f0ff;
+  border-style: solid;
+  background: rgba(0, 240, 255, 0.06);
+}
+.fx-signatureBox small {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  margin-bottom: 4px;
+}
+.fx-sigText {
+  font-family: var(--fx-font-mono, monospace);
+  font-size: 12px;
+  font-weight: 800;
+  color: #00f0ff;
+}
+
+/* 3. GENETİK KAS POTANSİYELİ KARTI */
+.fx-geneticHeroCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.08) 0%, rgba(200, 255, 0, 0.03) 100%);
+  border-color: rgba(0, 240, 255, 0.28) !important;
+}
+.fx-geneticMaxVal {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 8px 0;
+}
+.fx-geneticMaxVal b {
+  font-size: 42px;
+  font-weight: 900;
+  color: #00f0ff;
+  letter-spacing: -0.03em;
+}
+.fx-geneticMaxVal span {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--fx-muted);
+}
+.fx-geneticStatPod {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px;
+}
+.fx-geneticStatPod small {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--fx-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.fx-statDigits {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.fx-statDigits b {
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  font-family: var(--fx-font-mono, monospace);
+}
+.fx-statDigits span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--fx-muted);
+}
+.fx-geneticStatPod p {
+  margin: 0;
+  font-size: 11px;
+  color: var(--fx-muted);
+}
+
+/* 4. HİPERTROFİ TEMPO METRONOMU & NÖRAL ODAK BARI */
+.fx-tempoNeuralBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+.fx-tempoToggleBtn,
+.fx-neuralPrimeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.fx-tempoToggleBtn:hover,
+.fx-neuralPrimeBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+.fx-tempoToggleBtn.active {
+  background: rgba(200, 255, 0, 0.15);
+  border-color: #c8ff00;
+  color: #c8ff00;
+  box-shadow: 0 0 12px rgba(200, 255, 0, 0.25);
+}
+.fx-neuralPrimeBtn.pulsing {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: #00f0ff;
+  color: #00f0ff;
+  animation: pulseGlow 1.2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.5); }
+  70% { box-shadow: 0 0 0 12px rgba(0, 240, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+}
+
 /* Hareket azaltma tercihi */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

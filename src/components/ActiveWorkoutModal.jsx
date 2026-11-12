@@ -103,6 +103,46 @@ export default function ActiveWorkoutModal({
   const [showReplaceModal, setShowReplaceModal] = useState(false);
   const [showStoryModal, setShowStoryModal] = useState(false);
 
+  // Hipertrofi Tempo Metronomu (3-1-1-0) & 40Hz Nöral Odak
+  const [tempoActive, setTempoActive] = useState(false);
+  const [tempoSec, setTempoSec] = useState(3);
+  const [tempoPhase, setTempoPhase] = useState('down');
+  const [neuralPrimingActive, setNeuralPrimingActive] = useState(false);
+
+  useEffect(() => {
+    let t = null;
+    if (tempoActive) {
+      t = setInterval(() => {
+        setTempoSec((prev) => {
+          if (prev <= 1) {
+            setTempoPhase((ph) => {
+              if (ph === 'down') {
+                sounds.tempoTick('pause');
+                return 'pause';
+              }
+              if (ph === 'pause') {
+                sounds.tempoTick('up');
+                return 'up';
+              }
+              sounds.tempoTick('down');
+              return 'down';
+            });
+            return 3;
+          }
+          sounds.tempoTick('down');
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(t);
+  }, [tempoActive]);
+
+  const handleTriggerNeuralPrime = () => {
+    sounds.neuralPulse(4);
+    setNeuralPrimingActive(true);
+    setTimeout(() => setNeuralPrimingActive(false), 4500);
+  };
+
   // Workout duration counter
   useEffect(() => {
     let interval = null;
@@ -580,6 +620,30 @@ export default function ActiveWorkoutModal({
                     <HelpCircle size={14} /> Rehber {showGuide ? '−' : '+'}
                   </button>
                 </div>
+              </div>
+
+              {/* HİPERTROFİ TEMPO METRONOMU & 40HZ NÖRAL ODAKLANMA BARI */}
+              <div className="fx-tempoNeuralBar">
+                <button
+                  type="button"
+                  className={`fx-tempoToggleBtn ${tempoActive ? 'active' : ''}`}
+                  onClick={() => {
+                    sounds.tap();
+                    setTempoActive(!tempoActive);
+                  }}
+                  title="3 saniye negatif iniş, 1 saniye duraklama, 1 saniye patlayıcı itiş ritmi"
+                >
+                  <Clock size={13} /> {tempoActive ? `Tempo Ritim: ${tempoPhase === 'down' ? 'İniş (3s)' : tempoPhase === 'pause' ? 'Dip (1s)' : 'Patlama (1s)'}` : '⚡ 3-1-1-0 Hipertrofi Metronomu'}
+                </button>
+
+                <button
+                  type="button"
+                  className={`fx-neuralPrimeBtn ${neuralPrimingActive ? 'pulsing' : ''}`}
+                  onClick={handleTriggerNeuralPrime}
+                  title="Ağır set öncesi 40Hz Gamma nöral dalgasıyla sinir sistemini uyar"
+                >
+                  <Zap size={13} color="#00f0ff" /> {neuralPrimingActive ? '🧠 40Hz Nöral Dalga Aktif…' : '40Hz Nöral Odak (PR Hazırlığı)'}
+                </button>
               </div>
 
               {/* Alternative Exercise Selection Modal */}

@@ -20,11 +20,13 @@ import {
   Activity,
   Coffee,
   Gift,
-  AlertCircle
+  AlertCircle,
+  FileText
 } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 import { getMaxGymBuddies, getAiMembership } from '../lib/aiQuota.js';
 import SubscriptionModal from './SubscriptionModal.jsx';
+import WagerContractModal from './WagerContractModal.jsx';
 
 const SQUAD_STORAGE_KEY = 'fit-gym-squad-v2';
 const OLD_STORAGE_KEY = 'fit-gym-buddy-v1';
@@ -108,6 +110,7 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
   const [copiedCode, setCopiedCode] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSubModal, setShowSubModal] = useState(false);
+  const [showContractModal, setShowContractModal] = useState(false);
   const [nudgeSent, setNudgeSent] = useState('');
 
   // Add buddy form
@@ -607,6 +610,20 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
             })}
           </div>
         </div>
+
+        <div className="fx-wagerContractCTA" style={{ marginTop: 16 }}>
+          <button
+            type="button"
+            className="fx-btn fx-solarBtn fx-btn--block"
+            onClick={() => {
+              sounds.tap();
+              setShowContractModal(true);
+            }}
+            style={{ fontWeight: 800, padding: '12px 16px' }}
+          >
+            <FileText size={16} /> 📜 Resmi İddia Sözleşmesi İmzala &amp; Düello Başlat
+          </button>
+        </div>
       </div>
 
       {/* 4. SQUAD XP LİDERLİK TABLOSU & HAFTALIK AKIŞ */}
@@ -759,6 +776,16 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
         <SubscriptionModal
           initialPlan="family"
           onClose={() => setShowSubModal(false)}
+        />
+      )}
+
+      {/* RESMİ SQUAD İDDİA SÖZLEŞMESİ VE DÜELLO MODALI */}
+      {showContractModal && (
+        <WagerContractModal
+          profile={profile}
+          buddy={buddies[0] || { name: 'Gym Buddy' }}
+          stake={WAGER_STAKES[wagerStakeKey]}
+          onClose={() => setShowContractModal(false)}
         />
       )}
     </div>

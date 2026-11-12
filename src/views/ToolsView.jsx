@@ -26,6 +26,7 @@ import StrengthOverloadCard from '../components/StrengthOverloadCard.jsx';
 import BodyCompositionPro from '../components/BodyCompositionPro.jsx';
 import BeforeAfterSlider from '../components/BeforeAfterSlider.jsx';
 import AiFormCheckStudio from '../components/AiFormCheckStudio.jsx';
+import GeneticPotentialCalc from '../components/GeneticPotentialCalc.jsx';
 import { sounds } from '../lib/audio.js';
 
 const TOOLS_CONFIG = [
@@ -138,6 +139,17 @@ const TOOLS_CONFIG = [
     color: '#00f0ff',
     image: '/images/tools/form_check.jpg',
     bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(0, 240, 255, 0.02))'
+  },
+  {
+    id: 'genetic',
+    title: 'Genetik Potansiyel & Doğal Tavan',
+    subtitle: 'Casey Butt kemik formülüyle doğal steroidsiz maksimum kas kütlesi ve kol sınırı',
+    symbol: '🧬',
+    category: 'biometrics',
+    badge: 'Casey Butt Sınırı',
+    color: '#00f0ff',
+    image: '/images/tools/genetic.jpg',
+    bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(0, 240, 255, 0.02))'
   }
 ];
 
@@ -193,7 +205,7 @@ export default function ToolsView({
                 Araçlar <span>&amp; Stüdyo Launchpad</span>
               </h2>
               <p className="fx-cockpitSub">
-                Performansını, biyometrik ölçümlerini ve antrenmanlarını optimize eden 10 adet özel laboratuvar aracı.
+                Performansını, biyometrik ölçümlerini ve antrenmanlarını optimize eden 11 adet özel laboratuvar aracı.
               </p>
             </div>
           </section>
@@ -338,6 +350,7 @@ export default function ToolsView({
               </div>
             )}
             {selectedToolId === 'form_check' && <AiFormCheckStudio />}
+            {selectedToolId === 'genetic' && <GeneticPotentialCalc profile={profile} />}
           </div>
 
           {/* ALT GEÇİŞ DOKU (MOBİLDE BAŞPARMAKLA ANINDA DİĞER ARACA GEÇİŞ İÇİN) */}
