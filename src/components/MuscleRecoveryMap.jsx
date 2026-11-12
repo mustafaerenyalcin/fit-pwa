@@ -20,9 +20,9 @@ const MUSCLE_META = {
   shoulders: { label: 'Omuz', hoursToRecover: 48 },
   chest: { label: 'Göğüs', hoursToRecover: 60 },
   back: { label: 'Sırt & Bel', hoursToRecover: 60 },
-  core: { label: 'Karın / Core', hoursToRecover: 36 },
-  arms: { label: 'Kol (Biceps/Triceps)', hoursToRecover: 40 },
-  legs: { label: 'Bacak & Kalça', hoursToRecover: 72 }
+  core: { label: 'Karın', hoursToRecover: 36 },
+  arms: { label: 'Kol', hoursToRecover: 40 },
+  legs: { label: 'Bacak', hoursToRecover: 72 }
 };
 
 export default function MuscleRecoveryMap({ entries = {}, day }) {
