@@ -4,7 +4,7 @@
  * and immediate network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-atelier-v3.3.0';
+const CACHE_NAME = 'fit-atelier-v3.4.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -13,6 +13,7 @@ const STATIC_ASSETS = [
   '/kosullar.html',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/icons/icon-maskable-512.png',
   '/images/workout-bg.jpg',
   '/images/nutrition-bg.jpg',
   '/images/recovery-bg.jpg',

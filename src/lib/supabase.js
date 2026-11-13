@@ -526,21 +526,60 @@ export async function resetPassword(email) {
 }
 
 /**
- * Hesabı ve buluttaki tüm verileri kalıcı olarak siler (schema.sql -> delete_my_account).
- * Bu cihazdaki yerel kopya da temizlenir.
+ * Hesabı ve bu cihaza / buluta ait tüm verileri kalıcı olarak siler (App Store 5.1.1(v) uyumlu).
+ * Hem Supabase bulut hesapları hem yerel/çevrimdışı hesaplar için çalışır.
  */
 export async function deleteAccount() {
-  if (!supabase || !currentUser) throw new Error('Önce giriş yapmalısın.');
+  if (!currentUser) throw new Error('Önce giriş yapmalısın.');
   const uid = currentUser.id;
-  const { error } = await supabase.rpc('delete_my_account');
-  if (error) throw new Error('Hesap silinemedi: ' + error.message);
+  const isLocal = Boolean(currentUser.isLocal);
+
+  if (!isLocal && supabase) {
+    const { error } = await supabase.rpc('delete_my_account');
+    if (error) throw new Error('Hesap silinemedi: ' + error.message);
+  }
+
   try {
-    localStorage.removeItem(`fit-pwa-local-v1:${uid}`);
-    if (localStorage.getItem('fit-legacy-owner') === uid) {
+    const keysToRemove = [
+      `fit-pwa-local-v1:${uid}`,
+      `fit-ai-membership-v1:${uid}`,
+      'fit-ai-membership-v1',
+      'fit-active-user-id',
+      'fit-pending-family-code',
+      'fit-progress-photos-v1',
+      'fit-gym-squad-v2',
+      'fit-squad-wager-stake-v1'
+    ];
+    for (const k of keysToRemove) {
+      localStorage.removeItem(k);
+    }
+    if (localStorage.getItem('fit-legacy-owner') === uid || isLocal) {
       localStorage.removeItem('fit-pwa-local-v1');
+      localStorage.removeItem('fit-legacy-owner');
+    }
+    if (localStorage.getItem('fit-local-user-v1')) {
+      localStorage.removeItem('fit-local-user-v1');
+    }
+    // Yerel Aile Planı kayıt defterinden kullanıcıyı temizle
+    const rawFam = localStorage.getItem('fit-family-registry-v1');
+    if (rawFam) {
+      const reg = JSON.parse(rawFam);
+      if (reg?.groups) {
+        for (const [gid, g] of Object.entries(reg.groups)) {
+          if (g.ownerId === uid) {
+            delete reg.groups[gid];
+          } else if (Array.isArray(g.members)) {
+            g.members = g.members.filter((m) => m.userId !== uid);
+          }
+        }
+        localStorage.setItem('fit-family-registry-v1', JSON.stringify(reg));
+      }
     }
   } catch {}
-  await supabase.auth.signOut().catch(() => {});
+
+  if (supabase) {
+    await supabase.auth.signOut().catch(() => {});
+  }
   currentUser = null;
   setStoreUser(null);
   dispatchSyncChange();

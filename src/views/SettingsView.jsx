@@ -23,6 +23,10 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
   const [quota, setQuota] = useState(getAiQuota);
   const [showSubModal, setShowSubModal] = useState(false);
   const [legalModalType, setLegalModalType] = useState(null); // 'privacy' | 'terms' | null
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
   const { user } = getAuthState();
   const syncState = getSyncState();
 
@@ -49,15 +53,27 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
     }
   };
 
-  const doDelete = async () => {
-    const ok = prompt(
-      'Hesabın ve buluttaki TÜM verilerin kalıcı olarak silinecek. Bu işlem geri alınamaz.\n\nOnaylamak için SİL yaz:'
-    );
-    if (ok?.trim().toLocaleUpperCase('tr-TR') !== 'SİL') return;
+  const doDelete = () => {
+    setDeleteConfirmText('');
+    setDeleteError('');
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteAccount = async (e) => {
+    e.preventDefault();
+    if (deleteConfirmText.trim().toLocaleUpperCase('tr-TR') !== 'SİL') {
+      setDeleteError('Onaylamak için kutuya SİL yazmalısın.');
+      return;
+    }
+    setDeleteBusy(true);
+    setDeleteError('');
     try {
       await deleteAccount();
-    } catch (e) {
-      setMessage(e.message);
+      setShowDeleteModal(false);
+    } catch (err) {
+      setDeleteError(err?.message || 'Hesap silinemedi.');
+    } finally {
+      setDeleteBusy(false);
     }
   };
 
@@ -355,6 +371,62 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
           type={legalModalType}
           onClose={() => setLegalModalType(null)}
         />
+      )}
+
+      {showDeleteModal && (
+        <div className="fx-modalBackdrop animate-fade-in" onClick={() => !deleteBusy && setShowDeleteModal(false)}>
+          <div
+            className="fx-modal animate-scale-in"
+            style={{ maxWidth: 420 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="fx-modalClose"
+              onClick={() => !deleteBusy && setShowDeleteModal(false)}
+              aria-label="Kapat"
+            >
+              ✕
+            </button>
+            <h3 style={{ margin: '0 0 8px', color: '#ef4444' }}>Hesabını Kalıcı Olarak Sil</h3>
+            <p className="fx-muted" style={{ fontSize: 13, lineHeight: 1.55, margin: '0 0 14px' }}>
+              Hesabın, antrenman/beslenme kayıtların, ilerleme fotoğrafların ve buluttaki tüm verilerin kalıcı olarak silinecek. Bu işlem geri alınamaz.
+            </p>
+            {deleteError && (
+              <p style={{ color: '#ef4444', fontSize: 12, fontWeight: 600, margin: '0 0 10px' }}>{deleteError}</p>
+            )}
+            <form onSubmit={confirmDeleteAccount} className="fx-stack" style={{ gap: 10 }}>
+              <label className="fx-field" style={{ margin: 0 }}>
+                <span>Onaylamak için aşağıya SİL yaz:</span>
+                <input
+                  type="text"
+                  placeholder="SİL"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  autoFocus
+                />
+              </label>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 6 }}>
+                <button
+                  type="button"
+                  className="fx-btn fx-btn--ghost"
+                  disabled={deleteBusy}
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  Vazgeç
+                </button>
+                <button
+                  type="submit"
+                  className="fx-btn"
+                  disabled={deleteBusy}
+                  style={{ background: '#ef4444', color: '#fff', borderColor: '#ef4444', fontWeight: 700 }}
+                >
+                  <Trash2 size={14} /> {deleteBusy ? 'Siliniyor…' : 'Kalıcı Olarak Sil'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

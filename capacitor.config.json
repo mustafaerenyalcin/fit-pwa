@@ -30,8 +30,7 @@
     "contentInset": "always",
     "preferredContentMode": "mobile",
     "allowsLinkPreview": false,
-    "handleApplicationURL": false,
-    "limitsNavigationsToAppBoundDomains": true
+    "handleApplicationURL": true
   },
   "android": {
     "allowMixedContent": false,

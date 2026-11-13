@@ -20,6 +20,7 @@ import {
   buildFamilyInviteUrl,
   normalizeInviteCode
 } from '../familyPlan.js';
+import { deleteAccount, continueAsLocalUser, getAuthState } from '../supabase.js';
 import { calculateReadiness } from '../readinessEngine.js';
 import { calculateStreak, calculateGamification } from '../streaks.js';
 import { setLang, getLang, translate } from '../i18n.js';
@@ -440,5 +441,64 @@ describe('Multi-Account Family Plan Engine (4 seats, independent accounts)', () 
     const f1Status = await getFamilyStatus(friend1);
     expect(f1Status.group).toBeNull();
     expect(getAiMembership().isPro).toBe(false);
+  });
+});
+
+describe('App Store & Google Play Store Release Readiness', () => {
+  const readPngDimensions = (filePath) => {
+    const buf = fs.readFileSync(filePath);
+    // PNG signature check (bytes 0..7) + IHDR width (bytes 16..19) & height (bytes 20..23)
+    expect(buf.slice(1, 4).toString('ascii')).toBe('PNG');
+    return {
+      width: buf.readUInt32BE(16),
+      height: buf.readUInt32BE(20)
+    };
+  };
+
+  it('provides exact-resolution PNG icons required by Play Store, iOS & PWA manifest', () => {
+    const publicDir = path.resolve(process.cwd(), 'public');
+    expect(readPngDimensions(path.join(publicDir, 'icons/icon-192.png'))).toEqual({ width: 192, height: 192 });
+    expect(readPngDimensions(path.join(publicDir, 'icons/icon-512.png'))).toEqual({ width: 512, height: 512 });
+    expect(readPngDimensions(path.join(publicDir, 'icons/icon-maskable-512.png'))).toEqual({ width: 512, height: 512 });
+    expect(readPngDimensions(path.join(publicDir, 'icons/app-icon.png'))).toEqual({ width: 512, height: 512 });
+    expect(readPngDimensions(path.join(publicDir, 'icons/app-icon-1024.png'))).toEqual({ width: 1024, height: 1024 });
+
+    const manifest = JSON.parse(fs.readFileSync(path.join(publicDir, 'manifest.webmanifest'), 'utf8'));
+    const purposes = manifest.icons.map((i) => i.purpose);
+    expect(purposes).toContain('any');
+    expect(purposes).toContain('maskable');
+    expect(purposes).not.toContain('any maskable');
+  });
+
+  it('includes valid legal pages, native Capacitor config & .well-known deep-link templates', () => {
+    const rootDir = process.cwd();
+    const publicDir = path.join(rootDir, 'public');
+
+    const cap = JSON.parse(fs.readFileSync(path.join(rootDir, 'capacitor.config.json'), 'utf8'));
+    expect(cap.appId).toBe('com.fitatelier.app');
+    expect(cap.ios?.handleApplicationURL).toBe(true);
+
+    const assetLinks = JSON.parse(fs.readFileSync(path.join(publicDir, '.well-known/assetlinks.json'), 'utf8'));
+    expect(assetLinks[0]?.target?.package_name).toBe('com.fitatelier.app');
+
+    const aasa = JSON.parse(fs.readFileSync(path.join(publicDir, '.well-known/apple-app-site-association'), 'utf8'));
+    expect(aasa.applinks?.details?.[0]?.appID).toContain('com.fitatelier.app');
+
+    expect(fs.existsSync(path.join(publicDir, 'gizlilik.html'))).toBe(true);
+    expect(fs.existsSync(path.join(publicDir, 'kosullar.html'))).toBe(true);
+  });
+
+  it('allows permanent in-app account deletion for local/guest users per App Store 5.1.1(v)', async () => {
+    localStorage.clear();
+    const localUser = continueAsLocalUser();
+    expect(getAuthState().user?.id).toBe(localUser.id);
+
+    await activateFamilyPlan(localUser, 'Test');
+    expect(localStorage.getItem('fit-family-registry-v1')).toBeTruthy();
+
+    await deleteAccount();
+    expect(getAuthState().user).toBeNull();
+    expect(localStorage.getItem('fit-local-user-v1')).toBeNull();
+    expect(localStorage.getItem('fit-ai-membership-v1')).toBeNull();
   });
 });
