@@ -11316,3 +11316,131 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   flex-shrink: 0;
   color: #ffffff;
 }
+
+
+/* ==========================================================================
+   CANLI ANİMASYONLU EGZERSİZ SAHNESİ (EV EGZERSİZLERİ STİLİ 60FPS)
+   ========================================================================== */
+
+.fx-animStage {
+  background: var(--fx-card2, #f8fafc);
+  border: 1px solid var(--fx-border, rgba(15, 23, 42, 0.08));
+  border-radius: 18px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fx-animStage--stage {
+  min-height: 190px;
+}
+
+[data-theme="dark"] .fx-animStage {
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+[data-theme="dark"] .fx-bodyStroke {
+  stroke: #e2e8f0 !important;
+}
+
+.fx-animStageBadgeRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ff3b30;
+}
+
+.fx-animLiveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3b30;
+  animation: fxPulseDot 1.2s ease-in-out infinite;
+}
+
+.fx-animMuscleTag {
+  margin-left: auto;
+  background: rgba(0, 122, 255, 0.12);
+  color: #007aff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+}
+
+.fx-animStageTip {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--fx-muted, #64748b);
+  text-align: center;
+  line-height: 1.4;
+}
+
+@keyframes fxPulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.75); }
+}
+
+@keyframes fxPushupMove {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(15px); }
+}
+
+@keyframes fxSquatMove {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(16px); }
+}
+
+@keyframes fxCrunchMove {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(20deg); }
+}
+
+@keyframes fxPlankKnee {
+  0%, 100% { transform: translateX(0px); }
+  50% { transform: translateX(-18px); }
+}
+
+@keyframes fxJacksArms {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(14px); }
+}
+
+@keyframes fxJacksLegs {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.65); }
+}
+
+@keyframes fxDipsMove {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(14px); }
+}
+
+@keyframes fxBridgeMove {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fxPressMove {
+  0%, 100% { transform: translateY(-8px); }
+  50% { transform: translateY(12px); }
+}
+
+.fx-pushup-body { animation: fxPushupMove 1.6s ease-in-out infinite; }
+.fx-squat-torso { animation: fxSquatMove 1.7s ease-in-out infinite; }
+.fx-crunch-torso { transform-origin: 92px 94px; animation: fxCrunchMove 1.5s ease-in-out infinite; }
+.fx-plank-knee { animation: fxPlankKnee 0.9s ease-in-out infinite; }
+.fx-jacks-arms { animation: fxJacksArms 0.85s ease-in-out infinite; }
+.fx-jacks-legs { transform-origin: 90px 66px; animation: fxJacksLegs 0.85s ease-in-out infinite; }
+.fx-dips-body { animation: fxDipsMove 1.5s ease-in-out infinite; }
+.fx-bridge-hips { animation: fxBridgeMove 1.6s ease-in-out infinite; }
+.fx-press-arms { animation: fxPressMove 1.6s ease-in-out infinite; }

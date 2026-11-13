@@ -591,6 +591,14 @@ export default function ActiveWorkoutModal({
 
             {/* Exercise Execution Screen */}
             <div className="currentExerciseSection">
+              {/* CANLI ANİMASYONLU HAREKET SAHNESİ (EV EGZERSİZLERİ STİLİ) */}
+              <ExerciseVisual
+                name={currentExercise.name}
+                size="stage"
+                muscle={currentExercise.muscle}
+                tip={currentExercise.tip}
+              />
+
               <div className="exerciseHeaderRow">
                 <div>
                   <div className="exMuscleTag">{currentExercise.muscle}</div>
