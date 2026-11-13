@@ -2,16 +2,16 @@ import React from 'react';
 
 function detectAnimationType(name = '') {
   const n = (name || '').toLowerCase();
-  if (/(jumping jack|burpee|high knee|cardio)/i.test(n)) return 'jacks';
+  if (/(jumping jack|burpee|high knee|cardio|arm circle)/i.test(n)) return 'jacks';
   if (/(mountain climber|spiderman|plank|hollow)/i.test(n)) return 'plank';
-  if (/(crunch|mekik|v-up|bicycle|russian twist|heel touch|leg raise|flutter|karın|abs)/i.test(n)) return 'crunch';
-  if (/(glute bridge|hip thrust|superman|köprü|cobra)/i.test(n)) return 'bridge';
-  if (/(dip)/i.test(n)) return 'dips';
+  if (/(crunch|mekik|v-up|bicycle|russian twist|heel touch|leg raise|flutter|dead bug|ab wheel|karın|abs)/i.test(n)) return 'crunch';
+  if (/(glute bridge|hip thrust|superman|köprü|cobra|prone y-t-w|snow angel)/i.test(n)) return 'bridge';
+  if (/(dip|kickback|pushdown)/i.test(n)) return 'dips';
   if (/(lunge|split squat)/i.test(n)) return 'lunge';
-  if (/(squat|wall sit|calf|bacak|leg)/i.test(n)) return 'squat';
+  if (/(squat|wall sit|calf|deadlift|rdl|leg press|bacak|leg)/i.test(n)) return 'squat';
   if (/(push-up|push up|şınav|sinav|pseudo planche|archer|hindu|dive bomber)/i.test(n)) return 'pushup';
-  if (/(row|curl|pull|barfiks|kürek|angel|y-t-w|biceps)/i.test(n)) return 'pull';
-  if (/(press|raise|omuz|shoulder|göğüs|chest|bench)/i.test(n)) return 'press';
+  if (/(row|curl|pull|barfiks|kürek|reverse fly|rear delt fly|face pull|biceps)/i.test(n)) return 'pull';
+  if (/(press|raise|fly|triceps extension|omuz|shoulder|göğüs|chest|bench)/i.test(n)) return 'press';
   return 'pushup';
 }
 
