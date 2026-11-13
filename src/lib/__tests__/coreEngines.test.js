@@ -12,7 +12,17 @@ import {
 import { calculateReadiness } from '../readinessEngine.js';
 import { calculateStreak, calculateGamification } from '../streaks.js';
 import { setLang, getLang, translate } from '../i18n.js';
-import { today, formatDate } from '../calculations.js';
+import {
+  today,
+  formatDate,
+  calculatePlateLoadout,
+  convertWeight,
+  toMetricWeight,
+  weightUnitLabel,
+  convertLength,
+  lengthUnitLabel,
+  getExerciseRecord
+} from '../calculations.js';
 import { resolveExerciseMedia, EXERCISE_MEDIA_DB } from '../exerciseMedia.js';
 import { parseSetRepTarget, getSmartExerciseDefaults } from '../exerciseStats.js';
 import { PROGRAMS } from '../../components/LeapWorkoutCatalog.jsx';
@@ -39,21 +49,21 @@ describe('aiQuota & Membership Engine', () => {
     expect(consumeAiCredit()).toBe(false);
   });
 
-  it('grants unlimited credits and correct squad buddy limits on upgrade', () => {
-    expect(getMaxGymBuddies()).toBe(1);
+  it('unlocks local squad slots for all users in Open Beta and scales AI credits on upgrade', () => {
+    expect(getMaxGymBuddies()).toBe(4);
 
     upgradeToPro('yearly');
     expect(getAiQuota().isPro).toBe(true);
     expect(getAiQuota().remaining).toBe(Infinity);
     expect(consumeAiCredit()).toBe(true);
-    expect(getMaxGymBuddies()).toBe(2);
+    expect(getMaxGymBuddies()).toBe(4);
 
     upgradeToPro('family');
     expect(getMaxGymBuddies()).toBe(4);
 
     cancelPro();
     expect(getAiQuota().isPro).toBe(false);
-    expect(getMaxGymBuddies()).toBe(1);
+    expect(getMaxGymBuddies()).toBe(4);
   });
 
   it('stores and retrieves semantic AI cache entries', () => {
@@ -247,5 +257,62 @@ describe('workout smart average defaults', () => {
       'Dambıl'
     );
     expect(fromHistory).toEqual({ kg: 17.5, reps: 11, sets: 4, isBodyweight: false, isTimeBased: false });
+  });
+});
+
+describe('Power Athlete Calculations (Plates, Units, PRs)', () => {
+  it('computes greedy Olympic plate breakdown per side accurately', () => {
+    const clean100 = calculatePlateLoadout(100, 20);
+    expect(clean100).toEqual({
+      barKg: 20,
+      targetKg: 100,
+      loadedTotalKg: 100,
+      remainderKg: 0,
+      perSide: [
+        { weight: 25, count: 1 },
+        { weight: 15, count: 1 }
+      ]
+    });
+
+    const withRemainder = calculatePlateLoadout(61, 20);
+    expect(withRemainder.loadedTotalKg).toBe(60);
+    expect(withRemainder.remainderKg).toBe(1);
+    expect(withRemainder.perSide).toEqual([{ weight: 20, count: 1 }]);
+
+    const belowBar = calculatePlateLoadout(15, 20);
+    expect(belowBar.loadedTotalKg).toBe(20);
+    expect(belowBar.perSide).toEqual([]);
+  });
+
+  it('converts weights and lengths cleanly between metric and imperial systems', () => {
+    expect(convertWeight(100, 'metric')).toBe(100);
+    expect(convertWeight(100, 'imperial')).toBe(220.5);
+    expect(toMetricWeight(220.5, 'imperial')).toBe(100);
+    expect(weightUnitLabel('metric')).toBe('kg');
+    expect(weightUnitLabel('imperial')).toBe('lbs');
+
+    expect(convertLength(180, 'metric')).toBe(180);
+    expect(convertLength(180, 'imperial')).toBe(70.9);
+    expect(lengthUnitLabel('imperial')).toBe('in');
+  });
+
+  it('extracts all-time 1RM PR and latest session summary from workout history', () => {
+    expect(getExerciseRecord([], 'Bench Press')).toBeNull();
+
+    const workouts = [
+      { day: '2026-10-01', payload: { sets: { 'Bench Press': { kg: 80, reps: 8, sets: 4 } } } },
+      { day: '2026-10-15', payload: { sets: { 'Bench Press': { kg: 100, reps: 5, sets: 4 } } } },
+      { day: '2026-11-01', payload: { sets: { 'Bench Press': { kg: 90, reps: 5, sets: 3 } } } }
+    ];
+
+    const record = getExerciseRecord(workouts, 'Bench Press');
+    expect(record).not.toBeNull();
+    expect(record.bestKg).toBe(100);
+    expect(record.bestReps).toBe(5);
+    expect(record.best1RM).toBeGreaterThan(110);
+    expect(record.sessions).toBe(3);
+    expect(record.lastDay).toBe('2026-11-01');
+    expect(record.lastKg).toBe(90);
+    expect(record.lastReps).toBe(5);
   });
 });

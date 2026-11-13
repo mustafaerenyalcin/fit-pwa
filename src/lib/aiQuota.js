@@ -55,16 +55,10 @@ export function upgradeToPro(plan = 'yearly') {
 }
 
 /**
- * Returns the maximum number of Gym Buddies allowed for the current subscription.
- * - Free Tier: 1 Buddy (1-on-1 accountability)
- * - Pro Individual: 2 Buddies
- * - Family & Gym Squad: 4 Buddies (Full 4-person squad telemetry)
+ * Yerel ekip slotu tüm kullanıcılar için tamamen ücretsizdir (maks. 4 partner).
  */
 export function getMaxGymBuddies() {
-  const membership = getAiMembership();
-  if (membership.plan === 'family' || membership.plan === 'squad') return 4;
-  if (membership.isPro) return 2;
-  return 1; // Free tier allows 1 gym buddy
+  return 4;
 }
 
 /**

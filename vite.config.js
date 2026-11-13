@@ -54,7 +54,9 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom'],
           'vendor-icons': ['lucide-react'],
-          'vendor-supabase': ['@supabase/supabase-js']
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'data-exercises': ['./src/lib/exerciseMedia.js', './src/lib/workoutPlans.js', './src/lib/exerciseGuide.js'],
+          'vendor-i18n': ['./src/lib/i18n.js']
         }
       }
     }

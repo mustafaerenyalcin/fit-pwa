@@ -7,8 +7,19 @@ export default function RestTimer() {
   const [isRunning, setIsRunning] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const timerRef = useRef(null);
+  const endsAtRef = useRef(null);
 
-  // Play audio alert via Web Audio API
+  // Play audio + vibration alert via Web Audio & Vibration API
+  const notifyDone = () => {
+    playBeep();
+    try {
+      navigator.vibrate?.([200, 100, 200]);
+      if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
+        new Notification('FIT. ATELIER', { body: 'Dinlenme süresi tamamlandı — sıradaki sete hazır ol!' });
+      }
+    } catch {}
+  };
+
   const playBeep = () => {
     if (!soundEnabled) return;
     try {
@@ -34,39 +45,55 @@ export default function RestTimer() {
   };
 
   useEffect(() => {
-    if (isRunning) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(timerRef.current);
-            setIsRunning(false);
-            playBeep();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else {
+    if (!isRunning) {
       clearInterval(timerRef.current);
+      endsAtRef.current = null;
+      return;
     }
 
-    return () => clearInterval(timerRef.current);
+    if (!endsAtRef.current) {
+      endsAtRef.current = Date.now() + timeLeft * 1000;
+    }
+
+    const tick = () => {
+      if (!endsAtRef.current) return;
+      const rem = Math.max(0, Math.ceil((endsAtRef.current - Date.now()) / 1000));
+      setTimeLeft(rem);
+      if (rem <= 0) {
+        clearInterval(timerRef.current);
+        endsAtRef.current = null;
+        setIsRunning(false);
+        notifyDone();
+      }
+    };
+
+    timerRef.current = setInterval(tick, 250);
+    document.addEventListener('visibilitychange', tick);
+
+    return () => {
+      clearInterval(timerRef.current);
+      document.removeEventListener('visibilitychange', tick);
+    };
   }, [isRunning, soundEnabled]);
 
   const toggleRun = () => {
+    const startFrom = timeLeft === 0 ? duration : timeLeft;
     if (timeLeft === 0) {
       setTimeLeft(duration);
     }
+    endsAtRef.current = !isRunning ? Date.now() + startFrom * 1000 : null;
     setIsRunning((prev) => !prev);
   };
 
   const handleReset = () => {
+    endsAtRef.current = null;
     setIsRunning(false);
     setTimeLeft(duration);
   };
 
   const handleDurationChange = (e) => {
     const val = Number(e.target.value);
+    endsAtRef.current = null;
     setDuration(val);
     setTimeLeft(val);
     setIsRunning(false);

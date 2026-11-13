@@ -2035,3 +2035,23 @@ label.fx-btn,
 [data-theme="dark"] .oneRmMain strong {
   color: #ff6b35 !important;
 }
+
+/* Prevent horizontal viewport drift on mobile & replace any legacy lime dock glow */
+html,
+body,
+.fx-shell,
+.fx-main,
+.fx-viewWrap {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.fx-dockItem.active .fx-dockIconBox {
+  background: rgba(255, 77, 28, 0.14) !important;
+  box-shadow: 0 0 14px rgba(255, 77, 28, 0.2) !important;
+}
+
+[data-theme="dark"] .fx-dockItem.active .fx-dockIconBox {
+  background: rgba(255, 107, 53, 0.18) !important;
+  box-shadow: 0 0 16px rgba(255, 107, 53, 0.24) !important;
+}

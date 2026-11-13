@@ -591,7 +591,7 @@ export default function NutritionView({
             {todaySupplements.map((s) => (
               <div className="historyRow" key={s.id}>
                 <span>
-                  <Pill size={14} style={{ marginRight: 6, verticalAlign: 'middle', color: '#b3f46f' }} />
+                  <Pill size={14} style={{ marginRight: 6, verticalAlign: 'middle', color: '#10b981' }} />
                   <b>{s.payload?.name}: </b>
                   <span>{s.payload?.grams} g alındı</span>
                 </span>

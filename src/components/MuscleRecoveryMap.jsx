@@ -84,7 +84,7 @@ export default function MuscleRecoveryMap({ entries = {}, day }) {
   }, [entries.workout, entries.checkin, day, t]);
 
   const colorFor = (pct) => {
-    if (pct >= 80) return '#c8ff00'; // Hazır (Volt)
+    if (pct >= 80) return '#10b981'; // Hazır (Zümrüt Yeşili)
     if (pct >= 50) return '#f5c451'; // Toparlanıyor (Sarı)
     return '#ff4d1c'; // Dinlenmeli (Solar Corsa)
   };

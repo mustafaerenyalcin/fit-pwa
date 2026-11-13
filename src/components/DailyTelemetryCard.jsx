@@ -111,13 +111,13 @@ export default function DailyTelemetryCard({
             onNavigate('nutrition');
           }}
         >
-          <Ring value={totals.calories} max={targetCalories} size={74} stroke={7} color="#c8ff00">
+          <Ring value={totals.calories} max={targetCalories} size={74} stroke={7} color="#ff4d1c">
             <span className="fx-ringPct">{calPct}%</span>
           </Ring>
           <div className="fx-zenRingMeta">
             <small className="fx-zenRingCat">{t('telemetry.energy')}</small>
             <div className="fx-zenRingValuesRow">
-              <strong className="fx-monoBig" style={{ color: '#c8ff00' }}>
+              <strong className="fx-monoBig" style={{ color: '#ff4d1c' }}>
                 {totals.calories}
               </strong>
               <span className="fx-zenTargetSpan">/ {targetCalories} kcal</span>

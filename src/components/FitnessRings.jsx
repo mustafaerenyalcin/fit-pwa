@@ -23,8 +23,8 @@ export default function FitnessRings({
     {
       id: 'workout',
       label: 'Antrenman',
-      color: '#b3f46f',
-      bgColor: '#1a3321',
+      color: '#ff4d1c',
+      bgColor: 'rgba(255, 77, 28, 0.16)',
       radius: 66,
       stroke: 12,
       current: workoutDone,
@@ -34,8 +34,8 @@ export default function FitnessRings({
     {
       id: 'protein',
       label: 'Protein',
-      color: '#7ee787',
-      bgColor: '#173623',
+      color: '#10b981',
+      bgColor: 'rgba(16, 185, 129, 0.16)',
       radius: 51,
       stroke: 12,
       current: proteinCurrent,
@@ -97,7 +97,7 @@ export default function FitnessRings({
 
       <div className="ringsLegend">
         <div className="ringLegendItem">
-          <span className="ringDot" style={{ background: '#b3f46f' }} />
+          <span className="ringDot" style={{ background: '#ff4d1c' }} />
           <div className="legendText">
             <small>Antrenman (Haftalık)</small>
             <b>{workoutDone} / {workoutTarget} gün</b>
@@ -105,7 +105,7 @@ export default function FitnessRings({
         </div>
 
         <div className="ringLegendItem">
-          <span className="ringDot" style={{ background: '#7ee787' }} />
+          <span className="ringDot" style={{ background: '#10b981' }} />
           <div className="legendText">
             <small>Protein (Bugün)</small>
             <b>{proteinCurrent} / {proteinTarget} g</b>

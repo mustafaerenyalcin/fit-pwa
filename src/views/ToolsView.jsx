@@ -71,9 +71,9 @@ const TOOLS_CONFIG = [
     symbol: '⏱️',
     category: 'training',
     badge: '8 Tur · 4 Dk',
-    color: '#c8ff00',
+    color: '#10b981',
     image: '/images/tools/tabata.jpg',
-    bg: 'linear-gradient(135deg, rgba(200, 255, 0, 0.16), rgba(200, 255, 0, 0.02))'
+    bg: 'linear-gradient(135deg, rgba(16, 185, 129, 0.16), rgba(16, 185, 129, 0.02))'
   },
   {
     id: 'hydration',
@@ -339,7 +339,7 @@ export default function ToolsView({
           <div className="fx-toolInnerContainer animate-fade-in" key={selectedToolId}>
             {selectedToolId === 'fasting' && <FastingTimer />}
             {selectedToolId === 'buddy' && (
-              <GymBuddyStudio profile={profile} onStartWorkout={onStartWorkout} />
+              <GymBuddyStudio profile={profile} entries={entries} onStartWorkout={onStartWorkout} />
             )}
             {selectedToolId === '1rm' && <OneRepMaxCalc />}
             {selectedToolId === 'tabata' && <TabataIntervalTimer />}

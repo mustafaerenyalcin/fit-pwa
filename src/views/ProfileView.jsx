@@ -12,8 +12,10 @@ import {
   Sparkles
 } from 'lucide-react';
 import Panel from '../components/Panel.jsx';
+import { useI18n } from '../lib/i18n.js';
 
 export default function ProfileView({ profile, onSaveProfile }) {
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     name: profile.name || '',
     height: profile.height || '',
@@ -29,7 +31,8 @@ export default function ProfileView({ profile, onSaveProfile }) {
     equipmentDumbbells: profile.equipmentDumbbells || '',
     injuries: profile.injuries || '',
     water: profile.water || 2500,
-    steps: profile.steps || 8000
+    steps: profile.steps || 8000,
+    unitSystem: profile.unitSystem || 'metric'
   });
 
   const [savedNotice, setSavedNotice] = useState(false);
@@ -133,6 +136,17 @@ export default function ProfileView({ profile, onSaveProfile }) {
               <option value="low">Az hareketli (Masa başı iş, düşük aktivite)</option>
               <option value="medium">Orta hareketli (Haftada 3-5 antrenman)</option>
               <option value="high">Çok hareketli (Yoğun fiziksel iş / antrenman)</option>
+            </select>
+          </label>
+
+          <label>
+            {t('profile.unitLabel')}
+            <select
+              value={formData.unitSystem}
+              onChange={(e) => handleChange('unitSystem', e.target.value)}
+            >
+              <option value="metric">{t('profile.unitMetric')}</option>
+              <option value="imperial">{t('profile.unitImperial')}</option>
             </select>
           </label>
         </div>

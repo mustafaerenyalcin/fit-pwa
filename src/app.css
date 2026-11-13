@@ -3485,8 +3485,8 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
 }
 
 .fx-dockItem.active .fx-dockIconBox {
-  background: rgba(200, 255, 0, 0.16);
-  box-shadow: 0 0 16px rgba(200, 255, 0, 0.25);
+  background: rgba(255, 77, 28, 0.16);
+  box-shadow: 0 0 16px rgba(255, 77, 28, 0.22);
 }
 
 /* =====================================================================

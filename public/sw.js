@@ -4,7 +4,7 @@
  * and immediate network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-atelier-v3.0.0';
+const CACHE_NAME = 'fit-atelier-v3.1.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -18,28 +18,25 @@ const STATIC_ASSETS = [
   '/images/squad-bg.jpg',
   '/images/recovery-bg.jpg',
   '/images/tools/fasting-v2.jpg',
-  '/images/tools/fasting.jpg',
   '/images/tools/buddy.jpg',
   '/images/tools/1rm.jpg',
   '/images/tools/tabata.jpg',
   '/images/tools/hydration.jpg',
   '/images/tools/adonis-v2.jpg',
-  '/images/tools/adonis.jpg',
   '/images/tools/metabolic-v2.jpg',
-  '/images/tools/metabolic.jpg',
   '/images/tools/recovery.jpg',
   '/images/tools/body.jpg',
   '/images/tools/form_check.jpg',
   '/images/tools/genetic.jpg'
 ];
 
-// Install: Cache critical application shell & skip waiting immediately
+// Install: Cache critical application shell resiliently & skip waiting immediately
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(STATIC_ASSETS.map((asset) => cache.add(asset)))
+    )
   );
 });
 

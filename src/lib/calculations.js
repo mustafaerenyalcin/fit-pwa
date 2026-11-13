@@ -240,3 +240,122 @@ export function calculateWaistToHeightRatio(waist, height) {
 
   return { ratio, status, score };
 }
+
+/**
+ * Olimpik bar (varsayılan 20 kg) için hedef kiloya göre tek tarafa takılacak plaka dağılımını hesaplar.
+ * @param {number} targetKg
+ * @param {number} [barKg=20]
+ * @param {number[]} [availablePlates]
+ * @returns {{ barKg: number, targetKg: number, loadedTotalKg: number, remainderKg: number, perSide: Array<{ weight: number, count: number }> }}
+ */
+export function calculatePlateLoadout(
+  targetKg,
+  barKg = 20,
+  availablePlates = [25, 20, 15, 10, 5, 2.5, 1.25]
+) {
+  const total = Number(targetKg) || 0;
+  const bar = Math.max(0, Number(barKg) || 0);
+  if (total <= bar) {
+    return { barKg: bar, targetKg: total, loadedTotalKg: total > 0 ? bar : 0, remainderKg: 0, perSide: [] };
+  }
+
+  let perSideRemaining = Math.round(((total - bar) / 2) * 100) / 100;
+  const perSide = [];
+  const sorted = [...availablePlates].sort((a, b) => b - a);
+
+  for (const plate of sorted) {
+    if (plate <= 0 || perSideRemaining + 1e-6 < plate) continue;
+    const count = Math.floor((perSideRemaining + 1e-6) / plate);
+    if (count > 0) {
+      perSide.push({ weight: plate, count });
+      perSideRemaining = Math.round((perSideRemaining - count * plate) * 100) / 100;
+    }
+  }
+
+  const perSideLoaded = perSide.reduce((sum, p) => sum + p.weight * p.count, 0);
+  const loadedTotalKg = Math.round((bar + perSideLoaded * 2) * 100) / 100;
+  const remainderKg = Math.round(Math.max(0, total - loadedTotalKg) * 100) / 100;
+
+  return { barKg: bar, targetKg: total, loadedTotalKg, remainderKg, perSide };
+}
+
+const KG_TO_LBS = 2.20462262;
+const CM_TO_IN = 0.39370079;
+
+/**
+ * Kilogram değerini seçili birim sistemine dönüştürür.
+ */
+export function convertWeight(kg, unitSystem = 'metric') {
+  const n = Number(kg) || 0;
+  if (unitSystem === 'imperial') {
+    return Math.round(n * KG_TO_LBS * 2) / 2;
+  }
+  return Math.round(n * 10) / 10;
+}
+
+/**
+ * Ekrandaki ağırlık değerini saklama birimi olan kilograma çevirir.
+ */
+export function toMetricWeight(displayVal, unitSystem = 'metric') {
+  const n = Number(displayVal) || 0;
+  if (unitSystem === 'imperial') {
+    return Math.round((n / KG_TO_LBS) * 10) / 10;
+  }
+  return Math.round(n * 10) / 10;
+}
+
+export function weightUnitLabel(unitSystem = 'metric') {
+  return unitSystem === 'imperial' ? 'lbs' : 'kg';
+}
+
+export function convertLength(cm, unitSystem = 'metric') {
+  const n = Number(cm) || 0;
+  if (unitSystem === 'imperial') {
+    return Math.round(n * CM_TO_IN * 10) / 10;
+  }
+  return Math.round(n * 10) / 10;
+}
+
+export function lengthUnitLabel(unitSystem = 'metric') {
+  return unitSystem === 'imperial' ? 'in' : 'cm';
+}
+
+/**
+ * Verilen hareket için tüm geçmiş antrenmanlardan Kişisel Rekor (PR) ve son seans özetini çıkarır.
+ * @param {Array} workouts
+ * @param {string} exerciseName
+ */
+export function getExerciseRecord(workouts = [], exerciseName = '') {
+  if (!Array.isArray(workouts) || !exerciseName) return null;
+  let bestKg = 0;
+  let bestReps = 0;
+  let best1RM = 0;
+  let sessions = 0;
+  let lastDay = null;
+  let lastKg = 0;
+  let lastReps = 0;
+
+  const sorted = [...workouts].sort((a, b) => String(a.day).localeCompare(String(b.day)));
+  for (const w of sorted) {
+    const data = w?.payload?.sets?.[exerciseName];
+    if (!data) continue;
+    const kg = Number(data.kg) || 0;
+    const reps = Number(data.reps) || 0;
+    if (reps <= 0 && kg <= 0) continue;
+
+    sessions += 1;
+    lastDay = w.day || lastDay;
+    lastKg = kg;
+    lastReps = reps;
+
+    const est = kg > 0 && reps > 0 ? calculateOneRepMax(kg, reps) : 0;
+    if (est > best1RM || (est === best1RM && kg > bestKg) || (best1RM === 0 && reps > bestReps)) {
+      best1RM = est;
+      bestKg = kg;
+      bestReps = reps;
+    }
+  }
+
+  if (sessions === 0) return null;
+  return { bestKg, bestReps, best1RM, sessions, lastDay, lastKg, lastReps };
+}

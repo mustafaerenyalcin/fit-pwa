@@ -10,7 +10,7 @@ export default function AdonisRatioCalc({ profile }) {
   const [result, setResult] = useState(null);
 
   const getTier = (ratio) => {
-    if (ratio >= 1.58 && ratio <= 1.65) return { label: 'Adonis Zirve Altın Oran 1.618 (Grecian Ideal)', color: '#c8ff00' };
+    if (ratio >= 1.58 && ratio <= 1.65) return { label: 'Adonis Zirve Altın Oran 1.618 (Grecian Ideal)', color: '#10b981' };
     if (ratio >= 1.50) return { label: 'Gelişmiş V-Taper Atletik Form', color: '#00f0ff' };
     if (ratio >= 1.40) return { label: 'Sağlam Temel Atletik Yapı', color: '#ff4d1c' };
     return { label: 'Başlangıç V-Taper Fazı', color: '#94a3b8' };
@@ -49,7 +49,7 @@ export default function AdonisRatioCalc({ profile }) {
       <div className="fx-cardHead">
         <div>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
-            <Award size={20} color="#c8ff00" /> Adonis 1.618 Altın Oran &amp; V-Taper Analizörü
+            <Award size={20} color="#ff4d1c" /> Adonis 1.618 Altın Oran &amp; V-Taper Analizörü
           </h3>
           <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--fx-muted)' }}>
             Antik Yunan heykellerinden modern estetik vücut geliştirmeye kadar kabul gören omuz/bel altın oran algoritması.

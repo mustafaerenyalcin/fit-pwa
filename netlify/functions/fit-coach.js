@@ -29,7 +29,7 @@ const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_QJM6x
 const DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT || 40);
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
-const MODES = new Set(['chat', 'checkin', 'meal', 'meal_photo', 'weekly', 'program']);
+const MODES = new Set(['chat', 'checkin', 'meal', 'meal_photo', 'form_check', 'weekly', 'program']);
 const MAX_BODY_BYTES = 4_500_000;
 
 const CORS = {
@@ -215,6 +215,20 @@ Sayılar tam sayı olsun. Fotoğrafta yemek yoksa items boş dizi olsun ve note'
         json: true
       };
 
+    case 'form_check':
+      return {
+        system: `${header}
+
+Görev: Kullanıcının yüklediği egzersiz fotoğrafını/karesini biyomekanik açıdan değerlendir (Seçili hareket: ${clean(body.exerciseName, 80) || 'Antrenman'}).
+Kurallar:
+- Görüntüde gerçekten bir kişi ve egzersiz duruşu varsa eklem açıları, bel/omurga nötrlüğü, diz/dirsek hizalaması ve dengeyi objektif analiz edip 1.0–10.0 arası puanla.
+- Eğer görsel çok karanlık, belirsiz veya içinde insan/egzersiz yoksa UYDURMA; valid:false döndür ve note içinde açıkla.
+SADECE şu JSON formatında yanıt ver:
+{"valid":true,"score":8.5,"riskLabel":"DÜŞÜK RİSK|ORTA RİSK|DİKKAT","joints":[{"name":"Ölçüt adı","status":"İyi|Orta|Dikkat","detail":"Gözlenen somut durum"}],"tips":["Somut düzeltme 1","Somut düzeltme 2","Somut düzeltme 3"],"note":"Kısa genel biyomekanik yorum"}`,
+        user: q || `${clean(body.exerciseName, 80) || 'Egzersiz'} duruşumu ve eklem hizalamamı analiz et.`,
+        json: true
+      };
+
     case 'weekly':
       return {
         system: `${header}
@@ -367,15 +381,16 @@ export async function handler(event) {
     return json(400, { error: 'Soru boş olamaz.' });
   }
 
-  const image = mode === 'meal_photo' ? parseImage(body.image) : null;
-  if (mode === 'meal_photo' && !image) {
-    return json(400, { error: 'Fotoğraf okunamadı (JPEG/PNG/WebP olmalı).' });
+  const needsVision = mode === 'meal_photo' || mode === 'form_check';
+  const image = needsVision ? parseImage(body.image) : null;
+  if (needsVision && !image) {
+    return json(400, { error: 'Görsel okunamadı (JPEG/PNG/WebP olmalı).' });
   }
 
   const hasDeepSeek = !!process.env.DEEPSEEK_API_KEY;
   const hasGemini = !!process.env.GEMINI_API_KEY;
-  if (mode === 'meal_photo' && !hasGemini) {
-    return json(503, { error: 'Fotoğraf analizi henüz aktif değil. Yemeği yazarak ekleyebilirsin.', code: 'NO_VISION' });
+  if (needsVision && !hasGemini) {
+    return json(503, { error: 'Görüntü analizi (Vision AI) sunucuda yapılandırılmamış.', code: 'NO_VISION' });
   }
   if (!hasDeepSeek && !hasGemini) {
     return json(503, { error: 'AI servisi yapılandırılmamış.' });

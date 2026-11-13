@@ -75,37 +75,29 @@ const NUDGE_MESSAGES = [
   '1 saat sonra antrenmandayım, hazır ol! ⏱️'
 ];
 
-export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
+export default function GymBuddyStudio({ profile = {}, entries = {}, onStartWorkout }) {
   const [buddies, setBuddies] = useState(() => {
     try {
       const raw = localStorage.getItem(SQUAD_STORAGE_KEY);
       if (raw) return JSON.parse(raw);
 
-      // Migrate from single buddy if exists
       const oldRaw = localStorage.getItem(OLD_STORAGE_KEY);
       if (oldRaw) {
         const parsed = JSON.parse(oldRaw);
         if (parsed) return [parsed];
       }
     } catch {}
-
-    // Default sample buddy for rich instant demo
-    return [
-      {
-        id: 'buddy_sample_1',
-        name: 'Ahmet Yılmaz',
-        goal: 'Hipertrofi & Güç Artışı',
-        frequency: 5,
-        completedThisWeek: 4,
-        streak: 12,
-        status: 'training_now', // 'training_now' | 'completed' | 'rest' | 'waiting'
-        lastWorkoutName: 'Push A · Göğüs & Omuz (52 dk)',
-        lastWorkoutTime: 'Şu an salonda aktif',
-        xp: 1180,
-        joinedAt: '12 Eki 2026'
-      }
-    ];
+    return [];
   });
+
+  // Gerçek kullanıcı antrenman istatistikleri (entries.workout üzerinden)
+  const allWorkouts = Array.isArray(entries?.workout) ? entries.workout : [];
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  const cutoffIso = `${sevenDaysAgo.getFullYear()}-${String(sevenDaysAgo.getMonth() + 1).padStart(2, '0')}-${String(sevenDaysAgo.getDate()).padStart(2, '0')}`;
+  const myWeeklySessions = allWorkouts.filter((w) => String(w.day || '') >= cutoffIso).length;
+  const myXp = allWorkouts.length * 150;
+  const myTarget = Number(profile?.trainingFrequency) || 4;
 
   const [copiedCode, setCopiedCode] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -217,12 +209,49 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
 
   const handleOpenAddModal = () => {
     sounds.tap();
-    if (buddies.length >= maxBuddiesAllowed) {
-      // Exceeded limit (e.g. Free user trying to add 2nd buddy, or Pro trying to add 3rd)
-      setShowSubModal(true);
-    } else {
-      setShowAddModal(true);
+    if (buddies.length >= 3) {
+      setNudgeSent('Maksimum 4 kişilik yerel ekip (Sen + 3 Partner) kapasitesine ulaşıldı.');
+      setTimeout(() => setNudgeSent(''), 3500);
+      return;
     }
+    setShowAddModal(true);
+  };
+
+  const handleLoadDemoBuddy = () => {
+    sounds.tap();
+    setBuddies([
+      {
+        id: 'buddy_demo_' + Date.now(),
+        name: 'Örnek Partner (Demo)',
+        goal: 'Hipertrofi & Güç Artışı',
+        frequency: 4,
+        completedThisWeek: 2,
+        streak: 3,
+        status: 'waiting',
+        lastWorkoutName: 'Üst Vücut (Demo)',
+        lastWorkoutTime: 'Cihaz içi örnek veri',
+        xp: 450,
+        joinedAt: new Date().toLocaleDateString('tr-TR')
+      }
+    ]);
+  };
+
+  const logBuddySession = (buddyId) => {
+    sounds.success();
+    setBuddies((prev) =>
+      prev.map((b) =>
+        b.id === buddyId
+          ? {
+              ...b,
+              completedThisWeek: (b.completedThisWeek || 0) + 1,
+              streak: (b.streak || 0) + 1,
+              status: 'completed',
+              lastWorkoutName: 'Bugün Kaydedildi',
+              xp: (b.xp || 0) + 150
+            }
+          : b
+      )
+    );
   };
 
   const handleCreateBuddy = (e) => {
@@ -252,25 +281,22 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
   const sendNudge = (buddyId, buddyName, msg) => {
     sounds.success();
     const selectedMsg = msg || NUDGE_MESSAGES[Math.floor(Math.random() * NUDGE_MESSAGES.length)];
-    setNudgeSent(`${buddyName} sporcusuna gaz verildi: "${selectedMsg}"`);
-
-    setBuddies((prev) =>
-      prev.map((b) => (b.id === buddyId ? { ...b, streak: b.streak + 1 } : b))
-    );
+    navigator.clipboard?.writeText(selectedMsg).catch(() => {});
+    setNudgeSent(`${buddyName} için motivasyon mesajı kopyalandı: "${selectedMsg}"`);
 
     setTimeout(() => setNudgeSent(''), 4500);
   };
 
   const removeBuddy = (id) => {
-    if (confirm('Bu arkadaşını squad ekibinden çıkarmak istediğine emin misin?')) {
+    if (confirm('Bu partneri yerel squad listesinden çıkarmak istediğine emin misin?')) {
       sounds.tap();
       setBuddies((prev) => prev.filter((b) => b.id !== id));
     }
   };
 
-  // Squad Total Stats
-  const squadStreak = Math.max(7, ...buddies.map((b) => b.streak || 0));
-  const totalSquadWorkouts = buddies.reduce((acc, b) => acc + (b.completedThisWeek || 0), 3);
+  // Gerçek Squad istatistikleri (sıfır uydurma sayı)
+  const squadStreak = buddies.length > 0 ? Math.max(myWeeklySessions, ...buddies.map((b) => b.streak || 0)) : myWeeklySessions;
+  const totalSquadWorkouts = myWeeklySessions + buddies.reduce((acc, b) => acc + (b.completedThisWeek || 0), 0);
 
   return (
     <div className="fx-stack fx-gymBuddyStudio animate-fade-in">
@@ -279,10 +305,10 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
         <div className="fx-squadHeroMain">
           <div className="fx-squadTagGroup">
             <span className="fx-squadBadge">
-              <Users size={13} color="#00f0ff" /> SQUAD PROTOKOLÜ // 4 KİŞİLİK ORTAK EKİP
+              <Users size={13} color="#06b6d4" /> CİHAZ İÇİ YEREL SQUAD // 4 KİŞİLİK EKİP
             </span>
-            <span className={`fx-squadTierTag ${isFamilySquad ? 'pro' : ''}`}>
-              {isFamilySquad ? '👑 AİLE & SQUAD PLANI' : `ÜCRETSİZ SLOT: ${buddies.length}/${maxBuddiesAllowed}`}
+            <span className="fx-squadTierTag pro">
+              ✓ ÜCRETSİZ SLOT: {buddies.length + 1}/4
             </span>
           </div>
 
@@ -290,8 +316,7 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
             Gym Buddy <span>Squad &amp; Takım</span>
           </h2>
           <p className="fx-squadHeroSub">
-            Tek başına salona gidenlerin vazgeçme oranı %60 iken, 2-4 kişilik Gym Buddy Squad ile çalışanlarda devamlılık <b>%88'e çıkar</b>.
-            Canlı durumunu paylaş, ortak seri yap ve takımını zirveye taşı!
+            Spor arkadaşlarınla haftalık hedef belirle, sözleşme kartı oluştur ve seanslarını aynı yerde takip et (veriler bu cihazda yerel saklanır).
           </p>
 
           {/* SQUAD SLOTLARI GÖSTERGESİ (4 KİŞİLİK MİMARİ) */}
@@ -353,7 +378,7 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
               </div>
             </div>
             <div className="fx-squadStatPod">
-              <Activity size={18} color="#c8ff00" />
+              <Activity size={18} color="#10b981" />
               <div>
                 <b>{totalSquadWorkouts} SEANS</b>
                 <small>BU HAFTA TOPLAM</small>
@@ -407,6 +432,24 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
         </div>
 
         <div className="fx-squadCardsGrid">
+          {buddies.length === 0 && (
+            <div className="fx-card" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 24 }}>
+              <Users size={28} color="#06b6d4" style={{ marginBottom: 8 }} />
+              <h4 style={{ margin: '4px 0 6px' }}>Henüz Yerel Antrenman Partneri Yok</h4>
+              <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--fx-muted)' }}>
+                Gerçek spor arkadaşını ekle veya düzeni denemek için demo partner yükle.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
+                <button type="button" className="fx-btn fx-solarBtn fx-btn--sm" onClick={handleOpenAddModal}>
+                  <UserPlus size={14} /> Partner Ekle
+                </button>
+                <button type="button" className="fx-btn fx-btn--ghost fx-btn--sm" onClick={handleLoadDemoBuddy}>
+                  Örnek Partner Yükle (Demo)
+                </button>
+              </div>
+            </div>
+          )}
+
           {buddies.map((b) => {
             const isLive = b.status === 'training_now';
             const isDone = b.status === 'completed';
@@ -491,13 +534,20 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
                 </div>
 
                 <div className="fx-buddyCardFoot">
+                  <button
+                    type="button"
+                    className="fx-btn fx-btn--ghost fx-btn--sm"
+                    onClick={() => logBuddySession(b.id)}
+                  >
+                    <Check size={14} /> +1 Seans Kaydet
+                  </button>
                   {onStartWorkout && (
                     <button
                       type="button"
                       className="fx-btn fx-solarBtn fx-btn--sm"
                       onClick={onStartWorkout}
                     >
-                      <Dumbbell size={14} /> Birlikte Antrenman Başlat
+                      <Dumbbell size={14} /> Birlikte Başlat
                     </button>
                   )}
                   <button
@@ -555,16 +605,16 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
           <span className="fx-wagerTrackLabel">TAKIMIN GÜNCEL İDDİA DURUMU:</span>
           <div className="fx-wagerMembersGrid">
             {/* KAPTAN (SEN) */}
-            <div className="fx-wagerMemberCell safe">
+            <div className={`fx-wagerMemberCell ${myWeeklySessions >= myTarget ? 'safe' : 'danger'}`}>
               <div className="fx-wagerMemberIdentity">
                 <span className="fx-wagerAvatar">👑</span>
                 <div>
                   <strong>{profile?.name || 'Sen (Kaptan)'}</strong>
-                  <small>4 / 4 Seans Tamamlandı</small>
+                  <small>{myWeeklySessions} / {myTarget} Seans Tamamlandı</small>
                 </div>
               </div>
-              <span className="fx-wagerStatusBadge safe">
-                <Check size={12} /> GÜVENDE
+              <span className={`fx-wagerStatusBadge ${myWeeklySessions >= myTarget ? 'safe' : 'danger'}`}>
+                <Check size={12} /> {myWeeklySessions >= myTarget ? 'HEDEFTE' : 'DEVAM ET'}
               </span>
             </div>
 
@@ -643,9 +693,9 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
               <span className="fx-rankNum">1</span>
               <div className="fx-leaderMeta">
                 <b>{profile?.name || 'Sen (Kaptan)'}</b>
-                <small>4 Seans Tamamlandı</small>
+                <small>{myWeeklySessions} Seans Bu Hafta</small>
               </div>
-              <strong className="fx-leaderXp">1,420 XP</strong>
+              <strong className="fx-leaderXp">{myXp.toLocaleString('tr-TR')} XP</strong>
             </div>
 
             {buddies.map((b, idx) => (
@@ -653,43 +703,13 @@ export default function GymBuddyStudio({ profile = {}, onStartWorkout }) {
                 <span className="fx-rankNum">{idx + 2}</span>
                 <div className="fx-leaderMeta">
                   <b>{b.name}</b>
-                  <small>{b.completedThisWeek || 3} Seans Tamamlandı</small>
+                  <small>{b.completedThisWeek || 0} Seans Bu Hafta</small>
                 </div>
-                <strong className="fx-leaderXp">{b.xp || 950} XP</strong>
+                <strong className="fx-leaderXp">{(b.xp || 0).toLocaleString('tr-TR')} XP</strong>
               </div>
             ))}
           </div>
         </div>
-
-        {/* SAĞ: AİLE & SQUAD YÜKSELTME TEŞVİKİ */}
-        {!isFamilySquad && (
-          <div className="fx-card fx-squadUpgradePromo">
-            <div className="fx-promoHead">
-              <Crown size={22} color="#f5c451" />
-              <div>
-                <span className="fx-promoTag">EKİP AVANTAJI</span>
-                <h4 style={{ margin: '2px 0 0', fontSize: 16, color: '#fff' }}>
-                  4 Kişilik Aile &amp; Gym Squad Planı
-                </h4>
-              </div>
-            </div>
-            <p style={{ fontSize: 13, color: 'var(--fx-muted)', margin: '10px 0 14px', lineHeight: 1.45 }}>
-              Arkadaşlarınla masrafı bölüş! Aylık ₺299'a 4 kişi birden sınırsız AI Koç, biyomekanik tarama ve canlı Squad telemetrisine sahip olun (Kişi başı sadece ~₺75/ay).
-            </p>
-            <button
-              type="button"
-              className="fx-btn fx-solarBtn fx-btn--block"
-              onClick={() => setShowSubModal(true)}
-              style={{
-                background: 'linear-gradient(135deg, #00f0ff 0%, #ff4d1c 100%)',
-                color: '#090a0f',
-                fontWeight: 900
-              }}
-            >
-              <Users size={16} /> Squad Planını İncele (₺299/ay)
-            </button>
-          </div>
-        )}
       </div>
 
       {/* ARKADAŞ EKLEME MODALI */}

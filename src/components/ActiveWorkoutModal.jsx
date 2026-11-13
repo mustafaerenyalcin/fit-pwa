@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
   Play,
@@ -26,7 +26,12 @@ import AthleteStoryCardModal from './AthleteStoryCardModal.jsx';
 import { getProgressiveOverloadAdvice, getSmartExerciseDefaults } from '../lib/exerciseStats.js';
 import { resolveExerciseMedia } from '../lib/exerciseMedia.js';
 import { getDetailedExerciseGuide } from '../lib/exerciseGuide.js';
-import { calculateOneRepMax } from '../lib/calculations.js';
+import {
+  calculateOneRepMax,
+  calculatePlateLoadout,
+  getExerciseRecord,
+  convertWeight
+} from '../lib/calculations.js';
 import { sounds } from '../lib/audio.js';
 import { celebration } from '../lib/celebration.js';
 import { useI18n } from '../lib/i18n.js';
@@ -36,6 +41,7 @@ const ACTIVE_WORKOUT_KEY = 'fit-active-session-v1';
 export default function ActiveWorkoutModal({
   plan,
   previousWorkout,
+  allWorkouts = [],
   profile,
   streak,
   onFinish,
@@ -114,6 +120,9 @@ export default function ActiveWorkoutModal({
   const [showReplaceModal, setShowReplaceModal] = useState(false);
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [showRpeCol, setShowRpeCol] = useState(false);
+  const [showPlateMath, setShowPlateMath] = useState(false);
+  const [barWeightKg, setBarWeightKg] = useState(20);
+  const restEndsAtRef = useRef(null);
 
   // Hipertrofi Tempo Metronomu (3-1-1-0) & 40Hz Nöral Odak
   const [tempoActive, setTempoActive] = useState(false);
@@ -176,25 +185,50 @@ export default function ActiveWorkoutModal({
     return () => clearInterval(interval);
   }, [isTimerRunning, showSummary]);
 
-  // Rest timer countdown with In-Ear Voice Coach
+  // Wall-clock bazlı sıfır kaymalı dinlenme sayacı + ses/titreşim/bildirim uyarısı
+  const startRestTimer = (secs = restDuration) => {
+    const cleanSecs = Math.max(1, Number(secs) || restDuration);
+    restEndsAtRef.current = Date.now() + cleanSecs * 1000;
+    setRestSeconds(cleanSecs);
+    setRestActive(true);
+  };
+
   useEffect(() => {
-    let timer = null;
-    if (restActive) {
-      timer = setInterval(() => {
-        setRestSeconds((curr) => {
-          if (curr <= 1) {
-            setRestActive(false);
-            if (soundEnabled) {
-              sounds.chime();
-              sounds.speak(t('wm.voiceRestDone'));
-            }
-            return 0;
-          }
-          return curr - 1;
-        });
-      }, 1000);
+    if (!restActive) {
+      restEndsAtRef.current = null;
+      return;
     }
-    return () => clearInterval(timer);
+
+    if (!restEndsAtRef.current) {
+      restEndsAtRef.current = Date.now() + (restSeconds || restDuration) * 1000;
+    }
+
+    const syncClock = () => {
+      if (!restEndsAtRef.current) return;
+      const rem = Math.max(0, Math.ceil((restEndsAtRef.current - Date.now()) / 1000));
+      setRestSeconds(rem);
+      if (rem <= 0) {
+        restEndsAtRef.current = null;
+        setRestActive(false);
+        try {
+          navigator.vibrate?.([200, 100, 200]);
+          if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
+            new Notification('FIT. ATELIER', { body: 'Dinlenme bitti — sıradaki sete hazır ol!' });
+          }
+        } catch {}
+        if (soundEnabled) {
+          sounds.chime();
+          sounds.speak(t('wm.voiceRestDone'));
+        }
+      }
+    };
+
+    const timer = setInterval(syncClock, 250);
+    document.addEventListener('visibilitychange', syncClock);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', syncClock);
+    };
   }, [restActive, soundEnabled]);
 
   const formatTime = (secs) => {
@@ -263,8 +297,7 @@ export default function ActiveWorkoutModal({
       } catch {}
       return updated;
     });
-    setRestSeconds(restDuration);
-    setRestActive(true);
+    startRestTimer(restDuration);
     if (event && event.currentTarget) {
       const rect = event.currentTarget.getBoundingClientRect();
       celebration.sparks({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, color: '#ff3b30' });
@@ -332,8 +365,7 @@ export default function ActiveWorkoutModal({
       } catch {}
 
       if (willBeDone) {
-        setRestSeconds(restDuration);
-        setRestActive(true);
+        startRestTimer(restDuration);
 
         // Dopamin artırıcı görsel ve işitsel kutlama
         if (event && event.currentTarget) {
@@ -466,6 +498,22 @@ export default function ActiveWorkoutModal({
     currentExercise?.tip
   );
 
+  // Kişisel Rekor (PR) & Plaka Dağılımı Hesaplamaları
+  const exerciseRecord = getExerciseRecord(allWorkouts, currentExercise?.name);
+  const currentBest1RM = (currentExercise?.sets || []).reduce((best, s) => {
+    if (!s.done) return best;
+    const est = calculateOneRepMax(Number(s.kg) || 0, Number(s.reps) || 0);
+    return est > best ? est : best;
+  }, 0);
+  const isLivePR = Boolean(exerciseRecord?.best1RM > 0 && currentBest1RM > exerciseRecord.best1RM);
+  const activePlateKg =
+    Number(
+      currentExercise?.sets?.find((s) => !s.done && Number(s.kg) > 0)?.kg ??
+        currentExercise?.sets?.find((s) => Number(s.kg) > 0)?.kg
+    ) || 0;
+  const plateLoadout = calculatePlateLoadout(activePlateKg, barWeightKg);
+  const isImperial = profile?.unitSystem === 'imperial';
+
   if (minimized) {
     return (
       <div className="fx-miniWorkoutBar" onClick={() => setMinimized(false)} role="button" tabIndex={0}>
@@ -562,7 +610,12 @@ export default function ActiveWorkoutModal({
               className="pillBtn"
               onClick={() => {
                 sounds.tap();
-                setRestActive((v) => !v);
+                if (restActive) {
+                  restEndsAtRef.current = null;
+                  setRestActive(false);
+                } else {
+                  startRestTimer(restSeconds > 0 ? restSeconds : restDuration);
+                }
               }}
             >
               {restActive ? t('wm.pause') : t('wm.start')}
@@ -572,6 +625,7 @@ export default function ActiveWorkoutModal({
               className="pillBtn"
               onClick={() => {
                 sounds.tap();
+                restEndsAtRef.current = null;
                 setRestSeconds(restDuration);
                 setRestActive(false);
               }}
@@ -583,7 +637,11 @@ export default function ActiveWorkoutModal({
               onChange={(e) => {
                 const dur = Number(e.target.value);
                 setRestDuration(dur);
-                setRestSeconds(dur);
+                if (restActive) {
+                  startRestTimer(dur);
+                } else {
+                  setRestSeconds(dur);
+                }
               }}
               className="restDurationSelect"
             >
@@ -646,6 +704,30 @@ export default function ActiveWorkoutModal({
                   <div className="exMuscleTag">{currentExercise.muscle}</div>
                   <h2>{currentExercise.name}</h2>
                   <p className="exTargetReps">{t('wm.target')} {currentExercise.targetReps}</p>
+                  {(exerciseRecord || isLivePR) && (
+                    <div
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        marginTop: 6,
+                        padding: '4px 10px',
+                        borderRadius: 999,
+                        fontSize: 12,
+                        fontWeight: 700,
+                        background: isLivePR ? 'rgba(16, 185, 129, 0.16)' : 'rgba(255, 77, 28, 0.12)',
+                        color: isLivePR ? '#10b981' : '#ff4d1c',
+                        border: isLivePR ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(255, 77, 28, 0.25)'
+                      }}
+                    >
+                      <Award size={13} />
+                      <span>
+                        {isLivePR
+                          ? `${t('wm.newPr')} 1RM ${currentBest1RM} kg`
+                          : `${t('wm.prBadge')}: ${exerciseRecord.bestKg > 0 ? `${exerciseRecord.bestKg} kg` : 'VA'} × ${exerciseRecord.bestReps}${exerciseRecord.best1RM > 0 ? ` (1RM: ${exerciseRecord.best1RM} kg)` : ''}`}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -724,7 +806,87 @@ export default function ActiveWorkoutModal({
                 >
                   <SlidersHorizontal size={12} /> RPE {showRpeCol ? 'Gizle' : 'Aç'}
                 </button>
+
+                <button
+                  type="button"
+                  className={`guideToggleBtn ${showPlateMath ? 'active-accent' : ''}`}
+                  onClick={() => {
+                    sounds.tap();
+                    setShowPlateMath((v) => !v);
+                  }}
+                  title={t('wm.platesTitle')}
+                >
+                  {t('wm.platesBtn')}
+                </button>
               </div>
+
+              {showPlateMath && (
+                <div
+                  style={{
+                    marginTop: 10,
+                    marginBottom: 10,
+                    padding: '10px 14px',
+                    borderRadius: 12,
+                    border: '1px solid var(--fx-border)',
+                    background: 'var(--fx-surface-2)',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 10
+                  }}
+                >
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <small style={{ fontSize: 11, fontWeight: 700, color: 'var(--fx-muted)' }}>
+                      {t('wm.platesTitle')} · {activePlateKg} kg
+                    </small>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
+                      {plateLoadout.perSide.length > 0 ? (
+                        plateLoadout.perSide.map((p) => (
+                          <span
+                            key={p.weight}
+                            style={{
+                              padding: '3px 8px',
+                              borderRadius: 8,
+                              fontSize: 12,
+                              fontWeight: 700,
+                              background: 'var(--fx-accent-soft)',
+                              color: 'var(--fx-accent)'
+                            }}
+                          >
+                            {p.weight} kg × {p.count}
+                          </span>
+                        ))
+                      ) : (
+                        <span style={{ fontSize: 12.5, color: 'var(--fx-muted)' }}>
+                          {activePlateKg > 0 && activePlateKg <= barWeightKg
+                            ? `Yalnızca ${barWeightKg} kg bar`
+                            : 'Bara takılacak ağırlık gir (ör. 60 kg)'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 4 }}>
+                    {[20, 15, 10].map((bw) => (
+                      <button
+                        key={bw}
+                        type="button"
+                        className={`pillBtn ${barWeightKg === bw ? 'active' : ''}`}
+                        style={{
+                          padding: '4px 8px',
+                          fontSize: 11,
+                          fontWeight: 700,
+                          background: barWeightKg === bw ? 'var(--fx-accent)' : undefined,
+                          color: barWeightKg === bw ? '#fff' : undefined
+                        }}
+                        onClick={() => setBarWeightKg(bw)}
+                      >
+                        Bar {bw}k
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Alternative Exercise Selection Modal */}
               {showReplaceModal && (
@@ -903,6 +1065,9 @@ export default function ActiveWorkoutModal({
                           </div>
                           {currentExercise.isDoubleDumbbell && Number(set.kg) > 0 && (
                             <small className="fx-multHint">Top: {Number(set.kg) * 2}kg</small>
+                          )}
+                          {isImperial && Number(set.kg) > 0 && (
+                            <small className="fx-multHint">{convertWeight(set.kg, 'imperial')} lbs</small>
                           )}
                         </div>
 
