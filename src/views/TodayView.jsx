@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Activity, Sparkles, Flame, Shield, ShieldCheck } from 'lucide-react';
 import AthleteHeaderBar from '../components/AthleteHeaderBar.jsx';
 import HeroWorkoutCard from '../components/HeroWorkoutCard.jsx';
+import LeapWorkoutCatalog from '../components/LeapWorkoutCatalog.jsx';
 import DailyTelemetryCard from '../components/DailyTelemetryCard.jsx';
 import AthleteToolsLaunchpad from '../components/AthleteToolsLaunchpad.jsx';
 import DailyCheckin from '../components/DailyCheckin.jsx';
@@ -143,6 +144,13 @@ export default function TodayView({
         onStartWorkout={onStartWorkout}
         onNavigate={onNavigate}
         onOpenStoryCard={() => setShowStoryModal(true)}
+      />
+
+      {/* 3.5 EV EGZERSİZLERİ (LEAP FITNESS) EKİPMANSIZ KAS GRUBU KATALOĞU */}
+      <LeapWorkoutCatalog
+        entries={entries}
+        streak={streak}
+        onStartWorkout={onStartWorkout}
       />
 
       {/* 4. GÜNLÜK HEDEFLER & HİDRASYON KOKPİTİ (3 HALKA + HIZLI YAKIT) */}

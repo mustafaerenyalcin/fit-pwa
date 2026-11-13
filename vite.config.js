@@ -44,6 +44,9 @@ function netlifyFunctionDevPlugin() {
 
 export default defineConfig({
   plugins: [react(), netlifyFunctionDevPlugin()],
+  resolve: {
+    dedupe: ['react', 'react-dom']
+  },
   base: './',
   build: {
     rollupOptions: {

@@ -10863,3 +10863,456 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
+
+
+/* ==========================================================================
+   EV EGZERSİZLERİ (LEAP FITNESS) DESIGN SYSTEM — CRISP LIGHT + DARK MODE
+   ========================================================================== */
+
+:root[data-theme="light"],
+[data-theme="light"] {
+  --fx-bg: #f4f6fa;
+  --fx-bg2: #eef1f7;
+  --fx-surface: #ffffff;
+  --fx-card: #ffffff;
+  --fx-card2: #f8fafc;
+  --fx-ink: #0f172a;
+  --fx-text: #0f172a;
+  --fx-muted: #64748b;
+  --fx-border: rgba(15, 23, 42, 0.08);
+  --fx-accent: #ff3b30;
+  --fx-accent2: #007aff;
+  --fx-volt: #10b981;
+}
+
+[data-theme="light"] body,
+[data-theme="light"] .fx-spatialShell,
+[data-theme="light"] .fx-atelierShell {
+  background: #f4f6fa !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-atelierBackdrop {
+  opacity: 0.08;
+}
+
+[data-theme="light"] .fx-spatialHeaderWrap {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 2px 14px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="light"] .fx-atelierLogo,
+[data-theme="light"] .fx-zenName,
+[data-theme="light"] .fx-zenHeroTitle,
+[data-theme="light"] .fx-muscleTitle,
+[data-theme="light"] .fx-cockpitGreeting,
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-atelierNavBtn {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .fx-atelierNavBtn.active {
+  background: #ff3b30 !important;
+  color: #ffffff !important;
+  border-color: #ff3b30 !important;
+  box-shadow: 0 4px 14px rgba(255, 59, 48, 0.28);
+}
+
+[data-theme="light"] .fx-floatingDock {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 34px rgba(15, 23, 42, 0.12) !important;
+}
+
+[data-theme="light"] .fx-dockItem {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .fx-dockItem.active {
+  color: #ff3b30 !important;
+  background: rgba(255, 59, 48, 0.1) !important;
+}
+
+[data-theme="light"] .fx-zenAthleteHeader,
+[data-theme="light"] .fx-zenHeroCard,
+[data-theme="light"] .fx-zenGoalsCard,
+[data-theme="light"] .fx-card,
+[data-theme="light"] .fx-muscleRecoveryCard,
+[data-theme="light"] .fx-squareToolCard,
+[data-theme="light"] .fx-membershipCard,
+[data-theme="light"] .fx-recalibrateBanner {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-zenMoveChip,
+[data-theme="light"] .fx-zenFactorCell,
+[data-theme="light"] .fx-muscleTile,
+[data-theme="light"] .fx-zenBadgeBtn,
+[data-theme="light"] .fx-zenPassportBtn,
+[data-theme="light"] .fx-dateNav--spatial,
+[data-theme="light"] .fx-spatialUserPod,
+[data-theme="light"] .fx-iconBtn {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: rgba(15, 23, 42, 0.09) !important;
+}
+
+[data-theme="light"] .fx-zenFuelPill {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+}
+
+[data-theme="light"] .fx-zenToolsSection .fx-zenToolTile {
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .fx-squareToolTitle,
+[data-theme="light"] .fx-squareToolSub,
+[data-theme="light"] .fx-openToolLink {
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .fx-solarBtn,
+[data-theme="light"] .fx-neonActionBtn {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b35 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 22px rgba(255, 59, 48, 0.3) !important;
+}
+
+/* ==========================================================================
+   LEAP FITNESS / EV EGZERSİZLERİ KATALOG BİLEŞENLERİ
+   ========================================================================== */
+
+.fx-leapCatalog {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 4px 0 8px;
+}
+
+.fx-leapWeeklyCard {
+  background: var(--fx-card, #ffffff);
+  border: 1px solid var(--fx-border, rgba(15, 23, 42, 0.08));
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.fx-leapWeeklyTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.fx-leapEyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #ff3b30;
+  margin-bottom: 2px;
+}
+
+.fx-leapWeeklyCount {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.fx-leapWeeklyCount span {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fx-muted, #64748b);
+}
+
+.fx-leapStatsRow {
+  display: flex;
+  gap: 16px;
+}
+
+.fx-leapStatCell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.fx-leapStatCell b {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.fx-leapStatCell small {
+  font-size: 11px;
+  color: var(--fx-muted, #64748b);
+}
+
+.fx-leapWeekDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.fx-leapDayPill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.fx-leapDayLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fx-muted, #64748b);
+  text-transform: uppercase;
+}
+
+.fx-leapDayCircle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  background: rgba(148, 163, 184, 0.14);
+  color: var(--fx-muted, #64748b);
+}
+
+.fx-leapDayPill.today .fx-leapDayCircle {
+  border: 2px solid #007aff;
+  color: #007aff;
+}
+
+.fx-leapDayPill.done .fx-leapDayCircle {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+/* 28-Day Challenge Hero Banner */
+.fx-leapChallengeBanner {
+  position: relative;
+  border-radius: 22px;
+  padding: 22px;
+  background: linear-gradient(125deg, #ff3b30 0%, #ff6b35 55%, #007aff 140%);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(255, 59, 48, 0.28);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.fx-leapChallengeBanner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(255, 59, 48, 0.35);
+}
+
+.fx-leapChallengeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.fx-leapChallengeBody h2 {
+  margin: 10px 0 4px;
+  font-size: 21px;
+  font-weight: 900;
+  color: #ffffff !important;
+}
+
+.fx-leapChallengeBody p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.fx-leapChallengeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #ffffff;
+  color: #ff3b30;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 9px 18px;
+  border-radius: 999px;
+}
+
+/* Level Filter Chips */
+.fx-leapFilterRow {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.fx-leapFilterChip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--fx-border, rgba(15, 23, 42, 0.1));
+  background: var(--fx-card, #ffffff);
+  color: var(--fx-ink, #0f172a);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.fx-leapFilterChip.active {
+  background: #007aff;
+  border-color: #007aff;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.28);
+}
+
+/* Muscle Group Sections & Program Cards */
+.fx-leapSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fx-leapSectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.fx-leapSectionHead h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.fx-leapSectionHead span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--fx-muted, #64748b);
+}
+
+.fx-leapCardsStack {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.fx-leapProgramCard {
+  position: relative;
+  border: none;
+  border-radius: 18px;
+  min-height: 126px;
+  padding: 16px;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.fx-leapProgramCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.22);
+}
+
+.fx-leapCardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.62) 100%);
+  pointer-events: none;
+}
+
+.fx-leapCardContent {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.fx-leapCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fx-leapBolts {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.fx-leapCardMetaPill {
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.36);
+  padding: 3px 9px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+}
+
+.fx-leapCardBottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fx-leapCardBottom h4 {
+  margin: 0 0 3px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #ffffff !important;
+  letter-spacing: 0.02em;
+}
+
+.fx-leapCardBottom p {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.fx-leapGoCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+}

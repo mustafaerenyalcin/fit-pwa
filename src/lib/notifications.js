@@ -7,8 +7,8 @@ const THEME_KEY = 'fit-theme-mode';
 const REMINDER_KEY = 'fit-morning-reminder';
 
 export function getTheme() {
-  if (typeof window === 'undefined') return 'dark';
-  return localStorage.getItem(THEME_KEY) || 'dark';
+  if (typeof window === 'undefined') return 'light';
+  return localStorage.getItem(THEME_KEY) || 'light';
 }
 
 export function setTheme(mode) {
