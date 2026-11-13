@@ -23,6 +23,7 @@ import PhotoCompareModal from '../components/PhotoCompareModal.jsx';
 import { getExerciseHistory } from '../lib/exerciseStats.js';
 import { calculateBMI, calculateWaistToHeightRatio } from '../lib/calculations.js';
 import { getStoreUser } from '../lib/store.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function ProgressView({
   day,
@@ -31,6 +32,7 @@ export default function ProgressView({
   onAddWeight,
   onRemoveWeight
 }) {
+  const { t } = useI18n();
   const [timeFilter, setTimeFilter] = useState('all'); // '7d' | '30d' | '90d' | 'all'
   const [selectedExChart, setSelectedExChart] = useState('Dumbbell Floor Press');
   const [showCompareModal, setShowCompareModal] = useState(false);
@@ -144,49 +146,46 @@ export default function ProgressView({
   return (
     <div className="progressView">
       <div className="intro">
-        <h2>Vücut Gelişimi & Ölçüm Takibi</h2>
-        <p>
-          Kas kazanırken tartı sabit kalabilir veya artabilir. Bel çevresi, omuz ve göğüs ölçüleri,
-          karın kası belirginlik oranı ve hareketlerdeki güç artışı gerçek dönüşümü gösterir.
-        </p>
+        <h2>{t('prog.title')}</h2>
+        <p>{t('prog.sub')}</p>
       </div>
 
       {/* Stats Summary */}
       <div className="metrics four">
         <Metric
-          label="BAŞLANGIÇ KİLOSU"
+          label={t('prog.startWeight')}
           value={`${initialWeight} kg`}
-          extra="Profil başlangıç değeri"
+          extra="Baseline"
           icon={Target}
         />
         <Metric
-          label="SON TARTI KAYDI"
+          label={t('prog.lastWeight')}
           value={`${latestWeight} kg`}
-          extra={`Fark: ${Math.round((latestWeight - initialWeight) * 10) / 10} kg`}
+          extra={`Δ ${Math.round((latestWeight - initialWeight) * 10) / 10} kg`}
           icon={ChartNoAxesCombined}
         />
         <Metric
-          label="VÜCUT KİTLE İNDEKSİ"
+          label={t('prog.bmi')}
           value={`${bmiData.bmi}`}
           extra={bmiData.label}
           icon={Activity}
         />
         <Metric
-          label="BEL / BOY ORANI"
+          label={t('prog.waistRatio')}
           value={waistRatioData ? `${waistRatioData.ratio}` : '—'}
-          extra={waistRatioData ? waistRatioData.status : 'Bel ölçüsü gerekli'}
+          extra={waistRatioData ? waistRatioData.status : '—'}
           icon={TrendingUp}
         />
       </div>
 
       {/* New Measurement Input Panel */}
       <Panel
-        title="Yeni Vücut Ölçümü Ekle"
-        sub="Tercihen sabah aç karnına, tuvalet sonrası ve benzer koşullarda"
+        title={t('prog.addTitle')}
+        sub={t('prog.addSub')}
       >
         <div className="formGrid threeCols">
           <label>
-            Ağırlık (kg) *
+            {t('prog.weightKg')}
             <input
               type="number"
               min="30"

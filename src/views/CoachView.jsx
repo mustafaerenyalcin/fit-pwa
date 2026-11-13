@@ -14,6 +14,7 @@ import { RichText } from '../components/ui.jsx';
 import { askCoach } from '../lib/aiCoach.js';
 import { buildContext } from '../lib/api.js';
 import { consumeAiCredit } from '../lib/aiQuota.js';
+import { useI18n } from '../lib/i18n.js';
 import SubscriptionModal from '../components/SubscriptionModal.jsx';
 
 export default function CoachView({
@@ -22,10 +23,11 @@ export default function CoachView({
   target,
   totals
 }) {
+  const { t, speechLang } = useI18n();
   const [messages, setMessages] = useState([
     {
       sender: 'coach',
-      text: `Merhaba${profile.name ? ` ${profile.name}` : ''}! Ben Fit Koç. Profilini, ekipmanını ve son kayıtlarını görebiliyorum. Antrenman, form, beslenme ya da evdeki malzemelerle tarif — yazarak ya da mikrofona konuşarak sorabilirsin.`
+      text: t('coach.welcome', { name: profile.name ? ` ${profile.name}` : '' })
     }
   ]);
   const [inputQuestion, setInputQuestion] = useState('');
@@ -50,10 +52,10 @@ export default function CoachView({
   ];
 
   const quickQuestions = [
-    'Bugün ne yemeliyim?',
-    'Programım hedefime uygun mu?',
-    'Ağırlıkları ne zaman artırmalıyım?',
-    'Bu haftaki gidişatımı değerlendir.'
+    t('coach.q1'),
+    t('coach.q2'),
+    t('coach.q3'),
+    t('coach.q4')
   ];
 
   const toggleVoice = () => {
@@ -67,7 +69,7 @@ export default function CoachView({
     }
 
     const rec = new SpeechRecognition();
-    rec.lang = 'tr-TR';
+    rec.lang = speechLang || 'tr-TR';
     rec.interimResults = false;
     rec.maxAlternatives = 1;
     rec.onstart = () => setListening(true);
@@ -136,12 +138,12 @@ export default function CoachView({
               setMessages([
                 {
                   sender: 'coach',
-                  text: 'Sohbet sıfırlandı. Yeni bir soru veya konuyla devam edebiliriz.'
+                  text: t('coach.resetMsg')
                 }
               ])
             }
           >
-            <RotateCcw size={14} /> Sohbeti temizle
+            <RotateCcw size={14} /> {t('coach.reset')}
           </button>
         </div>
       )}
@@ -150,10 +152,10 @@ export default function CoachView({
       <div className="recipeWizardCard">
         <div className="recipeWizardHeader">
           <ChefHat size={18} className="chefIcon" />
-          <b>Evdeki Malzemelere Göre Yemek Sihirbazı</b>
+          <b>{t('coach.pantryTitle')}</b>
         </div>
         <p className="smallHelp" style={{ margin: '4px 0 10px' }}>
-          Dolabında olan malzemelere tıkla, AI Koç senin için en uygun yüksek proteinli tarifi hazırlasın:
+          {t('coach.pantrySub')}
         </p>
 
         <div className="ingredientChips">
@@ -180,7 +182,7 @@ export default function CoachView({
             disabled={busy}
             onClick={askRecipeWithIngredients}
           >
-            <Sparkles size={14} /> Seçili ({selectedIngredients.length}) Malzemeyle Tarif İste
+            <Sparkles size={14} /> {t('coach.pantryBtn', { count: selectedIngredients.length })}
           </button>
         )}
       </div>

@@ -5,6 +5,7 @@ import Onboarding from './components/Onboarding.jsx';
 import { Segmented, Skeleton } from './components/ui.jsx';
 import TodayView from './views/TodayView.jsx';
 import QuickActionDock from './components/QuickActionDock.jsx';
+import CommandSpotlight from './components/CommandSpotlight.jsx';
 
 const ActiveWorkoutModal = lazy(() => import('./components/ActiveWorkoutModal.jsx'));
 const AiMealLogger = lazy(() => import('./components/AiMealLogger.jsx'));
@@ -536,6 +537,26 @@ function MainApp() {
           todayPlan={getWorkoutForDay(profile.training || 'home', (new Date(day + 'T12:00:00').getDay() + 6) % 7)}
         />
       )}
+
+      {/* HIZLI KOMUT & ARAÇ SPOTLIGHT PALETİ (Ctrl+K / ⌘K) */}
+      <CommandSpotlight
+        onNavigate={(nextTab, toolId) => {
+          if (nextTab === 'tools' && toolId) {
+            setActiveToolId(toolId);
+          }
+          setTab(nextTab);
+        }}
+        onQuickWater={handleQuickWaterAdd}
+        onStartWorkout={() => {
+          const dayIdx = (new Date(day + 'T12:00:00').getDay() + 6) % 7;
+          setActiveWorkoutPlan(getWorkoutForDay(profile.training || 'home', dayIdx));
+        }}
+        onOpenBarcode={() => setTab('nutrition', 'ai')}
+        onOpenSubscription={() => {
+          setTab('settings');
+          showToast('👑 Atelier Black');
+        }}
+      />
     </Layout>
   );
 }

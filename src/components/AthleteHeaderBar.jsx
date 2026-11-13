@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Flame, Trophy, Shield, Zap, Sparkles, Award, ShieldCheck } from 'lucide-react';
+import { Flame, Trophy, Shield, Zap, Sparkles, Award, ShieldCheck, Search } from 'lucide-react';
 import { calculateGamification } from '../lib/streaks.js';
 import UserAvatar from './UserAvatar.jsx';
 import AiEnergyPill from './AiEnergyPill.jsx';
@@ -111,6 +111,18 @@ export default function AthleteHeaderBar({
           >
             <Trophy size={14} color="#f5c451" />
             <span>{unlockedBadges}</span>
+          </button>
+
+          {/* HIZLI SPOTLIGHT ARAMA (Ctrl+K) */}
+          <button
+            type="button"
+            className="fx-zenBadgeBtn"
+            onClick={() => window.dispatchEvent(new CustomEvent('fit-open-spotlight'))}
+            title="Spotlight (Ctrl+K)"
+            aria-label="Spotlight Search"
+          >
+            <Search size={14} color="#00f0ff" />
+            <span style={{ fontSize: 10, opacity: 0.75 }}>⌘K</span>
           </button>
 
           {/* DİJİTAL SPORCU PASAPORTU DÜĞMESİ */}

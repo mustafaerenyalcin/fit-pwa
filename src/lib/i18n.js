@@ -389,7 +389,54 @@ const DICT = {
     'nut.noMealsDesc': 'Yukarıdaki arama çubuğunu veya formu kullanarak öğünlerini ekle.',
     'nut.suppTitle': 'Takviye Takibi',
     'nut.suppSub': 'Kreatin, Protein Tozu ve BCAA',
-    'nut.saveSupp': 'Kullanımı Kaydet'
+    'nut.saveSupp': 'Kullanımı Kaydet',
+
+    // TrainingView
+    'tr.title': 'Programlar',
+    'tr.sub': 'Canlı antrenman modunu başlat ya da setlerini elle kaydet. Kişisel AI programın varsa ilk sekmede görünür.',
+    'tr.myProgram': 'Kişisel Programım',
+    'tr.homePlan': 'Ev (Dambıl) · 5 Gün',
+    'tr.gymPlan': 'Spor Salonu · 3 Gün',
+    'tr.prTitle': 'Kişisel Rekorlar Vitrini (PR)',
+    'tr.prSub': 'Hareket bazında ulaştığın en yüksek ağırlıklar',
+    'tr.start': 'Başla',
+    'tr.guide': 'Rehber',
+    'tr.days': 'Gün',
+
+    // ProgressView
+    'prog.title': 'Vücut Gelişimi & Ölçüm Takibi',
+    'prog.sub': 'Kas kazanırken tartı sabit kalabilir veya artabilir. Bel çevresi, omuz ve göğüs ölçüleri ile hareketlerdeki güç artışı gerçek dönüşümü gösterir.',
+    'prog.startWeight': 'BAŞLANGIÇ KİLOSU',
+    'prog.lastWeight': 'SON TARTI KAYDI',
+    'prog.bmi': 'VÜCUT KİTLE İNDEKSİ',
+    'prog.waistRatio': 'BEL / BOY ORANI',
+    'prog.addTitle': 'Yeni Vücut Ölçümü Ekle',
+    'prog.addSub': 'Tercihen sabah aç karnına, tuvalet sonrası ve benzer koşullarda',
+    'prog.weightKg': 'Ağırlık (kg) *',
+
+    // CoachView
+    'coach.welcome': 'Merhaba{name}! Ben Fit Koç. Profilini, ekipmanını ve son kayıtlarını görebiliyorum. Antrenman, form, beslenme ya da evdeki malzemelerle tarif — yazarak ya da mikrofona konuşarak sorabilirsin.',
+    'coach.reset': 'Sohbeti temizle',
+    'coach.resetMsg': 'Sohbet sıfırlandı. Yeni bir soru veya konuyla devam edebiliriz.',
+    'coach.pantryTitle': 'Evdeki Malzemelere Göre Yemek Sihirbazı',
+    'coach.pantrySub': 'Dolabında olan malzemelere tıkla, AI Koç senin için en uygun yüksek proteinli tarifi hazırlasın:',
+    'coach.pantryBtn': 'Seçili ({count}) Malzemeyle Tarif İste',
+    'coach.q1': 'Bugün ne yemeliyim?',
+    'coach.q2': 'Programım hedefime uygun mu?',
+    'coach.q3': 'Ağırlıkları ne zaman artırmalıyım?',
+    'coach.q4': 'Bu haftaki gidişatımı değerlendir.',
+
+    // CommandSpotlight
+    'cmd.placeholder': 'Araç, sekme veya hızlı eylem ara… (Ctrl+K)',
+    'cmd.noResults': 'Eşleşen sonuç bulunamadı.',
+    'cmd.hint': '↑↓ Gezin · ↵ Aç · ESC Kapat',
+    'cmd.catNav': 'NAVİGASYON',
+    'cmd.catTools': 'LABORATUVAR ARAÇLARI (11)',
+    'cmd.catActions': 'HIZLI EYLEMLER',
+    'cmd.actWater': '+250 ml Su Ekle',
+    'cmd.actWorkout': 'Canlı Antrenmanı Başlat',
+    'cmd.actBarcode': 'Barkod Tarayıcıyı Aç',
+    'cmd.actPro': 'Atelier Black / Squad Pass'
   },
 
   en: {
@@ -752,7 +799,54 @@ const DICT = {
     'nut.noMealsDesc': 'Use the search bar or form above to log your meals.',
     'nut.suppTitle': 'Supplement Tracker',
     'nut.suppSub': 'Creatine, Whey Protein & BCAA',
-    'nut.saveSupp': 'Log Supplement'
+    'nut.saveSupp': 'Log Supplement',
+
+    // TrainingView
+    'tr.title': 'Training Programs',
+    'tr.sub': 'Launch live workout mode or log sets manually. Your custom AI program appears in the first tab.',
+    'tr.myProgram': 'My AI Program',
+    'tr.homePlan': 'Home (Dumbbell) · 5 Days',
+    'tr.gymPlan': 'Gym · 3 Days',
+    'tr.prTitle': 'Personal Records Showcase (PR)',
+    'tr.prSub': 'Highest weights achieved per exercise',
+    'tr.start': 'Start',
+    'tr.guide': 'Guide',
+    'tr.days': 'Days',
+
+    // ProgressView
+    'prog.title': 'Body Progress & Measurements',
+    'prog.sub': 'Scale weight may fluctuate while gaining muscle. Waist, chest, shoulder measurements and strength gains reveal true transformation.',
+    'prog.startWeight': 'STARTING WEIGHT',
+    'prog.lastWeight': 'LATEST WEIGH-IN',
+    'prog.bmi': 'BODY MASS INDEX',
+    'prog.waistRatio': 'WAIST / HEIGHT RATIO',
+    'prog.addTitle': 'Add New Body Measurement',
+    'prog.addSub': 'Ideally in the morning fasted under consistent conditions',
+    'prog.weightKg': 'Weight (kg) *',
+
+    // CoachView
+    'coach.welcome': 'Hello{name}! I am Fit Coach. I can see your profile, equipment, and recent logs. Ask about training, form, nutrition, or recipes by typing or speaking.',
+    'coach.reset': 'Clear chat',
+    'coach.resetMsg': 'Chat cleared. Ask a new question anytime.',
+    'coach.pantryTitle': 'Pantry High-Protein Recipe Wizard',
+    'coach.pantrySub': 'Tap ingredients you have at home and AI Coach will craft a high-protein meal:',
+    'coach.pantryBtn': 'Get Recipe with ({count}) Ingredients',
+    'coach.q1': 'What should I eat today?',
+    'coach.q2': 'Does my program match my goal?',
+    'coach.q3': 'When should I increase weights?',
+    'coach.q4': 'Review my weekly progress.',
+
+    // CommandSpotlight
+    'cmd.placeholder': 'Search tools, tabs, or quick actions… (Ctrl+K)',
+    'cmd.noResults': 'No matching results found.',
+    'cmd.hint': '↑↓ Navigate · ↵ Open · ESC Close',
+    'cmd.catNav': 'NAVIGATION',
+    'cmd.catTools': 'LABORATORY TOOLS (11)',
+    'cmd.catActions': 'QUICK ACTIONS',
+    'cmd.actWater': 'Add +250 ml Water',
+    'cmd.actWorkout': 'Start Live Workout',
+    'cmd.actBarcode': 'Open Barcode Scanner',
+    'cmd.actPro': 'Atelier Black / Squad Pass'
   },
 
   de: {
@@ -1115,7 +1209,54 @@ const DICT = {
     'nut.noMealsDesc': 'Nutze die Suche oder das Formular oben, um Mahlzeiten einzutragen.',
     'nut.suppTitle': 'Supplement-Tracking',
     'nut.suppSub': 'Kreatin, Whey Protein & BCAA',
-    'nut.saveSupp': 'Einnahme speichern'
+    'nut.saveSupp': 'Einnahme speichern',
+
+    // TrainingView
+    'tr.title': 'Trainingsprogramme',
+    'tr.sub': 'Starte den Live-Workout-Modus oder erfasse Sätze manuell. Dein KI-Plan erscheint im ersten Tab.',
+    'tr.myProgram': 'Mein KI-Programm',
+    'tr.homePlan': 'Zuhause (Kurzhantel) · 5 Tage',
+    'tr.gymPlan': 'Fitnessstudio · 3 Tage',
+    'tr.prTitle': 'Persönliche Rekorde (PR)',
+    'tr.prSub': 'Höchste erreichte Gewichte pro Übung',
+    'tr.start': 'Start',
+    'tr.guide': 'Anleitung',
+    'tr.days': 'Tage',
+
+    // ProgressView
+    'prog.title': 'Körperentwicklung & Messungen',
+    'prog.sub': 'Beim Muskelaufbau kann das Gewicht schwanken. Taillen-, Brust- und Schultermaße sowie Kraftzuwächse zeigen die echte Transformation.',
+    'prog.startWeight': 'STARTGEWICHT',
+    'prog.lastWeight': 'LETZTES WIEGEN',
+    'prog.bmi': 'BODY-MASS-INDEX',
+    'prog.waistRatio': 'TAILLE / GRÖSSE',
+    'prog.addTitle': 'Neue Körpermaße hinzufügen',
+    'prog.addSub': 'Idealerweise morgens nüchtern unter gleichen Bedingungen',
+    'prog.weightKg': 'Gewicht (kg) *',
+
+    // CoachView
+    'coach.welcome': 'Hallo{name}! Ich bin Fit Coach. Ich sehe dein Profil, Equipment und aktuelle Logs. Frag zu Training, Technik, Ernährung oder Rezepten.',
+    'coach.reset': 'Chat leeren',
+    'coach.resetMsg': 'Chat zurückgesetzt. Stelle jederzeit eine neue Frage.',
+    'coach.pantryTitle': 'Vorrats-Rezept-Assistent',
+    'coach.pantrySub': 'Wähle vorhandene Zutaten aus und der KI-Coach erstellt ein proteinreiches Rezept:',
+    'coach.pantryBtn': 'Rezept mit ({count}) Zutaten anfordern',
+    'coach.q1': 'Was soll ich heute essen?',
+    'coach.q2': 'Passt mein Plan zu meinem Ziel?',
+    'coach.q3': 'Wann sollte ich das Gewicht steigern?',
+    'coach.q4': 'Bewerte meinen Wochenfortschritt.',
+
+    // CommandSpotlight
+    'cmd.placeholder': 'Tools, Tabs oder Schnellaktionen suchen… (Ctrl+K)',
+    'cmd.noResults': 'Keine passenden Ergebnisse gefunden.',
+    'cmd.hint': '↑↓ Navigieren · ↵ Öffnen · ESC Schließen',
+    'cmd.catNav': 'NAVIGATION',
+    'cmd.catTools': 'LABOR-TOOLS (11)',
+    'cmd.catActions': 'SCHNELLAKTIONEN',
+    'cmd.actWater': '+250 ml Wasser hinzufügen',
+    'cmd.actWorkout': 'Live-Training starten',
+    'cmd.actBarcode': 'Barcode-Scanner öffnen',
+    'cmd.actPro': 'Atelier Black / Squad Pass'
   },
 
   es: {
@@ -1478,7 +1619,54 @@ const DICT = {
     'nut.noMealsDesc': 'Usa el buscador o el formulario superior para registrar tus comidas.',
     'nut.suppTitle': 'Control de Suplementos',
     'nut.suppSub': 'Creatina, Proteína Whey y BCAA',
-    'nut.saveSupp': 'Guardar Toma'
+    'nut.saveSupp': 'Guardar Toma',
+
+    // TrainingView
+    'tr.title': 'Programas de Entrenamiento',
+    'tr.sub': 'Inicia el modo de entreno en vivo o registra series manualmente. Tu plan IA aparece en la primera pestaña.',
+    'tr.myProgram': 'Mi Programa IA',
+    'tr.homePlan': 'Casa (Mancuernas) · 5 Días',
+    'tr.gymPlan': 'Gimnasio · 3 Días',
+    'tr.prTitle': 'Vitrina de Récords Personales (PR)',
+    'tr.prSub': 'Pesos máximos alcanzados por ejercicio',
+    'tr.start': 'Iniciar',
+    'tr.guide': 'Guía',
+    'tr.days': 'Días',
+
+    // ProgressView
+    'prog.title': 'Progreso Corporal y Medidas',
+    'prog.sub': 'El peso puede variar al ganar músculo. Las medidas de cintura, pecho y hombros junto con tu fuerza muestran la transformación real.',
+    'prog.startWeight': 'PESO INICIAL',
+    'prog.lastWeight': 'ÚLTIMO PESAJE',
+    'prog.bmi': 'ÍNDICE DE MASA CORPORAL',
+    'prog.waistRatio': 'CINTURA / ALTURA',
+    'prog.addTitle': 'Añadir Nueva Medida Corporal',
+    'prog.addSub': 'Preferiblemente por la mañana en ayunas',
+    'prog.weightKg': 'Peso (kg) *',
+
+    // CoachView
+    'coach.welcome': '¡Hola{name}! Soy Fit Coach. Puedo ver tu perfil, equipo y registros recientes. Pregúntame sobre entreno, técnica, nutrición o recetas.',
+    'coach.reset': 'Limpiar chat',
+    'coach.resetMsg': 'Chat reiniciado. Puedes hacer una nueva pregunta.',
+    'coach.pantryTitle': 'Asistente de Recetas con tu Despensa',
+    'coach.pantrySub': 'Toca los ingredientes que tienes y el Coach IA creará una receta alta en proteína:',
+    'coach.pantryBtn': 'Pedir receta con ({count}) ingredientes',
+    'coach.q1': '¿Qué debo comer hoy?',
+    'coach.q2': '¿Mi plan coincide con mi objetivo?',
+    'coach.q3': '¿Cuándo debo subir los pesos?',
+    'coach.q4': 'Evalúa mi progreso semanal.',
+
+    // CommandSpotlight
+    'cmd.placeholder': 'Buscar herramientas, pestañas o acciones… (Ctrl+K)',
+    'cmd.noResults': 'No se encontraron resultados.',
+    'cmd.hint': '↑↓ Navegar · ↵ Abrir · ESC Cerrar',
+    'cmd.catNav': 'NAVEGACIÓN',
+    'cmd.catTools': 'HERRAMIENTAS DE LAB (11)',
+    'cmd.catActions': 'ACCIONES RÁPIDAS',
+    'cmd.actWater': 'Añadir +250 ml de Agua',
+    'cmd.actWorkout': 'Iniciar Entreno en Vivo',
+    'cmd.actBarcode': 'Abrir Escáner de Barras',
+    'cmd.actPro': 'Atelier Black / Squad Pass'
   }
 };
 

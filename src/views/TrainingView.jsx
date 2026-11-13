@@ -22,6 +22,7 @@ import { homePlans, gymPlans, getCustomTrainingDays } from '../lib/workoutPlans.
 import { calculatePersonalRecords, getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
 import { sounds } from '../lib/audio.js';
+import { useI18n } from '../lib/i18n.js';
 
 export default function TrainingView({
   day,
@@ -31,6 +32,7 @@ export default function TrainingView({
   onAddWorkout,
   onRemoveWorkout
 }) {
+  const { t } = useI18n();
   const [guide, setGuide] = useState(null);
   const [session, setSession] = useState({});
   const [workoutNote, setWorkoutNote] = useState('');
@@ -54,11 +56,8 @@ export default function TrainingView({
       <div className="intro">
         <div className="introHeaderRow">
           <div>
-            <h2>Programlar</h2>
-            <p>
-              Canlı antrenman modunu başlat ya da setlerini elle kaydet. Kişisel AI programın
-              varsa ilk sekmede görünür.
-            </p>
+            <h2>{t('tr.title')}</h2>
+            <p>{t('tr.sub')}</p>
           </div>
 
           <div className="planSwitcher">
@@ -68,7 +67,7 @@ export default function TrainingView({
                 className={`planSwitchBtn ${effectiveMode === 'ai' ? 'active' : ''}`}
                 onClick={() => setPlanMode('ai')}
               >
-                Kişisel Programım · {customDays.length} Gün
+                {t('tr.myProgram')} · {customDays.length} {t('tr.days')}
               </button>
             )}
             <button
@@ -76,14 +75,14 @@ export default function TrainingView({
               className={`planSwitchBtn ${effectiveMode === 'home' ? 'active' : ''}`}
               onClick={() => setPlanMode('home')}
             >
-              Ev (Dambıl) · 5 Gün
+              {t('tr.homePlan')}
             </button>
             <button
               type="button"
               className={`planSwitchBtn ${effectiveMode === 'gym' ? 'active' : ''}`}
               onClick={() => setPlanMode('gym')}
             >
-              Spor Salonu · 3 Gün
+              {t('tr.gymPlan')}
             </button>
           </div>
         </div>
@@ -94,7 +93,7 @@ export default function TrainingView({
 
       {/* Personal Records Showcase (PR Vitrini) */}
       {prEntries.length > 0 && (
-        <Panel title="Kişisel Rekorlar Vitrini (PR)" sub="Hareket bazında ulaştığın en yüksek ağırlıklar">
+        <Panel title={t('tr.prTitle')} sub={t('tr.prSub')}>
           <div className="prShowcaseGrid">
             {prEntries.map(([exerciseName, data]) => {
               const estimated1RM = calculateOneRepMax(data.maxWeight, data.maxRepsAtMaxWeight);
@@ -137,7 +136,7 @@ export default function TrainingView({
                   className="primary startLiveBtn"
                   onClick={() => onStartActiveWorkout(plan)}
                 >
-                  <Play size={14} fill="currentColor" /> Başla
+                  <Play size={14} fill="currentColor" /> {t('tr.start')}
                 </button>
               }
             >
