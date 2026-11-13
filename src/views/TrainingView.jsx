@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Dumbbell,
   Play,
@@ -7,19 +7,22 @@ import {
   HelpCircle,
   TrendingUp,
   Award,
-  Sparkles,
-  Info,
-  RotateCcw,
   Calculator,
-  Flame,
-  CheckCircle2
+  SlidersHorizontal,
+  Minus,
+  Plus,
+  Layers
 } from 'lucide-react';
 import Panel from '../components/Panel.jsx';
 import ExerciseVisual from '../components/ExerciseVisual.jsx';
 import RestTimer from '../components/RestTimer.jsx';
 import EmptyState from '../components/EmptyState.jsx';
 import { homePlans, gymPlans, getCustomTrainingDays } from '../lib/workoutPlans.js';
-import { calculatePersonalRecords, getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
+import {
+  calculatePersonalRecords,
+  getProgressiveOverloadAdvice,
+  getSmartExerciseDefaults
+} from '../lib/exerciseStats.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
 import { resolveExerciseMedia } from '../lib/exerciseMedia.js';
 import { sounds } from '../lib/audio.js';
@@ -35,11 +38,15 @@ export default function TrainingView({
 }) {
   const { t } = useI18n();
   const [guide, setGuide] = useState(null);
+  const [editingKey, setEditingKey] = useState(null);
+  const [checkedMoves, setCheckedMoves] = useState({});
   const [session, setSession] = useState({});
+  const [savedPlanBanner, setSavedPlanBanner] = useState('');
   const [workoutNote, setWorkoutNote] = useState('');
   const [planMode, setPlanMode] = useState(() =>
     getCustomTrainingDays().length ? 'ai' : profile.training || 'home'
   );
+  const [showAllDays, setShowAllDays] = useState(false);
 
   // 1RM Calculator State
   const [calcWeight, setCalcWeight] = useState(15);
@@ -51,6 +58,49 @@ export default function TrainingView({
   const currentPlans = effectiveMode === 'ai' ? customDays : effectiveMode === 'gym' ? gymPlans : homePlans;
   const personalRecords = calculatePersonalRecords(entries.workout);
   const prEntries = Object.entries(personalRecords).filter(([_, data]) => data.maxWeight > 0);
+
+  // Bugünün haftanın gününe en uygun antrenman gününü otomatik seç
+  const defaultDayIdx = useMemo(() => {
+    if (!currentPlans.length) return 0;
+    const weekday = (new Date(day + 'T12:00:00').getDay() + 6) % 7;
+    const exact = currentPlans.findIndex((p) => Number(p.day) === weekday);
+    return exact >= 0 ? exact : 0;
+  }, [currentPlans, day]);
+
+  const [selectedDayIdx, setSelectedDayIdx] = useState(defaultDayIdx);
+
+  useEffect(() => {
+    setSelectedDayIdx(defaultDayIdx);
+    setEditingKey(null);
+    setGuide(null);
+  }, [effectiveMode, defaultDayIdx]);
+
+  const safeDayIdx = Math.min(selectedDayIdx, Math.max(0, currentPlans.length - 1));
+  const displayedPlans = showAllDays
+    ? currentPlans.map((plan, idx) => ({ plan, idx }))
+    : currentPlans[safeDayIdx]
+      ? [{ plan: currentPlans[safeDayIdx], idx: safeDayIdx }]
+      : [];
+
+  const updateExerciseMetric = (key, field, nextVal, baseDefaults) => {
+    const min = field === 'sets' ? 1 : 0;
+    const max = field === 'sets' ? 10 : field === 'reps' ? 120 : 400;
+    const clamped = Math.min(max, Math.max(min, Number(nextVal) || 0));
+    setSession((prev) => ({
+      ...prev,
+      [key]: {
+        kg: prev[key]?.kg ?? baseDefaults.kg,
+        reps: prev[key]?.reps ?? baseDefaults.reps,
+        sets: prev[key]?.sets ?? baseDefaults.sets,
+        [field]: clamped
+      }
+    }));
+  };
+
+  const toggleMoveChecked = (key) => {
+    sounds.tap();
+    setCheckedMoves((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   return (
     <div className="trainingView">
@@ -119,45 +169,145 @@ export default function TrainingView({
         </Panel>
       )}
 
+      {/* Day Selector Pills Strip */}
+      {currentPlans.length > 1 && (
+        <div className="fx-dayTabRow" role="tablist" aria-label="Program günleri">
+          {currentPlans.map((p, idx) => {
+            const shortName = (p.name || `Gün ${idx + 1}`).split('·')[0].trim();
+            const isTodayMatch = idx === defaultDayIdx;
+            const isSelected = !showAllDays && safeDayIdx === idx;
+            const doneToday = entries.workout.some(
+              (e) => e.day === day && e.payload?.name === p.name
+            );
+            return (
+              <button
+                key={p.name}
+                type="button"
+                role="tab"
+                aria-selected={isSelected}
+                className={`fx-dayTabPill ${isSelected ? 'active' : ''} ${doneToday ? 'is-done' : ''}`}
+                onClick={() => {
+                  sounds.tap();
+                  setShowAllDays(false);
+                  setSelectedDayIdx(idx);
+                }}
+              >
+                {doneToday && <Check size={12} className="fx-dayDoneIcon" />}
+                <span>{shortName}</span>
+                {isTodayMatch && !doneToday && <small className="fx-dayTodayTag">Bugün</small>}
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            className={`fx-dayTabPill fx-dayTabAll ${showAllDays ? 'active' : ''}`}
+            onClick={() => {
+              sounds.tap();
+              setShowAllDays((v) => !v);
+            }}
+          >
+            <Layers size={12} />
+            <span>{showAllDays ? 'Tek Gün Göster' : `Tüm Hafta (${currentPlans.length})`}</span>
+          </button>
+        </div>
+      )}
+
       {/* Program Grid */}
-      <div className="trainingGrid">
-        {currentPlans.map((plan, i) => {
+      <div className={`trainingGrid ${!showAllDays ? 'fx-singleDayGrid' : ''}`}>
+        {displayedPlans.map(({ plan, idx: i }) => {
           const isDoneToday = entries.workout.some(
             (e) => e.day === day && e.payload?.name === plan.name
           );
+
+          const resolvedMoves = plan.moves.map((move) => {
+            const n = move.name || move[0];
+            const reps = move.sets || move[1];
+            const muscle = move.muscle || move[2] || 'Kas';
+            const tip = move.tip || move[3] || '';
+            const mistakes = move.commonMistakes || '';
+            const key = i + '|' + n;
+            const lastWorkout = entries.workout.find((e) => e.payload?.sets?.[n]);
+            const prevSet = lastWorkout?.payload?.sets?.[n];
+            const media = resolveExerciseMedia(n);
+            const defaults = getSmartExerciseDefaults(move, prevSet, media.equipmentTr);
+            const currentVal = {
+              kg: session[key]?.kg ?? defaults.kg,
+              reps: session[key]?.reps ?? defaults.reps,
+              sets: session[key]?.sets ?? defaults.sets
+            };
+            return {
+              move,
+              n,
+              reps,
+              muscle,
+              tip,
+              mistakes,
+              key,
+              prevSet,
+              media,
+              defaults,
+              currentVal,
+              isChecked: !!checkedMoves[key],
+              pr: personalRecords[n],
+              advice: prevSet ? getProgressiveOverloadAdvice(prevSet, reps) : null
+            };
+          });
+
+          const checkedCount = resolvedMoves.filter((m) => m.isChecked).length;
+          const totalMoves = resolvedMoves.length;
 
           return (
             <Panel
               key={plan.name}
               title={plan.name}
-              sub={plan.focus}
+              sub={`${plan.focus} · ${totalMoves} hareket`}
               action={
-                <button
-                  type="button"
-                  className="primary startLiveBtn"
-                  onClick={() => onStartActiveWorkout(plan)}
-                >
-                  <Play size={14} fill="currentColor" /> {t('tr.start')}
-                </button>
+                <div className="fx-planHeaderActions">
+                  {isDoneToday && (
+                    <span className="fx-doneDayBadge">
+                      <Check size={12} /> Bugün Tamamlandı
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    className="primary startLiveBtn"
+                    onClick={() => onStartActiveWorkout(plan)}
+                  >
+                    <Play size={14} fill="currentColor" /> {t('tr.start')}
+                  </button>
+                </div>
               }
             >
               <div className="exerciseList">
-                {plan.moves.map((move, j) => {
-                  const n = move.name || move[0];
-                  const reps = move.sets || move[1];
-                  const muscle = move.muscle || move[2] || 'Kas';
-                  const tip = move.tip || move[3] || '';
-                  const mistakes = move.commonMistakes || '';
-
-                  const key = i + '|' + n;
-                  const lastWorkout = entries.workout.find((e) => e.payload?.sets?.[n]);
-                  const prevSet = lastWorkout?.payload?.sets?.[n];
-                  const pr = personalRecords[n];
-                  const advice = prevSet ? getProgressiveOverloadAdvice(prevSet, reps) : null;
-                  const media = resolveExerciseMedia(n);
+                {resolvedMoves.map((item, j) => {
+                  const {
+                    n,
+                    reps,
+                    muscle,
+                    tip,
+                    mistakes,
+                    key,
+                    prevSet,
+                    media,
+                    defaults,
+                    currentVal,
+                    isChecked,
+                    pr,
+                    advice
+                  } = item;
+                  const isEditing = editingKey === key;
+                  const weightLabel =
+                    Number(currentVal.kg) === 0
+                      ? 'Vücut Ağırlığı'
+                      : `${currentVal.kg} kg`;
+                  const repUnit = defaults.isTimeBased ? 'sn' : 'tek';
 
                   return (
-                    <div className="exercise fx-studioExCard" key={key} style={{ display: 'block' }}>
+                    <div
+                      className={`exercise fx-studioExCard ${isChecked ? 'is-checked' : ''}`}
+                      key={key}
+                      style={{ display: 'block' }}
+                    >
                       <div className="exerciseMainRow">
                         <span className="exerciseIndex">{j + 1}</span>
                         <button
@@ -179,20 +329,178 @@ export default function TrainingView({
                             )}
                           </div>
                           <small className="exerciseSubDesc">
-                            {muscle} · {media.equipmentTr}
+                            {muscle} · {media.equipmentTr} · Hedef {reps}
                           </small>
                         </div>
+
                         <div className="fx-exCardRightCluster">
-                          <b className="exRepsBadge">{reps}</b>
-                          <button
-                            type="button"
-                            className={`guideButton ${guide === key ? 'is-open' : ''}`}
-                            onClick={() => setGuide(guide === key ? null : key)}
-                          >
-                            <HelpCircle size={12} /> Rehber {guide === key ? '−' : '+'}
-                          </button>
+                          <div className="fx-exActionGroup">
+                            <button
+                              type="button"
+                              className={`fx-exPresetPill ${isEditing ? 'is-open' : ''}`}
+                              onClick={() => {
+                                sounds.tap();
+                                setEditingKey(isEditing ? null : key);
+                              }}
+                              title="Ağırlık, tekrar veya seti hızlıca ayarla"
+                            >
+                              <SlidersHorizontal size={11} />
+                              <span>
+                                {currentVal.sets}×{currentVal.reps} {repUnit === 'sn' ? 'sn' : ''} · {weightLabel}
+                              </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className={`guideButton ${guide === key ? 'is-open' : ''}`}
+                              onClick={() => setGuide(guide === key ? null : key)}
+                            >
+                              <HelpCircle size={12} /> Rehber {guide === key ? '−' : '+'}
+                            </button>
+
+                            <button
+                              type="button"
+                              className={`fx-exCheckPill ${isChecked ? 'checked' : ''}`}
+                              onClick={() => toggleMoveChecked(key)}
+                              aria-pressed={isChecked}
+                              title={isChecked ? 'İşareti kaldır' : 'Ortalama değerle tamamlandı işaretle'}
+                            >
+                              <Check size={13} />
+                              <span>{isChecked ? 'Yapıldı' : 'Yaptım'}</span>
+                            </button>
+                          </div>
                         </div>
                       </div>
+
+                      {/* Optional Compact Stepper Adjuster (Hidden until user taps metric chip) */}
+                      {isEditing && (
+                        <div className="fx-exStepperDrawer">
+                          <div className="fx-stepperControl">
+                            <small>Ağırlık</small>
+                            <div className="fx-stepperBtns">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateExerciseMetric(key, 'kg', Number(currentVal.kg) - 2.5, defaults)
+                                }
+                                aria-label="Ağırlığı azalt"
+                              >
+                                <Minus size={12} />
+                              </button>
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.5"
+                                value={currentVal.kg}
+                                onChange={(e) =>
+                                  updateExerciseMetric(key, 'kg', e.target.value, defaults)
+                                }
+                                aria-label={`${n} kg`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateExerciseMetric(key, 'kg', Number(currentVal.kg) + 2.5, defaults)
+                                }
+                                aria-label="Ağırlığı artır"
+                              >
+                                <Plus size={12} />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="fx-stepperControl">
+                            <small>{defaults.isTimeBased ? 'Süre (sn)' : 'Tekrar'}</small>
+                            <div className="fx-stepperBtns">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateExerciseMetric(
+                                    key,
+                                    'reps',
+                                    Number(currentVal.reps) - (defaults.isTimeBased ? 5 : 1),
+                                    defaults
+                                  )
+                                }
+                                aria-label="Tekrarı azalt"
+                              >
+                                <Minus size={12} />
+                              </button>
+                              <input
+                                type="number"
+                                min="1"
+                                max="120"
+                                value={currentVal.reps}
+                                onChange={(e) =>
+                                  updateExerciseMetric(key, 'reps', e.target.value, defaults)
+                                }
+                                aria-label={`${n} tekrar`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateExerciseMetric(
+                                    key,
+                                    'reps',
+                                    Number(currentVal.reps) + (defaults.isTimeBased ? 5 : 1),
+                                    defaults
+                                  )
+                                }
+                                aria-label="Tekrarı artır"
+                              >
+                                <Plus size={12} />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="fx-stepperControl">
+                            <small>Set</small>
+                            <div className="fx-stepperBtns">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateExerciseMetric(key, 'sets', Number(currentVal.sets) - 1, defaults)
+                                }
+                                aria-label="Seti azalt"
+                              >
+                                <Minus size={12} />
+                              </button>
+                              <input
+                                type="number"
+                                min="1"
+                                max="10"
+                                value={currentVal.sets}
+                                onChange={(e) =>
+                                  updateExerciseMetric(key, 'sets', e.target.value, defaults)
+                                }
+                                aria-label={`${n} set`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateExerciseMetric(key, 'sets', Number(currentVal.sets) + 1, defaults)
+                                }
+                                aria-label="Seti artır"
+                              >
+                                <Plus size={12} />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="fx-quickWeightChips">
+                            {[0, 5, 10, 15, 20].map((w) => (
+                              <button
+                                key={w}
+                                type="button"
+                                className={`fx-quickWeightChip ${Number(currentVal.kg) === w ? 'active' : ''}`}
+                                onClick={() => updateExerciseMetric(key, 'kg', w, defaults)}
+                              >
+                                {w === 0 ? 'Vücut Ağ.' : `${w} kg`}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Technique Guide Box */}
                       {guide === key && (
@@ -221,61 +529,10 @@ export default function TrainingView({
                         </div>
                       )}
 
-                      {/* Manual Set Logging Inputs */}
-                      <div className="fitInputs">
-                        <label>
-                          Kg
-                          <input
-                            type="number"
-                            min="0"
-                            step="0.5"
-                            placeholder={prevSet?.kg ?? '0'}
-                            value={session[key]?.kg ?? ''}
-                            onChange={(e) =>
-                              setSession((x) => ({
-                                ...x,
-                                [key]: { ...x[key], kg: e.target.value }
-                              }))
-                            }
-                          />
-                        </label>
-                        <label>
-                          Tekrar
-                          <input
-                            type="number"
-                            min="0"
-                            max="100"
-                            placeholder={prevSet?.reps ?? '10'}
-                            value={session[key]?.reps ?? ''}
-                            onChange={(e) =>
-                              setSession((x) => ({
-                                ...x,
-                                [key]: { ...x[key], reps: e.target.value }
-                              }))
-                            }
-                          />
-                        </label>
-                        <label>
-                          Set
-                          <input
-                            type="number"
-                            min="1"
-                            max="10"
-                            placeholder="3"
-                            value={session[key]?.sets ?? ''}
-                            onChange={(e) =>
-                              setSession((x) => ({
-                                ...x,
-                                [key]: { ...x[key], sets: e.target.value }
-                              }))
-                            }
-                          />
-                        </label>
-                      </div>
-
                       {prevSet && (
                         <small className="smallHelp">
-                          Önceki seans: {prevSet.kg} kg × {prevSet.reps} tekrar ({prevSet.sets} set).
+                          Son kayıt: {prevSet.kg > 0 ? `${prevSet.kg} kg` : 'Vücut Ağırlığı'} × {prevSet.reps}{' '}
+                          ({prevSet.sets} set)
                         </small>
                       )}
                     </div>
@@ -283,36 +540,61 @@ export default function TrainingView({
                 })}
               </div>
 
-              {/* End Workout with manual inputs */}
-              <button
-                type="button"
-                className="secondary full"
-                onClick={() => {
-                  const sets = {};
-                  plan.moves.forEach((m) => {
-                    const n = m.name || m[0];
-                    const v = session[i + '|' + n];
-                    if (v && v.kg !== '' && v.reps !== '' && v.sets !== '') {
-                      sets[n] = { kg: +v.kg, reps: +v.reps, sets: +v.sets };
-                    }
-                  });
+              {/* One-Tap Save With Smart Averages */}
+              <div className="fx-daySaveFooter">
+                <div className="fx-daySaveMeta">
+                  <b>
+                    {checkedCount > 0
+                      ? `${checkedCount} / ${totalMoves} hareket işaretlendi`
+                      : `Ortalama program ayarları hazır (${totalMoves} hareket)`}
+                  </b>
+                  <small>
+                    {checkedCount > 0
+                      ? 'İşaretlediğin hareketler kendi/ortalama değerleriyle kaydedilecek.'
+                      : 'Tek tek doldurmana gerek yok; tek tıkla bu günü ortalama setlerle kaydet.'}
+                  </small>
+                  {savedPlanBanner === plan.name && (
+                    <span className="fx-inlineSavedMsg">✓ {plan.name} kaydedildi!</span>
+                  )}
+                </div>
 
-                  if (!Object.keys(sets).length) {
-                    alert('Lütfen en az bir hareketin kg, tekrar ve setini doldur veya yukarıdan "Başla" ile canlı antrenman modunu aç.');
-                    return;
-                  }
+                <button
+                  type="button"
+                  className="secondary fx-quickSaveDayBtn"
+                  onClick={() => {
+                    sounds.tap();
+                    const sets = {};
+                    const itemsToSave =
+                      checkedCount > 0
+                        ? resolvedMoves.filter((m) => m.isChecked)
+                        : resolvedMoves;
 
-                  onAddWorkout({
-                    name: plan.name,
-                    note: workoutNote,
-                    sets
-                  });
-                  setWorkoutNote('');
-                  setSession({});
-                }}
-              >
-                <Check size={16} /> Manuel Olarak Kaydet ve Bitir
-              </button>
+                    itemsToSave.forEach((m) => {
+                      sets[m.n] = {
+                        kg: Number(m.currentVal.kg) || 0,
+                        reps: Number(m.currentVal.reps) || 10,
+                        sets: Number(m.currentVal.sets) || 3
+                      };
+                    });
+
+                    onAddWorkout({
+                      name: plan.name,
+                      note: workoutNote,
+                      sets
+                    });
+                    setWorkoutNote('');
+                    setCheckedMoves({});
+                    setEditingKey(null);
+                    setSavedPlanBanner(plan.name);
+                    setTimeout(() => setSavedPlanBanner(''), 3500);
+                  }}
+                >
+                  <Check size={15} />
+                  {checkedCount > 0
+                    ? `Seçili ${checkedCount} Hareketi Kaydet`
+                    : 'Ortalama Değerlerle Günü Kaydet'}
+                </button>
+              </div>
             </Panel>
           );
         })}

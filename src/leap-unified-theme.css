@@ -1450,3 +1450,588 @@ label.fx-btn,
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   8. SMART PROGRAM DAY SWITCHER, AVERAGE DEFAULTS & STREAMLINED SET LOGGING
+   ========================================================================== */
+.fx-dayTabRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 4px 0 14px;
+}
+
+.fx-dayTabPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.fx-dayTabPill:hover {
+  border-color: rgba(15, 23, 42, 0.3);
+  color: #0f172a;
+}
+
+.fx-dayTabPill.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+.fx-dayTabPill.is-done:not(.active) {
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #047857;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.fx-dayTodayTag {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 59, 48, 0.14);
+  color: #e11d48;
+}
+
+.fx-dayTabPill.active .fx-dayTodayTag {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.fx-dayTabAll {
+  margin-left: auto;
+}
+
+[data-theme="dark"] .fx-dayTabPill {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .fx-dayTabPill:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .fx-dayTabPill.active {
+  background: #f8fafc;
+  border-color: #f8fafc;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .fx-dayTabPill.is-done:not(.active) {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+[data-theme="dark"] .fx-dayTabPill.active .fx-dayTodayTag {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.trainingGrid.fx-singleDayGrid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+.fx-planHeaderActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fx-doneDayBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.32);
+}
+
+[data-theme="dark"] .fx-doneDayBadge {
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+}
+
+.fx-studioExCard {
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+
+.fx-studioExCard.is-checked {
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  background: rgba(16, 185, 129, 0.05) !important;
+}
+
+[data-theme="dark"] .fx-studioExCard.is-checked {
+  background: rgba(16, 185, 129, 0.09) !important;
+  border-color: rgba(52, 211, 153, 0.45) !important;
+}
+
+.fx-exActionGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.fx-exPresetPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  background: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.14s ease;
+  font-variant-numeric: tabular-nums;
+}
+
+.fx-exPresetPill:hover,
+.fx-exPresetPill.is-open {
+  background: #e2e8f0;
+  border-color: rgba(15, 23, 42, 0.25);
+}
+
+[data-theme="dark"] .fx-exPresetPill {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .fx-exPresetPill:hover,
+[data-theme="dark"] .fx-exPresetPill.is-open {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.fx-exCheckPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.fx-exCheckPill:hover {
+  border-color: #10b981;
+  color: #059669;
+}
+
+.fx-exCheckPill.checked {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .fx-exCheckPill {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .fx-exCheckPill.checked {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+/* Optional Collapsible Stepper Adjuster on Exercise Card */
+.fx-exStepperDrawer {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+[data-theme="dark"] .fx-exStepperDrawer {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.fx-stepperControl {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fx-stepperControl small {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.fx-stepperBtns {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 10px;
+  padding: 2px 4px;
+}
+
+[data-theme="dark"] .fx-stepperBtns {
+  background: #0f172a;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.fx-stepperBtns button {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 7px;
+  background: #f1f5f9;
+  color: #0f172a;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.fx-stepperBtns button:hover {
+  background: #e2e8f0;
+}
+
+[data-theme="dark"] .fx-stepperBtns button {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+
+.fx-stepperBtns input {
+  width: 48px !important;
+  min-width: 42px !important;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 4px 2px !important;
+  text-align: center !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  color: #0f172a !important;
+}
+
+[data-theme="dark"] .fx-stepperBtns input {
+  color: #f8fafc !important;
+}
+
+.fx-quickWeightChips {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.fx-quickWeightChip {
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+}
+
+.fx-quickWeightChip.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .fx-quickWeightChip {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .fx-quickWeightChip.active {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* One-Tap Day Save Bar */
+.fx-daySaveFooter {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .fx-daySaveFooter {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.fx-daySaveMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fx-daySaveMeta b {
+  font-size: 13px;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .fx-daySaveMeta b {
+  color: #f8fafc;
+}
+
+.fx-daySaveMeta small {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+[data-theme="dark"] .fx-daySaveMeta small {
+  color: #94a3b8;
+}
+
+.fx-inlineSavedMsg {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #059669;
+}
+
+.fx-quickSaveDayBtn {
+  font-weight: 800 !important;
+  white-space: nowrap;
+}
+
+/* ActiveWorkoutModal Streamlined Set Table & Inline Steppers */
+.fx-setQuickBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(15, 23, 42, 0.03);
+}
+
+[data-theme="dark"] .fx-setQuickBar {
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.fx-setQuickHint {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+[data-theme="dark"] .fx-setQuickHint {
+  color: #94a3b8;
+}
+
+.fx-completeAllBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.fx-completeAllBtn:hover:not(:disabled) {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.fx-completeAllBtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+[data-theme="dark"] .fx-completeAllBtn {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.fx-streamlinedTable .setTableHeader,
+.fx-streamlinedTable .setRow {
+  grid-template-columns: 44px 0.85fr 1.28fr 1.18fr 86px !important;
+  gap: 8px !important;
+}
+
+.fx-streamlinedTable.with-rpe .setTableHeader,
+.fx-streamlinedTable.with-rpe .setRow {
+  grid-template-columns: 44px 0.72fr 1.2fr 1.12fr 78px 82px !important;
+}
+
+.fx-setNumBtn {
+  width: 32px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.fx-setNumBtn.type-warmup {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #b45309;
+}
+
+.fx-setNumBtn.type-drop {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #b91c1c;
+}
+
+[data-theme="dark"] .fx-setNumBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f8fafc;
+}
+
+.fx-inlineStepper {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.fx-inlineStepper input {
+  min-width: 0;
+  padding: 6px 4px !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.fx-stepMicroBtn {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #f1f5f9;
+  color: #334155;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.fx-stepMicroBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .fx-stepMicroBtn {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .fx-stepMicroBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.fx-checkActionCell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+@media (max-width: 720px) {
+  .fx-exActionGroup {
+    justify-content: flex-start;
+  }
+
+  .fx-streamlinedTable .setTableHeader,
+  .fx-streamlinedTable .setRow {
+    grid-template-columns: 36px 0.7fr 1.25fr 1.15fr 68px !important;
+    gap: 5px !important;
+    padding: 8px 10px !important;
+  }
+
+  .fx-streamlinedTable.with-rpe .setTableHeader,
+  .fx-streamlinedTable.with-rpe .setRow {
+    grid-template-columns: 34px 1.2fr 1.1fr 66px 64px !important;
+  }
+
+  .fx-streamlinedTable.with-rpe .colPrev {
+    display: none;
+  }
+
+  .fx-stepMicroBtn {
+    display: none;
+  }
+}
+
+/* Dark Mode cleanup for RestTimer header, index digits, 1RM & QuickSave button */
+[data-theme="dark"] .fx-quickSaveDayBtn {
+  background: rgba(16, 185, 129, 0.14) !important;
+  border: 1px solid rgba(52, 211, 153, 0.42) !important;
+  color: #34d399 !important;
+}
+
+[data-theme="dark"] .fx-studioExCard .exerciseIndex {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .fx-restStudioBar > .fx-restStudioMainRow,
+[data-theme="dark"] .fx-restStudioBar svg,
+[data-theme="dark"] .fx-restStudioTitle {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .fx-restStudioBar .restTimerClock {
+  color: #ff6b35 !important;
+}
+
+[data-theme="dark"] .oneRmMain strong {
+  color: #ff6b35 !important;
+}

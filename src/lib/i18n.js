@@ -393,7 +393,7 @@ const DICT = {
 
     // TrainingView
     'tr.title': 'Programlar',
-    'tr.sub': 'Canlı antrenman modunu başlat ya da setlerini elle kaydet. Kişisel AI programın varsa ilk sekmede görünür.',
+    'tr.sub': 'Canlı antrenmanı başlat ya da tek tıkla ortalama set değerleriyle tamamla. Kişisel programın ilk sekmede.',
     'tr.myProgram': 'Kişisel Programım',
     'tr.homePlan': 'Ev (Dambıl) · 5 Gün',
     'tr.gymPlan': 'Spor Salonu · 3 Gün',
@@ -803,7 +803,7 @@ const DICT = {
 
     // TrainingView
     'tr.title': 'Training Programs',
-    'tr.sub': 'Launch live workout mode or log sets manually. Your custom AI program appears in the first tab.',
+    'tr.sub': 'Start live guided mode or finish with smart default sets in one tap. Custom programs appear first.',
     'tr.myProgram': 'My AI Program',
     'tr.homePlan': 'Home (Dumbbell) · 5 Days',
     'tr.gymPlan': 'Gym · 3 Days',
@@ -1213,7 +1213,7 @@ const DICT = {
 
     // TrainingView
     'tr.title': 'Trainingsprogramme',
-    'tr.sub': 'Starte den Live-Workout-Modus oder erfasse Sätze manuell. Dein KI-Plan erscheint im ersten Tab.',
+    'tr.sub': 'Starte den Live-Modus oder speichere mit einem Tipp die Standard-Durchschnittssätze.',
     'tr.myProgram': 'Mein KI-Programm',
     'tr.homePlan': 'Zuhause (Kurzhantel) · 5 Tage',
     'tr.gymPlan': 'Fitnessstudio · 3 Tage',
@@ -1623,7 +1623,7 @@ const DICT = {
 
     // TrainingView
     'tr.title': 'Programas de Entrenamiento',
-    'tr.sub': 'Inicia el modo de entreno en vivo o registra series manualmente. Tu plan IA aparece en la primera pestaña.',
+    'tr.sub': 'Inicia el modo en vivo o guarda con un toque usando promedios inteligentes.',
     'tr.myProgram': 'Mi Programa IA',
     'tr.homePlan': 'Casa (Mancuernas) · 5 Días',
     'tr.gymPlan': 'Gimnasio · 3 Días',

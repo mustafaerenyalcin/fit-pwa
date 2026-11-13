@@ -14,6 +14,7 @@ import { calculateStreak, calculateGamification } from '../streaks.js';
 import { setLang, getLang, translate } from '../i18n.js';
 import { today, formatDate } from '../calculations.js';
 import { resolveExerciseMedia, EXERCISE_MEDIA_DB } from '../exerciseMedia.js';
+import { parseSetRepTarget, getSmartExerciseDefaults } from '../exerciseStats.js';
 import { PROGRAMS } from '../../components/LeapWorkoutCatalog.jsx';
 import { EXERCISE_LIBRARY } from '../../components/CustomWorkoutBuilder.jsx';
 import { homePlans, gymPlans } from '../workoutPlans.js';
@@ -216,5 +217,35 @@ describe('exerciseMedia resolver, CC BY-SA 4.0 vector availability & strict uniq
       expect(resolved.frame2).toMatch(/^\/exercises\/.+\/2\.svg$/);
       expect(resolved.frame3).toMatch(/^\/exercises\/.+\/3\.svg$/);
     }
+  });
+});
+
+describe('workout smart average defaults', () => {
+  it('parses target set/rep schemes into clean middle averages', () => {
+    expect(parseSetRepTarget('3 × 8–12')).toEqual({ sets: 3, reps: 10, isTimeBased: false });
+    expect(parseSetRepTarget('4 × 12-15')).toEqual({ sets: 4, reps: 14, isTimeBased: false });
+    expect(parseSetRepTarget('3 × 45–60 sn')).toEqual({ sets: 3, reps: 55, isTimeBased: true });
+    expect(parseSetRepTarget('3 × Maks')).toEqual({ sets: 3, reps: 12, isTimeBased: false });
+  });
+
+  it('produces equipment-aware average kg/reps/sets and honors previous logs', () => {
+    const pushup = getSmartExerciseDefaults({ name: 'Push-Ups', sets: '3 × 8–12' }, null, 'Ekipmansız');
+    expect(pushup).toEqual({ kg: 0, reps: 10, sets: 3, isBodyweight: true, isTimeBased: false });
+
+    const latRaise = getSmartExerciseDefaults({ name: 'Lateral Raise', sets: '3 × 12–15' }, null, 'Dambıl');
+    expect(latRaise).toEqual({ kg: 6, reps: 14, sets: 3, isBodyweight: false, isTimeBased: false });
+
+    const dbPress = getSmartExerciseDefaults({ name: 'Incline Dumbbell Press', sets: '3 × 8–12' }, null, 'Dambıl');
+    expect(dbPress).toEqual({ kg: 10, reps: 10, sets: 3, isBodyweight: false, isTimeBased: false });
+
+    const barbellSq = getSmartExerciseDefaults({ name: 'Barbell Squat', sets: '4 × 8–10' }, null, 'Halter (Barbell)');
+    expect(barbellSq).toEqual({ kg: 30, reps: 9, sets: 4, isBodyweight: false, isTimeBased: false });
+
+    const fromHistory = getSmartExerciseDefaults(
+      { name: 'Incline Dumbbell Press', sets: '3 × 8–12' },
+      { kg: 17.5, reps: 11, sets: 4 },
+      'Dambıl'
+    );
+    expect(fromHistory).toEqual({ kg: 17.5, reps: 11, sets: 4, isBodyweight: false, isTimeBased: false });
   });
 });

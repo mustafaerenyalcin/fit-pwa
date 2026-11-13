@@ -16,12 +16,15 @@ import {
   RefreshCw,
   Trash2,
   Activity,
-  Zap
+  Zap,
+  Minus,
+  SlidersHorizontal
 } from 'lucide-react';
 import ExerciseVisual from './ExerciseVisual.jsx';
 import WorkoutSummaryCard from './WorkoutSummaryCard.jsx';
 import AthleteStoryCardModal from './AthleteStoryCardModal.jsx';
-import { getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
+import { getProgressiveOverloadAdvice, getSmartExerciseDefaults } from '../lib/exerciseStats.js';
+import { resolveExerciseMedia } from '../lib/exerciseMedia.js';
 import { getDetailedExerciseGuide } from '../lib/exerciseGuide.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
 import { sounds } from '../lib/audio.js';
@@ -59,21 +62,25 @@ export default function ActiveWorkoutModal({
       const alternatives = move.alternatives || [];
 
       const prev = previousWorkout?.payload?.sets?.[name];
-      // AI planlarında önerilen ağırlık ve set sayısı gelir; önceki kayıt varsa o önceliklidir.
-      const startKg = prev?.kg || (move.suggestedKg && move.suggestedKg !== '0' ? String(move.suggestedKg) : '');
-      const setCount = Math.min(6, Math.max(1, Number(move.defaultSets) || 3));
+      const media = resolveExerciseMedia(name);
+      const defaults = getSmartExerciseDefaults(move, prev, media.equipmentTr);
+      const startKg = String(defaults.kg);
+      const startReps = String(defaults.reps);
+      const setCount = defaults.sets;
       return {
         name,
         targetReps: reps,
         muscle,
         tip,
         alternatives,
-        previousKg: prev?.kg || '',
+        isBodyweight: defaults.isBodyweight,
+        isTimeBased: defaults.isTimeBased,
+        previousKg: prev?.kg !== undefined ? prev.kg : '',
         previousReps: prev?.reps || '',
         sets: Array.from({ length: setCount }, () => ({
           type: 'normal',
           kg: startKg,
-          reps: prev?.reps || '',
+          reps: startReps,
           rpe: 8,
           done: false
         }))
@@ -106,6 +113,7 @@ export default function ActiveWorkoutModal({
   const [showGuide, setShowGuide] = useState(false);
   const [showReplaceModal, setShowReplaceModal] = useState(false);
   const [showStoryModal, setShowStoryModal] = useState(false);
+  const [showRpeCol, setShowRpeCol] = useState(false);
 
   // Hipertrofi Tempo Metronomu (3-1-1-0) & 40Hz Nöral Odak
   const [tempoActive, setTempoActive] = useState(false);
@@ -214,13 +222,24 @@ export default function ActiveWorkoutModal({
     );
   }, 0);
 
-  // Set field updater
+  // Set field updater (1. sette kg veya tekrar değişince henüz yapılmamış eşleşen setlere otomatik yansıt)
   const handleSetChange = (exIdx, setIdx, field, val) => {
     setSessionData((prev) => {
       const nextExercises = [...prev.exercises];
       const ex = { ...nextExercises[exIdx] };
-      const sets = [...ex.sets];
-      sets[setIdx] = { ...sets[setIdx], [field]: val };
+      const prevSetZeroVal = ex.sets[0]?.[field];
+      const sets = ex.sets.map((s, idx) => {
+        if (idx === setIdx) return { ...s, [field]: val };
+        if (
+          setIdx === 0 &&
+          (field === 'kg' || field === 'reps') &&
+          !s.done &&
+          String(s[field] ?? '') === String(prevSetZeroVal ?? '')
+        ) {
+          return { ...s, [field]: val };
+        }
+        return s;
+      });
       ex.sets = sets;
       nextExercises[exIdx] = ex;
       const updated = { ...prev, exercises: nextExercises };
@@ -229,6 +248,29 @@ export default function ActiveWorkoutModal({
       } catch {}
       return updated;
     });
+  };
+
+  // Tek tıkla egzersizin kalan tüm setlerini tamamla
+  const completeAllSetsForExercise = (exIdx, event = null) => {
+    setSessionData((prev) => {
+      const nextExercises = [...prev.exercises];
+      const ex = { ...nextExercises[exIdx] };
+      ex.sets = ex.sets.map((s) => ({ ...s, done: true }));
+      nextExercises[exIdx] = ex;
+      const updated = { ...prev, exercises: nextExercises };
+      try {
+        localStorage.setItem(ACTIVE_WORKOUT_KEY, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    setRestSeconds(restDuration);
+    setRestActive(true);
+    if (event && event.currentTarget) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      celebration.sparks({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, color: '#ff3b30' });
+    }
+    celebration.floatingBadge({ text: 'EGZERSİZ TAMAMLANDI! 🔥', icon: '⚡' });
+    sounds.bellDing();
   };
 
   // Add set
@@ -298,10 +340,10 @@ export default function ActiveWorkoutModal({
           const rect = event.currentTarget.getBoundingClientRect();
           const x = rect.left + rect.width / 2;
           const y = rect.top + rect.height / 2;
-          celebration.sparks({ x, y, color: '#c8ff00' });
+          celebration.sparks({ x, y, color: '#ff3b30' });
           celebration.floatingBadge({ text: 'SET TAMAMLANDI! 🔥', x, y: y - 24, icon: '⚡' });
         } else {
-          celebration.sparks({ color: '#c8ff00' });
+          celebration.sparks({ color: '#ff3b30' });
           celebration.floatingBadge({ text: 'SET TAMAMLANDI! 🔥', icon: '⚡' });
         }
 
@@ -670,6 +712,18 @@ export default function ActiveWorkoutModal({
                 >
                   <Zap size={13} /> {neuralPrimingActive ? t('wm.neuralActive') : t('wm.neuralBtn')}
                 </button>
+
+                <button
+                  type="button"
+                  className={`guideToggleBtn ${showRpeCol ? 'active-accent' : ''}`}
+                  onClick={() => {
+                    sounds.tap();
+                    setShowRpeCol((v) => !v);
+                  }}
+                  title="RPE zorluk derecesi sütununu göster veya gizle"
+                >
+                  <SlidersHorizontal size={12} /> RPE {showRpeCol ? 'Gizle' : 'Aç'}
+                </button>
               </div>
 
               {/* Alternative Exercise Selection Modal */}
@@ -747,106 +801,176 @@ export default function ActiveWorkoutModal({
                 </div>
               )}
 
-              {/* Set Tracker Table with RPE & Set Type */}
-              <div className="setTrackerTable">
+              {/* Streamlined Set Tracker Table (Smart Defaults + One-Tap Steppers) */}
+              <div className={`setTrackerTable fx-streamlinedTable ${showRpeCol ? 'with-rpe' : ''}`}>
+                <div className="fx-setQuickBar">
+                  <span className="fx-setQuickHint">
+                    {currentExercise.isBodyweight
+                      ? 'Vücut Ağırlığı · Ortalamalar hazır'
+                      : 'Ortalama değerler hazır · 1. seti değiştirince diğerleri güncellenir'}
+                  </span>
+                  <button
+                    type="button"
+                    className="fx-completeAllBtn"
+                    disabled={currentExercise.sets.every((s) => s.done)}
+                    onClick={(e) => completeAllSetsForExercise(activeExIndex, e)}
+                  >
+                    <Check size={13} />
+                    {currentExercise.sets.every((s) => s.done)
+                      ? 'Tüm Setler Tamam'
+                      : 'Tüm Setleri Tamamla'}
+                  </button>
+                </div>
+
                 <div className="setTableHeader">
                   <span className="colSet">{t('wm.colSet')}</span>
                   <span className="colPrev">{t('wm.colPrev')}</span>
                   <span className="colKg">{t('wm.colKg')}</span>
                   <span className="colReps">{t('wm.colReps')}</span>
-                  <span className="colRpe">RPE</span>
+                  {showRpeCol && <span className="colRpe">RPE</span>}
                   <span className="colCheck">{t('wm.colCheck')}</span>
-                  <span className="colDel"></span>
                 </div>
 
                 <div className="setTableRows">
                   {currentExercise.sets.map((set, sIdx) => {
-                    const est1RM = set.kg && set.reps ? calculateOneRepMax(set.kg, set.reps) : null;
+                    const nextTypeMap = { normal: 'warmup', warmup: 'drop', drop: 'normal' };
+                    const stepKg = (delta) => {
+                      const next = Math.max(0, (Number(set.kg) || 0) + delta);
+                      handleSetChange(activeExIndex, sIdx, 'kg', String(next));
+                    };
+                    const stepReps = (delta) => {
+                      const next = Math.max(1, (Number(set.reps) || 10) + delta);
+                      handleSetChange(activeExIndex, sIdx, 'reps', String(next));
+                    };
+
                     return (
                       <div
                         key={sIdx}
                         className={`setRow ${set.done ? 'isDone' : ''}`}
                       >
                         <div className="colSet setIndexCol">
-                          <select
-                            value={set.type}
-                            onChange={(e) => handleSetChange(activeExIndex, sIdx, 'type', e.target.value)}
-                            className="setTypeSelect"
+                          <button
+                            type="button"
+                            className={`fx-setNumBtn type-${set.type || 'normal'}`}
+                            onClick={() =>
+                              handleSetChange(
+                                activeExIndex,
+                                sIdx,
+                                'type',
+                                nextTypeMap[set.type || 'normal']
+                              )
+                            }
+                            title="Tıkla: Normal / Isınma (W) / Drop (D)"
                           >
-                            <option value="normal">{sIdx + 1}</option>
-                            <option value="warmup">W</option>
-                            <option value="drop">D</option>
-                          </select>
+                            {set.type === 'warmup' ? 'W' : set.type === 'drop' ? 'D' : sIdx + 1}
+                          </button>
                         </div>
 
                         <span className="colPrev prevPerformance">
-                          {currentExercise.previousKg
-                            ? `${currentExercise.previousKg}k × ${currentExercise.previousReps}`
-                            : '—'}
+                          {currentExercise.previousKg !== '' && currentExercise.previousReps
+                            ? `${currentExercise.previousKg > 0 ? `${currentExercise.previousKg}k` : 'VA'} × ${currentExercise.previousReps}`
+                            : currentExercise.targetReps || '—'}
                         </span>
 
                         <div className="colKg">
-                          <input
-                            type="number"
-                            step="0.5"
-                            min="0"
-                            placeholder={currentExercise.previousKg || '0'}
-                            value={set.kg}
-                            onChange={(e) =>
-                              handleSetChange(activeExIndex, sIdx, 'kg', e.target.value)
-                            }
-                          />
-                          {currentExercise.isDoubleDumbbell && Boolean(set.kg) && (
+                          <div className="fx-inlineStepper">
+                            <button
+                              type="button"
+                              className="fx-stepMicroBtn"
+                              onClick={() => stepKg(-2.5)}
+                              aria-label="Ağırlığı 2.5 kg azalt"
+                            >
+                              <Minus size={11} />
+                            </button>
+                            <input
+                              type="number"
+                              step="0.5"
+                              min="0"
+                              placeholder="0"
+                              value={set.kg}
+                              onChange={(e) =>
+                                handleSetChange(activeExIndex, sIdx, 'kg', e.target.value)
+                              }
+                            />
+                            <button
+                              type="button"
+                              className="fx-stepMicroBtn"
+                              onClick={() => stepKg(2.5)}
+                              aria-label="Ağırlığı 2.5 kg artır"
+                            >
+                              <Plus size={11} />
+                            </button>
+                          </div>
+                          {currentExercise.isDoubleDumbbell && Number(set.kg) > 0 && (
                             <small className="fx-multHint">Top: {Number(set.kg) * 2}kg</small>
                           )}
                         </div>
 
                         <div className="colReps">
-                          <input
-                            type="number"
-                            min="0"
-                            max="100"
-                            placeholder={currentExercise.previousReps || '10'}
-                            value={set.reps}
-                            onChange={(e) =>
-                              handleSetChange(activeExIndex, sIdx, 'reps', e.target.value)
-                            }
-                          />
+                          <div className="fx-inlineStepper">
+                            <button
+                              type="button"
+                              className="fx-stepMicroBtn"
+                              onClick={() => stepReps(-1)}
+                              aria-label="Tekrarı 1 azalt"
+                            >
+                              <Minus size={11} />
+                            </button>
+                            <input
+                              type="number"
+                              min="1"
+                              max="120"
+                              placeholder="10"
+                              value={set.reps}
+                              onChange={(e) =>
+                                handleSetChange(activeExIndex, sIdx, 'reps', e.target.value)
+                              }
+                            />
+                            <button
+                              type="button"
+                              className="fx-stepMicroBtn"
+                              onClick={() => stepReps(1)}
+                              aria-label="Tekrarı 1 artır"
+                            >
+                              <Plus size={11} />
+                            </button>
+                          </div>
                         </div>
 
-                        <div className="colRpe">
-                          <select
-                            value={set.rpe || 8}
-                            onChange={(e) =>
-                              handleSetChange(activeExIndex, sIdx, 'rpe', Number(e.target.value))
-                            }
-                            className="rpeSelect"
-                          >
-                            <option value={6}>RPE 6 (4+ rezerv)</option>
-                            <option value={7}>RPE 7 (3 rezerv)</option>
-                            <option value={8}>RPE 8 (2 rezerv)</option>
-                            <option value={9}>RPE 9 (1 rezerv)</option>
-                            <option value={10}>RPE 10 (Tükeniş)</option>
-                          </select>
-                        </div>
+                        {showRpeCol && (
+                          <div className="colRpe">
+                            <select
+                              value={set.rpe || 8}
+                              onChange={(e) =>
+                                handleSetChange(activeExIndex, sIdx, 'rpe', Number(e.target.value))
+                              }
+                              className="rpeSelect"
+                            >
+                              <option value={6}>RPE 6</option>
+                              <option value={7}>RPE 7</option>
+                              <option value={8}>RPE 8</option>
+                              <option value={9}>RPE 9</option>
+                              <option value={10}>RPE 10</option>
+                            </select>
+                          </div>
+                        )}
 
-                        <div className="colCheck">
+                        <div className="colCheck fx-checkActionCell">
                           <button
                             type="button"
                             className={`setCheckBtn ${set.done ? 'checked' : ''}`}
                             onClick={(e) => toggleSetDone(activeExIndex, sIdx, e)}
+                            aria-label="Seti tamamla"
                           >
-                            <Check size={18} />
+                            <Check size={17} />
                           </button>
-                        </div>
-
-                        <div className="colDel">
                           {currentExercise.sets.length > 1 && (
                             <button
                               type="button"
                               className="trashSetBtn"
                               onClick={() => removeSetFromExercise(activeExIndex, sIdx)}
                               title="Seti Sil"
+                              aria-label="Seti sil"
                             >
                               <Trash2 size={13} />
                             </button>
