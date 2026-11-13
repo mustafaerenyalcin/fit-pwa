@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dumbbell, Target, Layers, Calculator, Zap, Sparkles } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 import { celebration } from '../lib/celebration.js';
+import { calculateDotsScore, calculateWilksScore } from '../lib/calculations.js';
 
 const AVAILABLE_PLATES = [25, 20, 15, 10, 5, 2.5, 1.25];
 
@@ -9,15 +10,20 @@ export default function OneRepMaxCalc() {
   const [weight, setWeight] = useState(80);
   const [reps, setReps] = useState(6);
   const [barWeight, setBarWeight] = useState(20);
+  const [bodyWeight, setBodyWeight] = useState(78);
+  const [sex, setSex] = useState('male');
+  const [sbdTotal, setSbdTotal] = useState('');
   const [result, setResult] = useState(null);
 
   const handleCalculate = () => {
     sounds.success();
-    celebration.sparks({ color: '#c8ff00', count: 28 });
-    celebration.floatingBadge({ text: '1RM HESAPLANDI! ⚡', color: '#c8ff00', icon: '⚡' });
+    celebration.sparks({ color: '#ff6b35', count: 28 });
+    celebration.floatingBadge({ text: '1RM & DOTS HESAPLANDI!', color: '#ff6b35', icon: '⚡' });
     const w = Number(weight) || 0;
     const r = Number(reps) || 0;
     const bW = Number(barWeight) || 20;
+    const bw = Number(bodyWeight) || 78;
+    const customTotal = Number(sbdTotal) || 0;
 
     if (w <= 0 || r <= 0) {
       setResult(null);
@@ -27,6 +33,11 @@ export default function OneRepMaxCalc() {
     const brzycki = w / (1.0278 - 0.0278 * r);
     const epley = w * (1 + 0.0333 * r);
     const oneRepMax = r === 1 ? w : Math.round((brzycki + epley) / 2);
+
+    const scoreBaseKg = customTotal > 0 ? customTotal : oneRepMax;
+    const dotsScore = calculateDotsScore(scoreBaseKg, bw, sex);
+    const wilksScore = calculateWilksScore(scoreBaseKg, bw, sex);
+    const strengthRatio = bw > 0 ? Math.round((scoreBaseKg / bw) * 100) / 100 : 0;
 
     const percentages = [
       { pct: 100, label: 'Maksimum Güç (1RM)', reps: '1 tekrar', zone: 'Saf Güç' },
@@ -57,7 +68,11 @@ export default function OneRepMaxCalc() {
       percentages,
       platesPerSide,
       calcWeight: w,
-      calcReps: r
+      calcReps: r,
+      dotsScore,
+      wilksScore,
+      strengthRatio,
+      scoreModeLabel: customTotal > 0 ? `SBD Toplam (${customTotal} kg)` : `Tek Hareket 1RM (${oneRepMax} kg)`
     });
   };
 
@@ -99,6 +114,40 @@ export default function OneRepMaxCalc() {
             </label>
           </div>
 
+          <div className="fx-grid2" style={{ marginTop: 10 }}>
+            <label className="fx-field" style={{ margin: 0 }}>
+              <span>VÜCUT AĞIRLIĞI (KG)</span>
+              <input
+                type="number"
+                min="35"
+                max="210"
+                step="0.5"
+                value={bodyWeight}
+                onChange={(e) => setBodyWeight(Number(e.target.value))}
+              />
+            </label>
+            <label className="fx-field" style={{ margin: 0 }}>
+              <span>CİNSİYET (DOTS / WILKS)</span>
+              <select value={sex} onChange={(e) => setSex(e.target.value)}>
+                <option value="male">Erkek</option>
+                <option value="female">Kadın</option>
+              </select>
+            </label>
+          </div>
+
+          <label className="fx-field" style={{ margin: '10px 0 0' }}>
+            <span>SBD TOPLAMI · OPSİYONEL (Squat+Bench+Deadlift kg)</span>
+            <input
+              type="number"
+              min="0"
+              max="1200"
+              step="2.5"
+              placeholder="Boş bırakırsan seçili 1RM üzerinden hesaplanır"
+              value={sbdTotal}
+              onChange={(e) => setSbdTotal(e.target.value)}
+            />
+          </label>
+
           <button
             type="button"
             className="fx-btn fx-solarBtn fx-btn--block fx-btn--lg"
@@ -118,6 +167,32 @@ export default function OneRepMaxCalc() {
                 ? `${result.calcWeight} kg × ${result.calcReps} tekrar (Brzycki & Epley bilimsel formülü)`
                 : 'Ağırlık ve tekrar girip "Hesapla" butonuna bas.'}
             </p>
+            {result && (
+              <div
+                style={{
+                  marginTop: 12,
+                  paddingTop: 10,
+                  borderTop: '1px solid var(--fx-border)',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: 8,
+                  textAlign: 'left'
+                }}
+              >
+                <div>
+                  <small style={{ fontSize: 10, opacity: 0.72, display: 'block' }}>DOTS PUANI</small>
+                  <b className="fx-monoVal" style={{ fontSize: 16, color: '#00f0ff' }}>{result.dotsScore}</b>
+                </div>
+                <div>
+                  <small style={{ fontSize: 10, opacity: 0.72, display: 'block' }}>WILKS PUANI</small>
+                  <b className="fx-monoVal" style={{ fontSize: 16, color: '#ff6b35' }}>{result.wilksScore}</b>
+                </div>
+                <div>
+                  <small style={{ fontSize: 10, opacity: 0.72, display: 'block' }}>VÜCUT KATI</small>
+                  <b className="fx-monoVal" style={{ fontSize: 16 }}>{result.strengthRatio}×</b>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

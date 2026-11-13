@@ -35,6 +35,13 @@ import { getSetting, setSetting, list, add, remove, subscribe } from './lib/stor
 import { scheduleSync, getAuthState, getSyncState } from './lib/supabase.js';
 import { getCustomProgram, getWorkoutForDay } from './lib/workoutPlans.js';
 import { initTheme } from './lib/notifications.js';
+import { setQuotaUserScope } from './lib/aiQuota.js';
+import {
+  capturePendingFamilyInviteFromUrl,
+  getPendingFamilyInvite,
+  joinFamilyByCode,
+  getFamilyStatus
+} from './lib/familyPlan.js';
 import { useI18n } from './lib/i18n.js';
 
 const CATEGORIES = ['workout', 'meal', 'habit', 'weight', 'supplement', 'checkin', 'report'];
@@ -56,7 +63,12 @@ export default function App() {
 
   useEffect(() => {
     initTheme();
-    const h = () => setAuth(getAuthState());
+    capturePendingFamilyInviteFromUrl();
+    const h = () => {
+      const next = getAuthState();
+      setAuth(next);
+      setQuotaUserScope(next?.user?.id || null);
+    };
     window.addEventListener('fit-sync-change', h);
     h();
     return () => window.removeEventListener('fit-sync-change', h);
@@ -202,7 +214,7 @@ function MainApp() {
     document.addEventListener('backbutton', handleBackButton);
 
     // Yeni cihazda ilk senkronizasyon gecikirse onboarding'e takılmamak için üst sınır
-    const t = setTimeout(() => setWaitedForSync(true), 8000);
+    const timer = setTimeout(() => setWaitedForSync(true), 8000);
 
     return () => {
       unsubscribe();
@@ -213,9 +225,44 @@ function MainApp() {
       document.removeEventListener('visibilitychange', onVisible);
       window.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('backbutton', handleBackButton);
-      clearTimeout(t);
+      clearTimeout(timer);
     };
   }, []);
+
+  // Bekleyen ?family= daveti varsa kullanıcının kendi hesabına otomatik tanımla & aile durumunu eşitle
+  useEffect(() => {
+    let cancelled = false;
+    const currentUser = getAuthState()?.user;
+    if (!currentUser?.id) return () => {};
+    setQuotaUserScope(currentUser.id);
+
+    const processFamily = async () => {
+      const pendingCode = capturePendingFamilyInviteFromUrl() || getPendingFamilyInvite();
+      if (pendingCode) {
+        try {
+          await joinFamilyByCode(currentUser, pendingCode, storedProfile?.name || '');
+          if (!cancelled) {
+            showToast(`🎉 Aile Planına (${pendingCode}) kendi hesabınla katıldın! Pro aktif.`, 4200);
+          }
+          if (typeof window !== 'undefined' && window.location.search.includes('family=')) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('family');
+            window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+          }
+        } catch (err) {
+          if (!cancelled) {
+            showToast(err?.message || 'Aile daveti uygulanamadı.', 4200);
+          }
+        }
+      } else {
+        await getFamilyStatus(currentUser).catch(() => {});
+      }
+    };
+    processFamily();
+    return () => {
+      cancelled = true;
+    };
+  }, [showToast, storedProfile?.name]);
 
   const target = useMemo(() => targets(profile), [profile]);
   const streak = useMemo(() => calculateStreak(entries), [entries]);

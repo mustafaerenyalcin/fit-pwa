@@ -1,19 +1,30 @@
 import React, { useState } from 'react';
 import { Flame, Calculator, Sparkles, Target, Check, ChevronRight } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
+import { calculateKatchMcArdleBMR, calculateCalorieCycleSplit } from '../lib/calculations.js';
 
 export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
   const [age, setAge] = useState(profile?.age || 26);
   const [sex, setSex] = useState(profile?.sex || 'male');
   const [height, setHeight] = useState(profile?.height || 180);
   const [weight, setWeight] = useState(profile?.weight || 78);
+  const [bodyFat, setBodyFat] = useState(profile?.sex === 'female' ? 22 : 15);
+  const [formula, setFormula] = useState('mifflin'); // 'mifflin' | 'katch'
   const [activity, setActivity] = useState(profile?.activity || 'medium');
   const [goalType, setGoalType] = useState('recomp'); // 'cut' | 'hard_cut' | 'recomp' | 'bulk'
   const [result, setResult] = useState(null);
 
-  const computeMetrics = (a, s, h, w, act, goal) => {
-    let base = 10 * w + 6.25 * h - 5 * a;
-    const bmr = Math.round(s === 'female' ? base - 161 : base + 5);
+  const computeMetrics = (a, s, h, w, act, goal, nextFormula = formula, nextBf = bodyFat) => {
+    let bmr;
+    let leanMass = null;
+    if (nextFormula === 'katch') {
+      const bfVal = Math.min(55, Math.max(4, Number(nextBf) || 15));
+      leanMass = Math.round(w * (1 - bfVal / 100) * 10) / 10;
+      bmr = calculateKatchMcArdleBMR(w, bfVal) || Math.round(10 * w + 6.25 * h - 5 * a + (s === 'female' ? -161 : 5));
+    } else {
+      const base = 10 * w + 6.25 * h - 5 * a;
+      bmr = Math.round(s === 'female' ? base - 161 : base + 5);
+    }
 
     const actMult = {
       low: 1.2,
@@ -44,11 +55,15 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
     const fatGrams = Math.round((targetKcal * 0.25) / 9);
     const carbKcal = targetKcal - proteinGrams * 4 - fatGrams * 9;
     const carbGrams = Math.max(50, Math.round(carbKcal / 4));
+    const cycle = calculateCalorieCycleSplit(targetKcal, proteinGrams, fatGrams, 150);
 
     return {
       bmr,
       tdee,
       targetKcal,
+      formula: nextFormula,
+      leanMass,
+      cycle,
       macros: {
         protein: proteinGrams,
         fat: fatGrams,
@@ -57,13 +72,13 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
     };
   };
 
-  const handleCalculate = (nextGoal = goalType) => {
+  const handleCalculate = (nextGoal = goalType, nextFormula = formula) => {
     sounds.success();
     const a = Number(age) || 26;
     const h = Number(height) || 180;
     const w = Number(weight) || 78;
 
-    const res = computeMetrics(a, sex, h, w, activity, nextGoal);
+    const res = computeMetrics(a, sex, h, w, activity, nextGoal, nextFormula, bodyFat);
     setResult(res);
   };
 
@@ -71,7 +86,15 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
     sounds.tap();
     setGoalType(g);
     if (result) {
-      handleCalculate(g);
+      handleCalculate(g, formula);
+    }
+  };
+
+  const changeFormula = (f) => {
+    sounds.tap();
+    setFormula(f);
+    if (result) {
+      handleCalculate(goalType, f);
     }
   };
 
@@ -91,7 +114,45 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
       <div className="fx-grid2" style={{ gap: 14 }}>
         {/* SOL: GİRİŞLER */}
         <div className="fx-card fx-glassModule">
-          <span className="fx-subLabel">METABOLİK VERİLER:</span>
+          <span className="fx-subLabel">HESAPLAMA FORMÜLÜ &amp; METABOLİK VERİLER:</span>
+
+          <div
+            role="tablist"
+            style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 10 }}
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected={formula === 'mifflin'}
+              className={`fx-btn fx-btn--sm ${formula === 'mifflin' ? 'fx-solarBtn' : 'fx-btn--ghost'}`}
+              onClick={() => changeFormula('mifflin')}
+            >
+              Mifflin-St Jeor
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={formula === 'katch'}
+              className={`fx-btn fx-btn--sm ${formula === 'katch' ? 'fx-solarBtn' : 'fx-btn--ghost'}`}
+              onClick={() => changeFormula('katch')}
+            >
+              Katch-McArdle (Yağsız Kütle)
+            </button>
+          </div>
+
+          {formula === 'katch' && (
+            <label className="fx-field" style={{ margin: '10px 0 0' }}>
+              <span>TAHMİNİ VÜCUT YAĞ ORANI (%)</span>
+              <input
+                type="number"
+                min="4"
+                max="55"
+                step="0.5"
+                value={bodyFat}
+                onChange={(e) => setBodyFat(Number(e.target.value))}
+              />
+            </label>
+          )}
 
           <div className="fx-grid2" style={{ marginTop: 10 }}>
             <label className="fx-field" style={{ margin: 0 }}>
@@ -209,23 +270,51 @@ export default function MetabolicEngineCalc({ profile, onApplyTarget }) {
           GÜNLÜK ÖNERİLEN MAKRO BESİN DAĞILIMI
         </h4>
         {result ? (
-          <div className="fx-grid3 animate-fade-in">
-            <div className="fx-macroCard protein">
-              <span className="fx-macroType">PROTEİN (2.2g / KG)</span>
-              <strong>{result.macros.protein} g</strong>
-              <small>{result.macros.protein * 4} kcal · Kas onarımı &amp; toparlanma</small>
+          <>
+            <div className="fx-grid3 animate-fade-in">
+              <div className="fx-macroCard protein">
+                <span className="fx-macroType">PROTEİN (2.2g / KG)</span>
+                <strong>{result.macros.protein} g</strong>
+                <small>{result.macros.protein * 4} kcal · Kas onarımı &amp; toparlanma</small>
+              </div>
+              <div className="fx-macroCard carbs">
+                <span className="fx-macroType">KOMPLEKS KARBONHİDRAT</span>
+                <strong>{result.macros.carbs} g</strong>
+                <small>{result.macros.carbs * 4} kcal · Glikojen &amp; antrenman yakıtı</small>
+              </div>
+              <div className="fx-macroCard fat">
+                <span className="fx-macroType">SAĞLIKLI YAĞ (%25)</span>
+                <strong>{result.macros.fat} g</strong>
+                <small>{result.macros.fat * 9} kcal · Hormon dengesi &amp; eklemler</small>
+              </div>
             </div>
-            <div className="fx-macroCard carbs">
-              <span className="fx-macroType">KOMPLEKS KARBONHİDRAT</span>
-              <strong>{result.macros.carbs} g</strong>
-              <small>{result.macros.carbs * 4} kcal · Glikojen &amp; antrenman yakıtı</small>
-            </div>
-            <div className="fx-macroCard fat">
-              <span className="fx-macroType">SAĞLIKLI YAĞ (%25)</span>
-              <strong>{result.macros.fat} g</strong>
-              <small>{result.macros.fat * 9} kcal · Hormon dengesi &amp; eklemler</small>
-            </div>
-          </div>
+
+            {result.cycle && (
+              <div
+                className="fx-grid2 animate-fade-in"
+                style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--fx-border)', gap: 10 }}
+              >
+                <div style={{ padding: '10px 12px', borderRadius: 10, background: 'rgba(255, 107, 53, 0.08)', border: '1px solid rgba(255, 107, 53, 0.25)' }}>
+                  <small style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#ff6b35' }}>
+                    🔥 ANTRENMAN GÜNÜ (+150 KCAL · KARBONHİDRAT ODAKLI)
+                  </small>
+                  <b className="fx-monoVal" style={{ fontSize: 16 }}>{result.cycle.training.kcal} kcal</b>
+                  <span className="fx-muted" style={{ fontSize: 12, display: 'block' }}>
+                    Karb: <b>{result.cycle.training.carbs}g</b> · Pro: {result.cycle.training.protein}g
+                  </span>
+                </div>
+                <div style={{ padding: '10px 12px', borderRadius: 10, background: 'rgba(0, 240, 255, 0.06)', border: '1px solid rgba(0, 240, 255, 0.22)' }}>
+                  <small style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#00f0ff' }}>
+                    🧊 DİNLENME GÜNÜ (-150 KCAL · DÜŞÜK KARBONHİDRAT)
+                  </small>
+                  <b className="fx-monoVal" style={{ fontSize: 16 }}>{result.cycle.rest.kcal} kcal</b>
+                  <span className="fx-muted" style={{ fontSize: 12, display: 'block' }}>
+                    Karb: <b>{result.cycle.rest.carbs}g</b> · Pro: {result.cycle.rest.protein}g
+                  </span>
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <p className="fx-muted fx-small" style={{ margin: 0, textAlign: 'center', padding: '14px' }}>
             Önerilen makro ayrışımını görmek için "BMR ve Günlük Kalori İhtiyacını Hesapla" butonuna dokun.

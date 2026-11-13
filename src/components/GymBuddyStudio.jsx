@@ -25,6 +25,15 @@ import {
 } from 'lucide-react';
 import { sounds } from '../lib/audio.js';
 import { getMaxGymBuddies, getAiMembership } from '../lib/aiQuota.js';
+import { getAuthState } from '../lib/supabase.js';
+import {
+  FAMILY_MAX_SEATS,
+  getFamilyStatus,
+  activateFamilyPlan,
+  joinFamilyByCode,
+  leaveOrRemoveFamilyMember,
+  buildFamilyInviteUrl
+} from '../lib/familyPlan.js';
 import SubscriptionModal from './SubscriptionModal.jsx';
 import WagerContractModal from './WagerContractModal.jsx';
 
@@ -130,10 +139,95 @@ export default function GymBuddyStudio({ profile = {}, entries = {}, onStartWork
 
   const maxBuddiesAllowed = getMaxGymBuddies();
   const membership = getAiMembership();
-  const isFamilySquad = membership.plan === 'family' || membership.plan === 'squad';
+  const authUser = getAuthState()?.user;
+  const [familyState, setFamilyState] = useState({ source: 'local', group: null, migrationNeeded: false });
+  const [joinCodeInput, setJoinCodeInput] = useState('');
+  const [familyBusy, setFamilyBusy] = useState(false);
 
-  const myInviteCode = 'FIT-' + (profile?.name ? profile.name.slice(0, 3).toUpperCase() : 'PRO') + '9K2';
-  const inviteUrl = typeof window !== 'undefined' ? `${window.location.origin}/#tools` : 'https://fitpwa.app';
+  const refreshFamily = async () => {
+    if (!authUser?.id) return;
+    const res = await getFamilyStatus(authUser);
+    setFamilyState(res);
+  };
+
+  useEffect(() => {
+    refreshFamily();
+    const onFam = () => refreshFamily();
+    window.addEventListener('fit-family-changed', onFam);
+    return () => window.removeEventListener('fit-family-changed', onFam);
+  }, [authUser?.id]);
+
+  const familyGroup = familyState.group;
+  const isFamilyOwner = familyGroup?.ownerId === authUser?.id;
+  const familyMembers = familyGroup?.members || [];
+  const otherFamilyMembers = familyMembers.filter((m) => m.userId !== authUser?.id);
+
+  const myInviteCode =
+    familyGroup?.inviteCode ||
+    'FIT-' + (profile?.name ? profile.name.slice(0, 3).toUpperCase() : 'PRO') + '9K2';
+  const inviteUrl = familyGroup?.inviteCode
+    ? buildFamilyInviteUrl(familyGroup.inviteCode)
+    : typeof window !== 'undefined'
+      ? `${window.location.origin}/#tools`
+      : 'https://fitpwa.app';
+
+  const handleActivateFamily = async () => {
+    setFamilyBusy(true);
+    try {
+      const res = await activateFamilyPlan(authUser, profile?.name || '');
+      sounds.success();
+      setFamilyState(res);
+      setNudgeSent('🎉 4 Kişilik Aile Planın aktif! Davet linkini veya kodunu arkadaşlarına paylaşabilirsin.');
+      setTimeout(() => setNudgeSent(''), 4200);
+    } catch (err) {
+      setNudgeSent(err?.message || 'Aile planı başlatılamadı.');
+      setTimeout(() => setNudgeSent(''), 3800);
+    } finally {
+      setFamilyBusy(false);
+    }
+  };
+
+  const handleJoinFamily = async (e) => {
+    e.preventDefault();
+    if (!joinCodeInput.trim()) return;
+    setFamilyBusy(true);
+    try {
+      const res = await joinFamilyByCode(authUser, joinCodeInput, profile?.name || '');
+      sounds.success();
+      setFamilyState(res);
+      setJoinCodeInput('');
+      setNudgeSent('🤝 Aile Planına kendi hesabınla katıldın! Pro özellikler hesabında açıldı.');
+      setTimeout(() => setNudgeSent(''), 4200);
+    } catch (err) {
+      setNudgeSent(err?.message || 'Davet kodu kabul edilmedi.');
+      setTimeout(() => setNudgeSent(''), 4000);
+    } finally {
+      setFamilyBusy(false);
+    }
+  };
+
+  const handleRemoveFamilyMember = async (targetUserId) => {
+    const isSelf = targetUserId === authUser?.id;
+    const msg = isSelf
+      ? isFamilyOwner
+        ? 'Aile Planını kapatmak ve tüm davetli koltukları sonlandırmak istiyor musun?'
+        : 'Bu Aile Planından kendi hesabını çıkarmak istiyor musun?'
+      : 'Bu arkadaşı Aile Planından çıkarmak istiyor musun? (Kendi hesabı Free moda döner)';
+    if (!confirm(msg)) return;
+    setFamilyBusy(true);
+    try {
+      const res = await leaveOrRemoveFamilyMember(authUser, targetUserId);
+      sounds.tap();
+      setFamilyState(res || { source: 'local', group: null, migrationNeeded: false });
+      setNudgeSent(isSelf ? 'Aile planı bağlantısı güncellendi.' : 'Üye koltuktan çıkarıldı.');
+      setTimeout(() => setNudgeSent(''), 3500);
+    } catch (err) {
+      setNudgeSent(err?.message || 'İşlem tamamlanamadı.');
+      setTimeout(() => setNudgeSent(''), 3500);
+    } finally {
+      setFamilyBusy(false);
+    }
+  };
 
   const handleWagerBanter = async (buddyName) => {
     sounds.tap();
@@ -305,35 +399,51 @@ export default function GymBuddyStudio({ profile = {}, entries = {}, onStartWork
         <div className="fx-squadHeroMain">
           <div className="fx-squadTagGroup">
             <span className="fx-squadBadge">
-              <Users size={13} color="#06b6d4" /> CİHAZ İÇİ YEREL SQUAD // 4 KİŞİLİK EKİP
+              <Users size={13} color="#06b6d4" />{' '}
+              {familyGroup ? '4 KİŞİLİK AİLE & SQUAD PLANI' : 'ÇOKLU HESAP AİLE & SQUAD // 4 KOLTUK'}
             </span>
             <span className="fx-squadTierTag pro">
-              ✓ ÜCRETSİZ SLOT: {buddies.length + 1}/4
+              {familyGroup
+                ? `✓ AİLE KOLTUĞU: ${familyMembers.length}/${familyGroup.maxSeats || FAMILY_MAX_SEATS}`
+                : `✓ YEREL PARTNER: ${buddies.length + 1}/4`}
             </span>
           </div>
 
           <h2 className="fx-squadHeroTitle">
-            Gym Buddy <span>Squad &amp; Takım</span>
+            Gym Buddy <span>Aile &amp; Squad</span>
           </h2>
           <p className="fx-squadHeroSub">
-            Spor arkadaşlarınla haftalık hedef belirle, sözleşme kartı oluştur ve seanslarını aynı yerde takip et (veriler bu cihazda yerel saklanır).
+            1 kişi Aile Planını açar; arkadaşları kendi Google, Apple veya e-posta hesaplarıyla giriş yapıp davet linki veya kodu ile Pro erişime katılır (hesap şifresi paylaşılmaz).
           </p>
 
-          {/* SQUAD SLOTLARI GÖSTERGESİ (4 KİŞİLİK MİMARİ) */}
+          {/* SQUAD / AİLE SLOTLARI GÖSTERGESİ (4 KİŞİLİK MİMARİ) */}
           <div className="fx-squadSlotsTrack">
             {/* Slot 1: Kaptan (Kullanıcı) */}
             <div className="fx-squadSlotCell active captain">
               <div className="fx-squadSlotAvatar">{profile?.name?.charAt(0) || 'K'}</div>
               <div className="fx-squadSlotMeta">
-                <b>{profile?.name || 'Sen'} (Kaptan)</b>
-                <small>Aktif</small>
+                <b>{profile?.name || 'Sen'} ({familyGroup && !isFamilyOwner ? 'Üye' : 'Kaptan'})</b>
+                <small>{membership.isPro ? 'Pro Aktif' : 'Standart'}</small>
               </div>
             </div>
 
-            {/* Slot 2, 3, 4: Buddies or Empty */}
+            {/* Slot 2, 3, 4: Connected Family Members or Local Buddies or Empty */}
             {[0, 1, 2].map((slotIdx) => {
+              const famMember = otherFamilyMembers[slotIdx];
               const buddy = buddies[slotIdx];
-              const isLocked = !buddy && slotIdx + 1 >= maxBuddiesAllowed;
+              const isLocked = !famMember && !buddy && slotIdx + 1 >= maxBuddiesAllowed;
+
+              if (famMember) {
+                return (
+                  <div key={famMember.userId} className="fx-squadSlotCell active">
+                    <div className="fx-squadSlotAvatar">{(famMember.name || 'A').charAt(0).toUpperCase()}</div>
+                    <div className="fx-squadSlotMeta">
+                      <b>{famMember.name}</b>
+                      <small>{famMember.role === 'owner' ? '👑 Plan Sahibi' : '🤝 Kendi Hesabı'}</small>
+                    </div>
+                  </div>
+                );
+              }
 
               if (buddy) {
                 return (
@@ -358,16 +468,67 @@ export default function GymBuddyStudio({ profile = {}, entries = {}, onStartWork
                     {isLocked ? <Crown size={14} color="#f5c451" /> : <UserPlus size={14} />}
                   </div>
                   <div className="fx-squadSlotMeta">
-                    <b>{isLocked ? 'Slot Kilitli' : '+ Arkadaş Ekle'}</b>
-                    <small>{isLocked ? 'Squad Planı' : 'Ücretsiz Slot'}</small>
+                    <b>{isLocked ? 'Slot Kilitli' : '+ Partner / Davet'}</b>
+                    <small>{familyGroup ? 'Davet Bekliyor' : 'Ücretsiz Slot'}</small>
                   </div>
                 </button>
               );
             })}
           </div>
+
+          {/* ÇOKLU HESAP AİLE KOLTUK LİSTESİ (VARSA) */}
+          {familyGroup && (
+            <div style={{ marginTop: 12, padding: 12, borderRadius: 12, background: 'rgba(6, 182, 212, 0.06)', border: '1px solid rgba(6, 182, 212, 0.2)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 6 }}>
+                <b style={{ fontSize: 12, color: '#22d3ee' }}>
+                  Bağlı Aile Hesapları ({familyMembers.length}/{familyGroup.maxSeats || FAMILY_MAX_SEATS})
+                </b>
+                <small className="fx-muted" style={{ fontSize: 11 }}>
+                  {familyState.source === 'supabase'
+                    ? '☁️ Bulut Hesap Senkronizasyonu Aktif'
+                    : familyState.migrationNeeded
+                      ? 'Cihaz içi çoklu-hesap aktif (Bulut eşleme için SQL migration çalıştırın)'
+                      : 'Cihaz içi çoklu-hesap kaydı aktif'}
+                </small>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {familyMembers.map((m) => (
+                  <div key={m.userId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 10px', borderRadius: 8, background: 'rgba(255,255,255,0.03)', fontSize: 12 }}>
+                    <span>
+                      {m.role === 'owner' ? '👑' : '🤝'} <b>{m.name}</b>
+                      {m.email ? <span className="fx-muted"> · {m.email}</span> : null}
+                      {m.userId === authUser?.id ? ' (Sen)' : ''}
+                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {isFamilyOwner && m.userId !== authUser?.id && (
+                        <button
+                          type="button"
+                          className="fx-btn fx-btn--xs fx-btn--ghost"
+                          onClick={() => handleRemoveFamilyMember(m.userId)}
+                          disabled={familyBusy}
+                        >
+                          Çıkar
+                        </button>
+                      )}
+                      {m.userId === authUser?.id && !isFamilyOwner && (
+                        <button
+                          type="button"
+                          className="fx-btn fx-btn--xs fx-btn--ghost"
+                          onClick={() => handleRemoveFamilyMember(authUser.id)}
+                          disabled={familyBusy}
+                        >
+                          Ayrıl
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* SAĞ TELEMETRİ KUTUCUĞU & DAVET KODU */}
+        {/* SAĞ TELEMETRİ KUTUCUĞU & DAVET KODU / AİLE KATILIMI */}
         <div className="fx-squadQuickConnect">
           <div className="fx-squadTelemetryMini">
             <div className="fx-squadStatPod">
@@ -387,22 +548,56 @@ export default function GymBuddyStudio({ profile = {}, entries = {}, onStartWork
           </div>
 
           <div className="fx-squadInviteBox">
-            <span className="fx-squadInviteLabel">SQUAD DAVET LİNKİ &amp; KODU:</span>
-            <div className="fx-squadCodeRow">
-              <code className="fx-squadCode">{myInviteCode}</code>
-              <button type="button" className="fx-btn fx-btn--sm fx-copyBtn" onClick={copyCode}>
-                {copiedCode ? <Check size={13} color="#00f0ff" /> : <Copy size={13} />}
-                <span>{copiedCode ? 'Kopyalandı' : 'Kopyala'}</span>
-              </button>
-            </div>
-            <button
-              type="button"
-              className="fx-btn fx-btn--ghost fx-btn--sm fx-whatsappBtn"
-              onClick={handleShareWhatsApp}
-            >
-              <Share2 size={13} color="#25D366" />
-              <span>WhatsApp'tan Arkadaşını Davet Et</span>
-            </button>
+            {familyGroup ? (
+              <>
+                <span className="fx-squadInviteLabel">AİLE PLANI DAVET LİNKİ &amp; KODU:</span>
+                <div className="fx-squadCodeRow">
+                  <code className="fx-squadCode">{myInviteCode}</code>
+                  <button type="button" className="fx-btn fx-btn--sm fx-copyBtn" onClick={copyCode}>
+                    {copiedCode ? <Check size={13} color="#00f0ff" /> : <Copy size={13} />}
+                    <span>{copiedCode ? 'Kopyalandı' : 'Kodu Kopyala'}</span>
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="fx-btn fx-btn--ghost fx-btn--sm fx-whatsappBtn"
+                  onClick={handleShareWhatsApp}
+                >
+                  <Share2 size={13} color="#25D366" />
+                  <span>Davet Linkini Paylaş ({familyMembers.length}/4)</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <span className="fx-squadInviteLabel">AİLE PLANI BAŞLAT VEYA KOD İLE KATIL:</span>
+                <button
+                  type="button"
+                  className="fx-btn fx-solarBtn fx-btn--sm"
+                  onClick={handleActivateFamily}
+                  disabled={familyBusy}
+                  style={{ width: '100%' }}
+                >
+                  <Crown size={14} /> {familyBusy ? 'Hazırlanıyor…' : '4 Kişilik Aile Planı Başlat & Kod Al'}
+                </button>
+                <form onSubmit={handleJoinFamily} style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+                  <input
+                    type="text"
+                    placeholder="Davet kodu: FIT-FAM-..."
+                    value={joinCodeInput}
+                    onChange={(e) => setJoinCodeInput(e.target.value)}
+                    style={{ flex: 1, minWidth: 0, textTransform: 'uppercase', padding: '7px 10px', borderRadius: 8, fontSize: 12 }}
+                    aria-label="Aile davet kodu"
+                  />
+                  <button
+                    type="submit"
+                    className="fx-btn fx-btn--ghost fx-btn--sm"
+                    disabled={familyBusy || !joinCodeInput.trim()}
+                  >
+                    Katıl
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </div>

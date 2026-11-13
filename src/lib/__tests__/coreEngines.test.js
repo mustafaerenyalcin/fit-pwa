@@ -7,8 +7,19 @@ import {
   cancelPro,
   getMaxGymBuddies,
   setAiCache,
-  getAiCache
+  getAiCache,
+  setQuotaUserScope,
+  getAiMembership
 } from '../aiQuota.js';
+import {
+  FAMILY_MAX_SEATS,
+  activateFamilyPlan,
+  joinFamilyByCode,
+  leaveOrRemoveFamilyMember,
+  getFamilyStatus,
+  buildFamilyInviteUrl,
+  normalizeInviteCode
+} from '../familyPlan.js';
 import { calculateReadiness } from '../readinessEngine.js';
 import { calculateStreak, calculateGamification } from '../streaks.js';
 import { setLang, getLang, translate } from '../i18n.js';
@@ -21,7 +32,12 @@ import {
   weightUnitLabel,
   convertLength,
   lengthUnitLabel,
-  getExerciseRecord
+  getExerciseRecord,
+  calculateDotsScore,
+  calculateWilksScore,
+  calculateKatchMcArdleBMR,
+  calculateCalorieCycleSplit,
+  calculateUsNavyBodyFat
 } from '../calculations.js';
 import { resolveExerciseMedia, EXERCISE_MEDIA_DB } from '../exerciseMedia.js';
 import { parseSetRepTarget, getSmartExerciseDefaults } from '../exerciseStats.js';
@@ -337,7 +353,92 @@ describe('Cover Image Uniqueness & Asset Integrity', () => {
     for (const imgPath of toolImageMatches) {
       expect(progImages).not.toContain(imgPath);
       const diskPath = path.join(publicDir, imgPath.replace(/^\//, ''));
-      expect(fs.existsSync(diskPath)).toBe(true);
+      expect(diskPath && fs.existsSync(diskPath)).toBe(true);
     }
+  });
+});
+
+describe('Pro Biometrics, DOTS/Wilks, Katch-McArdle & i18n telemetry label', () => {
+  it('computes accurate DOTS, Wilks, Katch-McArdle, US Navy and Calorie Cycling outputs', () => {
+    const dots = calculateDotsScore(500, 80, 'male');
+    const wilks = calculateWilksScore(500, 80, 'male');
+    expect(dots).toBeGreaterThan(330);
+    expect(dots).toBeLessThan(360);
+    expect(wilks).toBeGreaterThan(330);
+    expect(wilks).toBeLessThan(360);
+    expect(calculateDotsScore(0, 80, 'male')).toBe(0);
+
+    // 80 kg, %15 yağ -> LBM = 68 kg -> BMR = 370 + 21.6 * 68 = 1839 kcal
+    expect(calculateKatchMcArdleBMR(80, 15)).toBe(1839);
+
+    const cycle = calculateCalorieCycleSplit(2400, 160, 65, 150);
+    expect(cycle.training.kcal).toBe(2550);
+    expect(cycle.rest.kcal).toBe(2250);
+    expect(cycle.training.carbs).toBeGreaterThan(cycle.rest.carbs);
+
+    const navyBf = calculateUsNavyBodyFat({ sex: 'male', heightCm: 180, waistCm: 84, neckCm: 38 });
+    expect(navyBf).toBeGreaterThan(10);
+    expect(navyBf).toBeLessThan(25);
+  });
+
+  it('has no trailing colon on telemetry.remaining across all 4 locales', () => {
+    for (const locale of ['tr', 'en', 'de', 'es']) {
+      setLang(locale);
+      expect(translate('telemetry.remaining').endsWith(':')).toBe(false);
+    }
+    setLang('tr');
+  });
+});
+
+describe('Multi-Account Family Plan Engine (4 seats, independent accounts)', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    setQuotaUserScope(null);
+  });
+
+  it('allows owner to create a 4-seat family plan and separate friend accounts to join via invite code', async () => {
+    const owner = { id: 'local_owner_1', email: 'owner@fit.local', isLocal: true };
+    const friend1 = { id: 'local_friend_1', email: 'ali@fit.local', isLocal: true };
+    const friend2 = { id: 'local_friend_2', email: 'veli@fit.local', isLocal: true };
+    const friend3 = { id: 'local_friend_3', email: 'can@fit.local', isLocal: true };
+    const friend4 = { id: 'local_friend_4', email: 'extra@fit.local', isLocal: true };
+
+    setQuotaUserScope(owner.id);
+    const created = await activateFamilyPlan(owner, 'Eren');
+    const code = normalizeInviteCode(created.group.inviteCode);
+    expect(code).toMatch(/^FIT-FAM-[A-Z0-9]+$/);
+    expect(buildFamilyInviteUrl(code, 'https://fit.app')).toBe(`https://fit.app/?family=${code}`);
+    expect(getAiMembership().plan).toBe('family');
+    expect(getAiMembership().isPro).toBe(true);
+
+    // Unrelated account starts Free (accounts are strictly isolated)
+    setQuotaUserScope(friend1.id);
+    expect(getAiMembership().isPro).toBe(false);
+
+    // Friend 1 joins using THEIR OWN account & code -> gets Family Pro on their own account
+    await joinFamilyByCode(friend1, code, 'Ali');
+    expect(getAiMembership().isPro).toBe(true);
+    expect(getAiMembership().plan).toBe('family');
+    expect(getAiMembership().familyRole).toBe('member');
+
+    // Fill seats 3 and 4
+    setQuotaUserScope(friend2.id);
+    await joinFamilyByCode(friend2, code, 'Veli');
+    setQuotaUserScope(friend3.id);
+    const fullStatus = await joinFamilyByCode(friend3, code, 'Can');
+    expect(fullStatus.group.members).toHaveLength(FAMILY_MAX_SEATS);
+
+    // Seat #5 must be rejected (max 4 accounts)
+    setQuotaUserScope(friend4.id);
+    await expect(joinFamilyByCode(friend4, code, 'Extra')).rejects.toThrow(/4 kişilik/);
+    expect(getAiMembership().isPro).toBe(false);
+
+    // Owner removes friend1 -> friend1's own account drops back to Free & seat opens
+    setQuotaUserScope(owner.id);
+    await leaveOrRemoveFamilyMember(owner, friend1.id);
+    setQuotaUserScope(friend1.id);
+    const f1Status = await getFamilyStatus(friend1);
+    expect(f1Status.group).toBeNull();
+    expect(getAiMembership().isPro).toBe(false);
   });
 });

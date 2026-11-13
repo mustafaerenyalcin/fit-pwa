@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
-import { Sparkles, ShieldCheck, Flame, Target, Award } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 import { Card, Ring } from './ui.jsx';
+import { calculateUsNavyBodyFat } from '../lib/calculations.js';
 
 /**
  * Profesyonel Vücut Kompozisyonu, Adonis Altın Oranı (Omuz/Bel = 1.618),
- * Tahmini Vücut Yağ Oranı (%) ve FFMI (Yağsız Kas Kütlesi İndeksi) Analizörü.
+ * US Navy ↔ Pro BIA / Kaliper karşılaştırması, Yağ Oranı (%) ve FFMI Analizörü.
  */
 export default function BodyCompositionPro({ profile, entries }) {
   const latestEntry = (entries.weight || [])[0]?.payload || {};
@@ -12,19 +12,37 @@ export default function BodyCompositionPro({ profile, entries }) {
   const weight = Number(latestEntry.weight || profile.weight) || 77;
   const waist = Number(latestEntry.waist) || 0;
   const shoulders = Number(latestEntry.shoulders) || 0;
-  const chest = Number(latestEntry.chest) || 0;
-  const arms = Number(latestEntry.arms) || 0;
+
+  const [formulaMode, setFormulaMode] = useState('navy');
+  const [neckCm, setNeckCm] = useState(() => String(latestEntry.neck || 38));
+  const [hipCm, setHipCm] = useState(() => String(latestEntry.hip || 96));
+  const [biaPct, setBiaPct] = useState(() => (profile.sex === 'female' ? '21.5' : '14.5'));
 
   const metrics = useMemo(() => {
     const hMeter = height / 100;
 
-    // 1. Tahmini Vücut Yağ Oranı (Bel/Boy tabanlı bilimsel RFM + Navy hibrit tahmini)
-    let bodyFat = null;
-    if (waist > 45 && height > 120) {
+    // 1A. US Navy Ölçümü (Boyun + Bel [+ Kalça kadın]) veya yetersizse RFM hibrit tahmini
+    let navyFat = calculateUsNavyBodyFat({
+      sex: profile.sex === 'female' ? 'female' : 'male',
+      heightCm: height,
+      waistCm: waist,
+      neckCm: Number(neckCm) || 38,
+      hipCm: Number(hipCm) || 96
+    });
+    if (navyFat === null && waist > 45 && height > 120) {
       const sexFactor = profile.sex === 'female' ? 76 : 64;
-      bodyFat = Math.round((sexFactor - 20 * (height / waist)) * 10) / 10;
-      bodyFat = Math.max(5, Math.min(45, bodyFat));
+      navyFat = Math.round((sexFactor - 20 * (height / waist)) * 10) / 10;
+      navyFat = Math.max(5, Math.min(45, navyFat));
     }
+
+    // 1B. Pro BIA / Kaliper (manuel ölçüm girdisi)
+    const parsedBia = parseFloat(biaPct);
+    const biaFat =
+      !isNaN(parsedBia) && parsedBia >= 4 && parsedBia <= 50 ? Math.round(parsedBia * 10) / 10 : null;
+
+    const bodyFat = formulaMode === 'bia' ? biaFat ?? navyFat : navyFat ?? biaFat;
+    const formulaDiff =
+      navyFat !== null && biaFat !== null ? Math.round((navyFat - biaFat) * 10) / 10 : null;
 
     // 2. Yağsız Kas Kütlesi (Lean Body Mass) ve FFMI
     const effectiveBf = bodyFat ?? (profile.sex === 'female' ? 22 : 15);
@@ -68,6 +86,9 @@ export default function BodyCompositionPro({ profile, entries }) {
     }
 
     return {
+      navyFat,
+      biaFat,
+      formulaDiff,
       bodyFat,
       leanMass,
       ffmi,
@@ -78,7 +99,7 @@ export default function BodyCompositionPro({ profile, entries }) {
       absScore,
       absStage
     };
-  }, [height, weight, waist, shoulders, profile.sex]);
+  }, [height, weight, waist, shoulders, profile.sex, formulaMode, neckCm, hipCm, biaPct]);
 
   const adonisPct = metrics.adonis
     ? Math.min(100, Math.round((metrics.adonis / 1.618) * 100))
@@ -88,8 +109,92 @@ export default function BodyCompositionPro({ profile, entries }) {
     <Card
       tone="accent"
       title="Pro Vücut Kompozisyonu & Estetik Oranlar"
-      subtitle="Yağ oranı, yağsız kas kütlesi (FFMI) ve Adonis altın oranı (1.618) analizi"
+      subtitle="US Navy ↔ Pro BIA/Kaliper kıyaslaması, yağsız kas kütlesi (FFMI) ve Adonis altın oranı (1.618)"
+      action={
+        <div role="tablist" style={{ display: 'flex', gap: 6 }}>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={formulaMode === 'navy'}
+            className={`fx-btn fx-btn--sm ${formulaMode === 'navy' ? 'fx-solarBtn' : 'fx-btn--ghost'}`}
+            onClick={() => setFormulaMode('navy')}
+          >
+            US Navy Ölçüm
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={formulaMode === 'bia'}
+            className={`fx-btn fx-btn--sm ${formulaMode === 'bia' ? 'fx-solarBtn' : 'fx-btn--ghost'}`}
+            onClick={() => setFormulaMode('bia')}
+          >
+            Pro BIA / Kaliper
+          </button>
+        </div>
+      }
     >
+      {/* Formül Kalibrasyon & Kıyaslama Şeridi */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+          gap: 10,
+          marginBottom: 14,
+          padding: 12,
+          borderRadius: 12,
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid var(--fx-border)'
+        }}
+      >
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 11 }}>
+          <span className="fx-muted">Boyun Çevresi (cm)</span>
+          <input
+            type="number"
+            min="25"
+            max="60"
+            step="0.5"
+            value={neckCm}
+            onChange={(e) => setNeckCm(e.target.value)}
+          />
+        </label>
+        {profile.sex === 'female' && (
+          <label style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 11 }}>
+            <span className="fx-muted">Kalça Çevresi (cm)</span>
+            <input
+              type="number"
+              min="60"
+              max="150"
+              step="0.5"
+              value={hipCm}
+              onChange={(e) => setHipCm(e.target.value)}
+            />
+          </label>
+        )}
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 11 }}>
+          <span className="fx-muted">BIA / Kaliper Yağ (%)</span>
+          <input
+            type="number"
+            min="4"
+            max="50"
+            step="0.1"
+            value={biaPct}
+            onChange={(e) => setBiaPct(e.target.value)}
+          />
+        </label>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', fontSize: 11 }}>
+          <span className="fx-muted">Formül Kıyaslama</span>
+          <b>
+            {metrics.navyFat !== null ? `Navy %${metrics.navyFat}` : 'Bel ölçüsü eksik'} ·{' '}
+            {metrics.biaFat !== null ? `BIA %${metrics.biaFat}` : '—'}
+          </b>
+          {metrics.formulaDiff !== null && (
+            <small className="fx-muted">
+              Fark: {metrics.formulaDiff > 0 ? `+${metrics.formulaDiff}` : metrics.formulaDiff} puan
+            </small>
+          )}
+        </div>
+      </div>
+
       <div className="fx-proCompGrid">
         <div className="fx-proCompStat">
           <span className="fx-eyebrow">TAHMİNİ YAĞ ORANI</span>

@@ -15,7 +15,8 @@ import {
   Globe,
   Smartphone
 } from 'lucide-react';
-import { signin, signup, signinWithGoogle, resetPassword, continueAsLocalUser } from '../lib/supabase.js';
+import { signin, signup, signinWithGoogle, signinWithApple, resetPassword, continueAsLocalUser } from '../lib/supabase.js';
+import { getPendingFamilyInvite, capturePendingFamilyInviteFromUrl } from '../lib/familyPlan.js';
 import { hasUnclaimedLegacyData } from '../lib/store.js';
 import { useI18n } from '../lib/i18n.js';
 import LegalModal from './LegalModal.jsx';
@@ -33,7 +34,7 @@ const translateError = (msg = '') => {
   if (m.includes('rate limit'))
     return 'Çok fazla deneme yapıldı. Güvenliğiniz için lütfen 1 dakika bekleyin.';
   if (m.includes('provider is not enabled'))
-    return 'Kurumsal Google SSO şu anda bakımda. E-posta ile kayıt olabilir veya yerel modda devam edebilirsiniz.';
+    return 'Seçilen sosyal giriş sağlayıcısı (Google / Apple) henüz Supabase üzerinde aktif edilmemiş. E-posta ile giriş yapabilir veya yerel modda devam edebilirsiniz.';
   if (m.includes('fetch'))
     return 'Sunucu bağlantısı kurulamadı. Lütfen internet bağlantınızı kontrol edin.';
   return msg || 'İşlem sırasında beklenmeyen bir hata oluştu.';
@@ -87,7 +88,8 @@ const CORP_COPY = {
     submitSignup: 'Üyeliği Tamamla ve Başla',
     submitReset: 'Sıfırlama Bağlantısı Gönder',
     orDivider: 'ALTERNATİF ERİŞİM YÖNTEMLERİ',
-    googleBtn: 'Google Hesabı ile Devam Et',
+    googleBtn: 'Google ile Devam Et',
+    appleBtn: 'Apple ile Devam Et',
     localBtnSaved: 'Cihazdaki Kayıtlı Profil ile Giriş',
     localBtnNew: 'Çevrimdışı / Yerel Hesapla Devam Et',
     backToSignin: '← Oturum açma ekranına dön'
@@ -139,7 +141,8 @@ const CORP_COPY = {
     submitSignup: 'Complete Registration',
     submitReset: 'Send Reset Link',
     orDivider: 'ALTERNATIVE ACCESS METHODS',
-    googleBtn: 'Continue with Google SSO',
+    googleBtn: 'Continue with Google',
+    appleBtn: 'Continue with Apple',
     localBtnSaved: 'Continue with Saved Local Profile',
     localBtnNew: 'Continue in Offline / Local Mode',
     backToSignin: '← Back to Sign In'
@@ -216,10 +219,14 @@ export default function AuthScreen() {
     }
   };
 
-  const handleGoogle = async () => {
+  const handleOAuth = async (provider) => {
     setError('');
     try {
-      await signinWithGoogle();
+      if (provider === 'apple') {
+        await signinWithApple();
+      } else {
+        await signinWithGoogle();
+      }
     } catch (err) {
       setError(translateError(err.message));
     }
@@ -529,7 +536,7 @@ export default function AuthScreen() {
                           e.stopPropagation();
                           setLegalModalType('privacy');
                         }}
-                        style={{ background: 'none', border: 'none', color: '#c8ff00', textDecoration: 'underline', padding: 0, cursor: 'pointer', font: 'inherit' }}
+                        style={{ background: 'none', border: 'none', color: '#ff6b35', textDecoration: 'underline', padding: 0, cursor: 'pointer', font: 'inherit' }}
                       >
                         {c.termsPrivacy}
                       </button>
@@ -541,7 +548,7 @@ export default function AuthScreen() {
                           e.stopPropagation();
                           setLegalModalType('terms');
                         }}
-                        style={{ background: 'none', border: 'none', color: '#c8ff00', textDecoration: 'underline', padding: 0, cursor: 'pointer', font: 'inherit' }}
+                        style={{ background: 'none', border: 'none', color: '#ff6b35', textDecoration: 'underline', padding: 0, cursor: 'pointer', font: 'inherit' }}
                       >
                         {c.termsService}
                       </button>
@@ -574,32 +581,63 @@ export default function AuthScreen() {
 
             {mode !== 'reset' ? (
               <>
+                {(capturePendingFamilyInviteFromUrl() || getPendingFamilyInvite()) && (
+                  <div
+                    className="fx-familyInviteAuthNotice"
+                    style={{
+                      marginTop: 12,
+                      padding: '10px 12px',
+                      borderRadius: 12,
+                      background: 'rgba(16, 185, 129, 0.1)',
+                      border: '1px solid rgba(16, 185, 129, 0.28)',
+                      color: '#34d399',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      textAlign: 'center'
+                    }}
+                  >
+                    🎁 Aile Planı Daveti ({getPendingFamilyInvite()}): Kendi hesabınla giriş yaptıktan sonra Pro erişimin otomatik açılacak!
+                  </div>
+                )}
+
                 <div className="fx-corpDividerText">
                   <span>{c.orDivider}</span>
                 </div>
 
                 <div className="fx-corpAltActions">
-                  <button type="button" className="fx-corpSecondaryBtn" onClick={handleGoogle}>
-                    <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
-                      <path
-                        fill="#FFC107"
-                        d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"
-                      />
-                      <path
-                        fill="#FF3D00"
-                        d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"
-                      />
-                      <path
-                        fill="#4CAF50"
-                        d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"
-                      />
-                      <path
-                        fill="#1976D2"
-                        d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"
-                      />
-                    </svg>
-                    <span>{c.googleBtn}</span>
-                  </button>
+                  <div
+                    className="fx-corpOAuthRow"
+                    style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}
+                  >
+                    <button type="button" className="fx-corpSecondaryBtn" onClick={() => handleOAuth('google')}>
+                      <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
+                        <path
+                          fill="#FFC107"
+                          d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"
+                        />
+                        <path
+                          fill="#FF3D00"
+                          d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"
+                        />
+                        <path
+                          fill="#4CAF50"
+                          d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"
+                        />
+                        <path
+                          fill="#1976D2"
+                          d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"
+                        />
+                      </svg>
+                      <span>{c.googleBtn}</span>
+                    </button>
+
+                    <button type="button" className="fx-corpSecondaryBtn" onClick={() => handleOAuth('apple')}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01ZM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25Z" />
+                      </svg>
+                      <span>{c.appleBtn}</span>
+                    </button>
+                  </div>
 
                   <button type="button" className="fx-corpSecondaryBtn" onClick={handleInstantLocal}>
                     <Smartphone size={16} />

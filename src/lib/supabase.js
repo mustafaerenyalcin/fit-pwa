@@ -473,15 +473,45 @@ export function getAuthState() {
 }
 
 /**
+ * OAuth sağlayıcıları ile tek tıkla giriş (Google / Apple).
+ * Varsa URL'deki ?family= davet kodunu OAuth yönlendirmesi öncesinde güvenceye alır.
+ */
+export async function signinWithOAuth(provider) {
+  if (!supabase) throw new Error('Supabase yapılandırılmamış.');
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search || '');
+    const familyCode = params.get('family');
+    if (familyCode) {
+      try {
+        localStorage.setItem('fit-pending-family-code', familyCode.trim().toUpperCase());
+      } catch {
+        /* yoksay */
+      }
+    }
+  }
+  const redirectTo =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}${window.location.pathname}${window.location.search || ''}`
+      : undefined;
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo }
+  });
+  if (error) throw error;
+}
+
+/**
  * Google ile giriş (Supabase panelinde Google sağlayıcısı açık olmalı).
  */
 export async function signinWithGoogle() {
-  if (!supabase) throw new Error('Supabase yapılandırılmamış.');
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin }
-  });
-  if (error) throw error;
+  return signinWithOAuth('google');
+}
+
+/**
+ * Apple ID ile giriş (Supabase panelinde Apple sağlayıcısı açık olmalı).
+ */
+export async function signinWithApple() {
+  return signinWithOAuth('apple');
 }
 
 /**

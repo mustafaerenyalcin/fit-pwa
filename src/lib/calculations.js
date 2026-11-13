@@ -359,3 +359,99 @@ export function getExerciseRecord(workouts = [], exerciseName = '') {
   if (sessions === 0) return null;
   return { bestKg, bestReps, best1RM, sessions, lastDay, lastKg, lastReps };
 }
+
+/**
+ * Katch-McArdle formülü (Yağsız vücut kütlesine dayalı BMR hesabı).
+ * @param {number} weightKg
+ * @param {number} bodyFatPct - % vücut yağ oranı (ör. 15)
+ * @returns {number|null}
+ */
+export function calculateKatchMcArdleBMR(weightKg, bodyFatPct) {
+  const w = Number(weightKg);
+  const bf = Number(bodyFatPct);
+  if (!w || w <= 0 || isNaN(bf) || bf < 3 || bf > 60) return null;
+  const leanMass = w * (1 - bf / 100);
+  return Math.round(370 + 21.6 * leanMass);
+}
+
+/**
+ * Antrenman vs Dinlenme günü kalori döngüsü (Kalori & Karbonhidrat Döngüsü).
+ */
+export function calculateCalorieCycleSplit(targetKcal, proteinGrams, fatGrams, swingKcal = 150) {
+  const base = Math.max(1200, Number(targetKcal) || 2200);
+  const p = Math.max(0, Number(proteinGrams) || 140);
+  const f = Math.max(0, Number(fatGrams) || 60);
+  const makeDay = (kcal) => {
+    const carbs = Math.max(30, Math.round((kcal - (p * 4 + f * 9)) / 4));
+    return { kcal, protein: p, fat: f, carbs };
+  };
+  return {
+    training: makeDay(base + swingKcal),
+    rest: makeDay(Math.max(1200, base - swingKcal))
+  };
+}
+
+/**
+ * US Navy Çevre Ölçümü Yöntemi ile Vücut Yağ Oranı (%) tahmini.
+ */
+export function calculateUsNavyBodyFat({ sex = 'male', heightCm, waistCm, neckCm, hipCm = 0 }) {
+  const h = Number(heightCm);
+  const waist = Number(waistCm);
+  const neck = Number(neckCm);
+  const hip = Number(hipCm);
+  if (!h || !waist || !neck || h < 120) return null;
+
+  if (sex === 'female') {
+    const sum = waist + (hip > 50 ? hip : waist * 1.15) - neck;
+    if (sum <= 0) return null;
+    const bf = 495 / (1.29579 - 0.35004 * Math.log10(sum) + 0.221 * Math.log10(h)) - 450;
+    return Math.round(Math.max(6, Math.min(50, bf)) * 10) / 10;
+  }
+
+  const diff = waist - neck;
+  if (diff <= 0) return null;
+  const bf = 495 / (1.0324 - 0.19077 * Math.log10(diff) + 0.15456 * Math.log10(h)) - 450;
+  return Math.round(Math.max(4, Math.min(48, bf)) * 10) / 10;
+}
+
+const DOTS_COEFFS = {
+  male: [-307.75076, 24.0900756, -0.1918759221, 0.0007391293, -0.000001093],
+  female: [-57.96288, 13.6175032, -0.1126655495, 0.0005158568, -0.0000010706]
+};
+
+const WILKS_COEFFS = {
+  male: [-216.0475144, 16.2606339, -0.002388645, -0.00113732, 7.01863e-6, -1.291e-8],
+  female: [594.31747775582, -27.23842536447, 0.82112226871, -0.00930733913, 4.731582e-5, -9.054e-8]
+};
+
+function evalPoly(coeffs, x) {
+  return coeffs.reduce((sum, c, idx) => sum + c * Math.pow(x, idx), 0);
+}
+
+/**
+ * DOTS Powerlifting Göreceli Kuvvet Puanı.
+ */
+export function calculateDotsScore(liftedKg, bodyWeightKg, sex = 'male') {
+  const total = Number(liftedKg);
+  const rawBw = Number(bodyWeightKg);
+  if (!total || total <= 0 || !rawBw || rawBw <= 0) return 0;
+  const bw = Math.min(210, Math.max(40, rawBw));
+  const coeffs = sex === 'female' ? DOTS_COEFFS.female : DOTS_COEFFS.male;
+  const denom = evalPoly(coeffs, bw);
+  if (!denom || denom <= 0) return 0;
+  return Math.round((total * (500 / denom)) * 100) / 100;
+}
+
+/**
+ * Wilks Powerlifting Göreceli Kuvvet Puanı.
+ */
+export function calculateWilksScore(liftedKg, bodyWeightKg, sex = 'male') {
+  const total = Number(liftedKg);
+  const rawBw = Number(bodyWeightKg);
+  if (!total || total <= 0 || !rawBw || rawBw <= 0) return 0;
+  const bw = Math.min(200, Math.max(40, rawBw));
+  const coeffs = sex === 'female' ? WILKS_COEFFS.female : WILKS_COEFFS.male;
+  const denom = evalPoly(coeffs, bw);
+  if (!denom || denom <= 0) return 0;
+  return Math.round((total * (500 / denom)) * 100) / 100;
+}

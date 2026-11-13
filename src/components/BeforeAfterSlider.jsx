@@ -17,6 +17,8 @@ export default function BeforeAfterSlider({ profile, entries }) {
   });
 
   const [sliderPos, setSliderPos] = useState(50);
+  const [compareMode, setCompareMode] = useState('slider'); // 'slider' | 'side' | 'ghost'
+  const [ghostOpacity, setGhostOpacity] = useState(50);
   const [leftIdx, setLeftIdx] = useState(0);
   const [rightIdx, setRightIdx] = useState(1);
   const [busy, setBusy] = useState(false);
@@ -117,30 +119,103 @@ export default function BeforeAfterSlider({ profile, entries }) {
             </label>
           </div>
 
-          <div className="fx-baStage">
-            <img src={afterPhoto.url} alt="Sonra" className="fx-baImg fx-baImg--after" />
-            <div className="fx-baClip" style={{ width: `${sliderPos}%` }}>
-              <img src={beforePhoto.url} alt="Önce" className="fx-baImg fx-baImg--before" />
-            </div>
-            <div className="fx-baDivider" style={{ left: `${sliderPos}%` }}>
-              <span className="fx-baHandle">↔</span>
-            </div>
-            <span className="fx-baTag fx-baTag--left">
-              ÖNCE · {beforePhoto.day} {beforePhoto.weight ? `· ${beforePhoto.weight}kg` : ''}
-            </span>
-            <span className="fx-baTag fx-baTag--right">
-              SONRA · {afterPhoto.day} {afterPhoto.weight ? `· ${afterPhoto.weight}kg` : ''}
-            </span>
-            <input
-              type="range"
-              min="5"
-              max="95"
-              value={sliderPos}
-              onChange={(e) => setSliderPos(Number(e.target.value))}
-              className="fx-baRangeInput"
-              aria-label="Önce Sonra Karşılaştırma Kaydırıcısı"
-            />
+          <div
+            role="tablist"
+            style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}
+          >
+            {[
+              ['slider', 'Kaydırıcı'],
+              ['side', 'Yan Yana'],
+              ['ghost', 'Hayalet Overlay']
+            ].map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                aria-selected={compareMode === id}
+                className={`fx-btn fx-btn--sm ${compareMode === id ? 'fx-solarBtn' : 'fx-btn--ghost'}`}
+                onClick={() => setCompareMode(id)}
+              >
+                {label}
+              </button>
+            ))}
           </div>
+
+          {compareMode === 'slider' && (
+            <div className="fx-baStage">
+              <img src={afterPhoto.url} alt="Sonra" className="fx-baImg fx-baImg--after" />
+              <div className="fx-baClip" style={{ width: `${sliderPos}%` }}>
+                <img src={beforePhoto.url} alt="Önce" className="fx-baImg fx-baImg--before" />
+              </div>
+              <div className="fx-baDivider" style={{ left: `${sliderPos}%` }}>
+                <span className="fx-baHandle">↔</span>
+              </div>
+              <span className="fx-baTag fx-baTag--left">
+                ÖNCE · {beforePhoto.day} {beforePhoto.weight ? `· ${beforePhoto.weight}kg` : ''}
+              </span>
+              <span className="fx-baTag fx-baTag--right">
+                SONRA · {afterPhoto.day} {afterPhoto.weight ? `· ${afterPhoto.weight}kg` : ''}
+              </span>
+              <input
+                type="range"
+                min="5"
+                max="95"
+                value={sliderPos}
+                onChange={(e) => setSliderPos(Number(e.target.value))}
+                className="fx-baRangeInput"
+                aria-label="Önce Sonra Karşılaştırma Kaydırıcısı"
+              />
+            </div>
+          )}
+
+          {compareMode === 'side' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid var(--fx-border)' }}>
+                <img src={beforePhoto.url} alt="Önce" style={{ width: '100%', aspectRatio: '3 / 4', objectFit: 'cover', display: 'block' }} />
+                <span className="fx-baTag fx-baTag--left">
+                  ÖNCE · {beforePhoto.day} {beforePhoto.weight ? `· ${beforePhoto.weight}kg` : ''}
+                </span>
+              </div>
+              <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid var(--fx-border)' }}>
+                <img src={afterPhoto.url} alt="Sonra" style={{ width: '100%', aspectRatio: '3 / 4', objectFit: 'cover', display: 'block' }} />
+                <span className="fx-baTag fx-baTag--right">
+                  SONRA · {afterPhoto.day} {afterPhoto.weight ? `· ${afterPhoto.weight}kg` : ''}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {compareMode === 'ghost' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div className="fx-baStage">
+                <img src={beforePhoto.url} alt="Önce" className="fx-baImg fx-baImg--after" />
+                <img
+                  src={afterPhoto.url}
+                  alt="Sonra"
+                  className="fx-baImg fx-baImg--before"
+                  style={{ opacity: ghostOpacity / 100, transition: 'opacity 0.1s linear' }}
+                />
+                <span className="fx-baTag fx-baTag--left">
+                  ÖNCE (Alt)
+                </span>
+                <span className="fx-baTag fx-baTag--right">
+                  SONRA · %{ghostOpacity} Opaklık
+                </span>
+              </div>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12 }}>
+                <span className="fx-muted">Hayalet Opaklık: %{ghostOpacity}</span>
+                <input
+                  type="range"
+                  min="10"
+                  max="90"
+                  value={ghostOpacity}
+                  onChange={(e) => setGhostOpacity(Number(e.target.value))}
+                  style={{ flex: 1 }}
+                  aria-label="Hayalet Overlay Opaklığı"
+                />
+              </label>
+            </div>
+          )}
         </div>
       ) : (
         <div className="fx-baEmptyState">
