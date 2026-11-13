@@ -60,7 +60,7 @@ export default function QuickActionDock({
     celebration.sparks({
       x: rect.left + rect.width / 2,
       y: rect.top,
-      color: '#c8ff00'
+      color: '#ff3b30'
     });
     sounds.bellDing();
     if (onStartWorkout) onStartWorkout(todayPlan);

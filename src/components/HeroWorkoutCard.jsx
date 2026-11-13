@@ -93,7 +93,7 @@ export default function HeroWorkoutCard({
         <div className="fx-zenReadinessDrawer animate-fade-in">
           <div className="fx-zenReadinessGrid">
             <div className="fx-zenFactorCell">
-              <Moon size={13} color="#00f0ff" />
+              <Moon size={13} color="#6366f1" />
               <div>
                 <small>{t('hero.sleep')}</small>
                 <b>{readiness.factors.sleep.val}</b>
@@ -107,7 +107,7 @@ export default function HeroWorkoutCard({
               </div>
             </div>
             <div className="fx-zenFactorCell">
-              <Flame size={13} color="#c8ff00" />
+              <Flame size={13} color="#f59e0b" />
               <div>
                 <small>{t('hero.load')}</small>
                 <b>{readiness.factors.fatigue.val}</b>
@@ -134,7 +134,7 @@ export default function HeroWorkoutCard({
         <p className="fx-zenHeroSub">
           {workoutDone ? (
             <span className="fx-zenDoneText">
-              <CheckCircle2 size={15} color="#c8ff00" /> {t('hero.doneText')}
+              <CheckCircle2 size={15} color="#10b981" /> {t('hero.doneText')}
             </span>
           ) : isRest ? (
             plan?.tips?.[0] || t('hero.restDefaultSub')
@@ -237,7 +237,7 @@ export default function HeroWorkoutCard({
                   onOpenStoryCard();
                 }}
               >
-                <Share2 size={15} color="#00f0ff" /> {t('hero.shareStory')}
+                <Share2 size={15} /> {t('hero.shareStory')}
               </button>
             )}
           </div>
@@ -278,17 +278,17 @@ export default function HeroWorkoutCard({
         {showMissions && (
           <div className="fx-zenMissionsDropdown animate-fade-in">
             <div className={`fx-zenMissionRow ${workoutDone ? 'done' : ''}`}>
-              <CheckCircle2 size={14} color={workoutDone ? '#c8ff00' : 'var(--fx-muted)'} />
+              <CheckCircle2 size={14} color={workoutDone ? '#10b981' : 'var(--fx-muted)'} />
               <span>{t('hero.missionWorkout')}</span>
               <b>+120 XP</b>
             </div>
             <div className={`fx-zenMissionRow ${isProteinDone ? 'done' : ''}`}>
-              <CheckCircle2 size={14} color={isProteinDone ? '#c8ff00' : 'var(--fx-muted)'} />
+              <CheckCircle2 size={14} color={isProteinDone ? '#10b981' : 'var(--fx-muted)'} />
               <span>{t('hero.missionProtein')}</span>
               <b>+80 XP</b>
             </div>
             <div className={`fx-zenMissionRow ${isWaterDone ? 'done' : ''}`}>
-              <CheckCircle2 size={14} color={isWaterDone ? '#c8ff00' : 'var(--fx-muted)'} />
+              <CheckCircle2 size={14} color={isWaterDone ? '#10b981' : 'var(--fx-muted)'} />
               <span>{t('hero.missionWater')}</span>
               <b>+60 XP</b>
             </div>

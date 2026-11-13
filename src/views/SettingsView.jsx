@@ -321,12 +321,12 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
                 <strong>Everkinetic</strong> (Greg Priday) çizimlerinden{' '}
                 <strong>Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0)</strong> lisansı kapsamında değiştirilmeden kullanılmıştır.
               </p>
-              <div className="fx-row" style={{ gap: '12px', flexWrap: 'wrap', fontSize: '11.5px' }}>
+              <div className="fx-creditLinksRow">
                 <a
                   href="https://creativecommons.org/licenses/by-sa/4.0/"
                   target="_blank"
                   rel="noreferrer"
-                  style={{ color: 'var(--fx-accent, #007aff)', fontWeight: 700 }}
+                  className="fx-creditLinkPill"
                 >
                   CC BY-SA 4.0 Lisans Metni ↗
                 </a>
@@ -334,9 +334,9 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
                   href="/exercises/ATTRIBUTION.md"
                   target="_blank"
                   rel="noreferrer"
-                  style={{ color: 'var(--fx-accent, #007aff)', fontWeight: 700 }}
+                  className="fx-creditLinkPill"
                 >
-                  Tam Atıf & Kaynak Dosyası (/exercises/ATTRIBUTION.md) ↗
+                  Tam Atıf & Kaynak Dosyası ↗
                 </a>
               </div>
             </div>

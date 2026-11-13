@@ -605,52 +605,53 @@ export default function ActiveWorkoutModal({
                   <h2>{currentExercise.name}</h2>
                   <p className="exTargetReps">{t('wm.target')} {currentExercise.targetReps}</p>
                 </div>
-
-                <div className="exHeaderActionBtns">
-                  <button
-                    type="button"
-                    className={`guideToggleBtn ${currentExercise.isDoubleDumbbell ? 'active-accent' : ''}`}
-                    onClick={() => {
-                      sounds.tap();
-                      setSessionData((prev) => {
-                        const updated = { ...prev };
-                        updated.exercises[activeExIndex].isDoubleDumbbell = !updated.exercises[activeExIndex].isDoubleDumbbell;
-                        return updated;
-                      });
-                    }}
-                  >
-                    <Dumbbell size={13} /> {currentExercise.isDoubleDumbbell ? t('wm.doubleDbActive') : t('wm.doubleDb')}
-                  </button>
-
-                  <button
-                    type="button"
-                    className="guideToggleBtn"
-                    onClick={() => handleAddWarmupSets(activeExIndex)}
-                  >
-                    {t('wm.warmup')}
-                  </button>
-
-                  {currentExercise.alternatives && currentExercise.alternatives.length > 0 && (
-                    <button
-                      type="button"
-                      className="guideToggleBtn"
-                      onClick={() => setShowReplaceModal(true)}
-                    >
-                      <RefreshCw size={13} /> {t('wm.swap')}
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className="guideToggleBtn"
-                    onClick={() => setShowGuide((v) => !v)}
-                  >
-                    <HelpCircle size={14} /> {t('wm.guide')} {showGuide ? '−' : '+'}
-                  </button>
-                </div>
               </div>
 
-              {/* HİPERTROFİ TEMPO METRONOMU & 40HZ NÖRAL ODAKLANMA BARI */}
-              <div className="fx-tempoNeuralBar">
+              {/* BİRLEŞİK STÜDYO ARAÇ ÇUBUĞU (Modifikatörler + Metronom + Odak) */}
+              <div className="fx-modalStudioToolbar">
+                <button
+                  type="button"
+                  className={`guideToggleBtn ${currentExercise.isDoubleDumbbell ? 'active-accent' : ''}`}
+                  onClick={() => {
+                    sounds.tap();
+                    setSessionData((prev) => {
+                      const updated = { ...prev };
+                      updated.exercises[activeExIndex].isDoubleDumbbell = !updated.exercises[activeExIndex].isDoubleDumbbell;
+                      return updated;
+                    });
+                  }}
+                >
+                  <Dumbbell size={13} /> {currentExercise.isDoubleDumbbell ? t('wm.doubleDbActive') : t('wm.doubleDb')}
+                </button>
+
+                <button
+                  type="button"
+                  className="guideToggleBtn"
+                  onClick={() => handleAddWarmupSets(activeExIndex)}
+                >
+                  {t('wm.warmup')}
+                </button>
+
+                {currentExercise.alternatives && currentExercise.alternatives.length > 0 && (
+                  <button
+                    type="button"
+                    className="guideToggleBtn"
+                    onClick={() => setShowReplaceModal(true)}
+                  >
+                    <RefreshCw size={13} /> {t('wm.swap')}
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  className="guideToggleBtn"
+                  onClick={() => setShowGuide((v) => !v)}
+                >
+                  <HelpCircle size={14} /> {t('wm.guide')} {showGuide ? '−' : '+'}
+                </button>
+
+                <span className="fx-toolbarDivider" aria-hidden="true" />
+
                 <button
                   type="button"
                   className={`fx-tempoToggleBtn ${tempoActive ? 'active' : ''}`}
@@ -667,7 +668,7 @@ export default function ActiveWorkoutModal({
                   className={`fx-neuralPrimeBtn ${neuralPrimingActive ? 'pulsing' : ''}`}
                   onClick={handleTriggerNeuralPrime}
                 >
-                  <Zap size={13} color="#00f0ff" /> {neuralPrimingActive ? t('wm.neuralActive') : t('wm.neuralBtn')}
+                  <Zap size={13} /> {neuralPrimingActive ? t('wm.neuralActive') : t('wm.neuralBtn')}
                 </button>
               </div>
 

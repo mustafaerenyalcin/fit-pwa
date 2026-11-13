@@ -76,18 +76,18 @@ export function calculateReadiness(entries = { workout: [], meal: [], habit: [] 
 
   let tier = 'OPTIMAL';
   let tierLabel = 'Optimum Antrenman Hazırlığı';
-  let color = '#c8ff00';
+  let color = '#059669';
   let advice = 'Vücudun standart hipertrofi ve hacim antrenmanı için dengeli durumda.';
 
   if (score >= 85) {
     tier = 'PEAK';
     tierLabel = 'Zirve Atletik Form (PR Günü)';
-    color = '#00f0ff';
+    color = '#0284c7';
     advice = 'Sinir sistemin ve kas depoların tamamen yenilendi! Bugün ağır ağırlıklar ve yeni PR denemek için harika bir gün.';
   } else if (score < 70) {
     tier = 'RECOVERY';
     tierLabel = 'Aktif Toparlanma / Deload Önerilir';
-    color = '#f5c451';
+    color = '#d97706';
     advice = 'Birikmiş kas yorgunluğu veya uyku eksiği tespit edildi. Bugün RPE 7 sınırında kalın veya kardiyo/mobiliteye odaklanın.';
   }
 

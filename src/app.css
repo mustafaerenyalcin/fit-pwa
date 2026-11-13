@@ -10591,9 +10591,9 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   }
 }
 
-/* 3. Sayfa & Sahne İpeksi Geçişi */
+/* 3. Sayfa & Sahne İpeksi Geçişi (backwards so no persistent transform traps fixed overlays) */
 .fx-spatialStage {
-  animation: stageSlideFade 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: stageSlideFade 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 @keyframes stageSlideFade {

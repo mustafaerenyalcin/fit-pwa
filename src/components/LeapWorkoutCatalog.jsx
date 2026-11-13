@@ -375,16 +375,41 @@ export default function LeapWorkoutCatalog({ entries = {}, onStartWorkout, strea
     ['back', copy.secBack]
   ];
 
+  const weeklyPct = Math.min(1, Math.max(0, activeThisWeek / 7));
+  const ringR = 17;
+  const ringC = 2 * Math.PI * ringR;
+  const ringOffset = ringC * (1 - weeklyPct);
+
   return (
     <div className="fx-leapCatalog">
       {/* 1. HAFTALIK HEDEF 7 GÜN ŞERİDİ (EV EGZERSİZLERİ İMZA KARTI) */}
       <section className="fx-leapWeeklyCard">
         <div className="fx-leapWeeklyTop">
-          <div>
-            <span className="fx-leapEyebrow">{copy.weeklyGoal}</span>
-            <h3 className="fx-leapWeeklyCount">
-              {activeThisWeek} <span>/ 7</span>
-            </h3>
+          <div className="fx-leapWeeklyCountRow">
+            <div className="fx-leapRingWrap" aria-hidden="true">
+              <svg width="44" height="44" viewBox="0 0 44 44">
+                <circle className="fx-leapRingTrack" cx="22" cy="22" r={ringR} strokeWidth="4" fill="none" />
+                <circle
+                  className="fx-leapRingFill"
+                  cx="22"
+                  cy="22"
+                  r={ringR}
+                  strokeWidth="4"
+                  fill="none"
+                  strokeDasharray={ringC}
+                  strokeDashoffset={ringOffset}
+                  strokeLinecap="round"
+                  transform="rotate(-90 22 22)"
+                />
+              </svg>
+              <span className="fx-leapRingCenter">{activeThisWeek}</span>
+            </div>
+            <div>
+              <span className="fx-leapEyebrow">{copy.weeklyGoal}</span>
+              <h3 className="fx-leapWeeklyCount">
+                {activeThisWeek} <span>/ 7</span>
+              </h3>
+            </div>
           </div>
           <div className="fx-leapStatsRow">
             <div className="fx-leapStatCell">

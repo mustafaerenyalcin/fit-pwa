@@ -78,17 +78,10 @@ export default function RestTimer() {
   const progressPercent = Math.max(0, Math.min(100, ((duration - timeLeft) / duration) * 100));
 
   return (
-    <div
-      className={`restTimerCard ${isRunning ? 'active' : ''}`}
-      style={{
-        background: `linear-gradient(135deg, rgba(179, 244, 111, ${
-          0.05 + (progressPercent / 100) * 0.15
-        }) 0%, #17191e 100%)`
-      }}
-    >
+    <div className={`restTimerCard fx-restStudioBar ${isRunning ? 'active' : ''}`}>
       <div className="restTimerHeader">
         <div className="restTimerTitle">
-          <TimerReset size={18} className="timerIcon" />
+          <TimerReset size={16} className="timerIcon" />
           <span>Dinlenme Sayacı</span>
         </div>
 
@@ -100,7 +93,7 @@ export default function RestTimer() {
             title={soundEnabled ? 'Sesi Kapat' : 'Sesi Aç'}
             aria-label="Ses Ayarı"
           >
-            {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+            {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
           </button>
 
           <select
@@ -117,38 +110,40 @@ export default function RestTimer() {
         </div>
       </div>
 
-      <div className="restTimerDisplay">
-        <span className="restTimerDigits">{formattedTime}</span>
-      </div>
+      <div className="fx-restStudioMainRow">
+        <div className="restTimerDisplay">
+          <span className="restTimerDigits">{formattedTime}</span>
+        </div>
 
-      <div className="restTimerProgressBar">
-        <div
-          className="restTimerProgressFill"
-          style={{ width: `${progressPercent}%` }}
-        />
-      </div>
+        <div className="restTimerProgressBar">
+          <div
+            className="restTimerProgressFill"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
 
-      <div className="restTimerActions">
-        <button
-          type="button"
-          className={`timerBtn primary ${isRunning ? 'pause' : 'play'}`}
-          onClick={toggleRun}
-          aria-label={isRunning ? 'Durdur' : 'Başlat'}
-        >
-          {isRunning ? <Pause size={20} /> : <Play size={20} />}
-          <span>{isRunning ? 'Durdur' : timeLeft === 0 ? 'Yeniden Başlat' : 'Başlat'}</span>
-        </button>
+        <div className="restTimerActions">
+          <button
+            type="button"
+            className={`timerBtn primary ${isRunning ? 'pause' : 'play'}`}
+            onClick={toggleRun}
+            aria-label={isRunning ? 'Durdur' : 'Başlat'}
+          >
+            {isRunning ? <Pause size={15} /> : <Play size={15} />}
+            <span>{isRunning ? 'Durdur' : timeLeft === 0 ? 'Yeniden Başlat' : 'Başlat'}</span>
+          </button>
 
-        <button
-          type="button"
-          className="timerBtn secondary"
-          onClick={handleReset}
-          aria-label="Sıfırla"
-          title="Sıfırla"
-        >
-          <RotateCcw size={18} />
-          <span>Sıfırla</span>
-        </button>
+          <button
+            type="button"
+            className="timerBtn secondary"
+            onClick={handleReset}
+            aria-label="Sıfırla"
+            title="Sıfırla"
+          >
+            <RotateCcw size={14} />
+            <span>Sıfırla</span>
+          </button>
+        </div>
       </div>
     </div>
   );

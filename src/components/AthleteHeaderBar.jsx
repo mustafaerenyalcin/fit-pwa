@@ -109,20 +109,20 @@ export default function AthleteHeaderBar({
             onClick={handleOpenBadges}
             title={`${unlockedBadges}/${badges.length}`}
           >
-            <Trophy size={14} color="#f5c451" />
+            <Trophy size={13} color="#d97706" />
             <span>{unlockedBadges}</span>
           </button>
 
           {/* HIZLI SPOTLIGHT ARAMA (Ctrl+K) */}
           <button
             type="button"
-            className="fx-zenBadgeBtn"
+            className="fx-zenBadgeBtn fx-zenCmdBtn"
             onClick={() => window.dispatchEvent(new CustomEvent('fit-open-spotlight'))}
             title="Spotlight (Ctrl+K)"
             aria-label="Spotlight Search"
           >
-            <Search size={14} color="#00f0ff" />
-            <span style={{ fontSize: 10, opacity: 0.75 }}>⌘K</span>
+            <Search size={13} />
+            <kbd>⌘K</kbd>
           </button>
 
           {/* DİJİTAL SPORCU PASAPORTU DÜĞMESİ */}
@@ -135,7 +135,7 @@ export default function AthleteHeaderBar({
             }}
             title={t('header.passport')}
           >
-            <ShieldCheck size={14} color="#00f0ff" />
+            <ShieldCheck size={14} />
             <span>{t('header.passport')}</span>
           </button>
         </div>

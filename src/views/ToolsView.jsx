@@ -241,7 +241,7 @@ export default function ToolsView({
                 setCategoryFilter('training');
               }}
             >
-              <span>⚡ {t('tools.filterTraining')}</span>
+              <span>{t('tools.filterTraining')}</span>
             </button>
             <button
               type="button"
@@ -251,7 +251,7 @@ export default function ToolsView({
                 setCategoryFilter('nutrition');
               }}
             >
-              <span>⏳ {t('tools.filterNutrition')}</span>
+              <span>{t('tools.filterNutrition')}</span>
             </button>
             <button
               type="button"
@@ -261,7 +261,7 @@ export default function ToolsView({
                 setCategoryFilter('biometrics');
               }}
             >
-              <span>🏛️ {t('tools.filterBiometrics')}</span>
+              <span>{t('tools.filterBiometrics')}</span>
             </button>
           </div>
 

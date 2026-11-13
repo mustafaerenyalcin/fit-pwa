@@ -21,6 +21,7 @@ import EmptyState from '../components/EmptyState.jsx';
 import { homePlans, gymPlans, getCustomTrainingDays } from '../lib/workoutPlans.js';
 import { calculatePersonalRecords, getProgressiveOverloadAdvice } from '../lib/exerciseStats.js';
 import { calculateOneRepMax } from '../lib/calculations.js';
+import { resolveExerciseMedia } from '../lib/exerciseMedia.js';
 import { sounds } from '../lib/audio.js';
 import { useI18n } from '../lib/i18n.js';
 
@@ -153,11 +154,21 @@ export default function TrainingView({
                   const prevSet = lastWorkout?.payload?.sets?.[n];
                   const pr = personalRecords[n];
                   const advice = prevSet ? getProgressiveOverloadAdvice(prevSet, reps) : null;
+                  const media = resolveExerciseMedia(n);
 
                   return (
-                    <div className="exercise" key={key} style={{ display: 'block' }}>
+                    <div className="exercise fx-studioExCard" key={key} style={{ display: 'block' }}>
                       <div className="exerciseMainRow">
                         <span className="exerciseIndex">{j + 1}</span>
+                        <button
+                          type="button"
+                          className="fx-miniMoveThumb"
+                          onClick={() => setGuide(guide === key ? null : key)}
+                          title={`${media.label} · 3-fazlı rehber`}
+                          aria-label={`${n} form rehberi`}
+                        >
+                          <img src={media.frame1} alt={n} loading="lazy" />
+                        </button>
                         <div className="exerciseInfoCol">
                           <div className="exTitleRow">
                             <b>{n}</b>
@@ -168,17 +179,19 @@ export default function TrainingView({
                             )}
                           </div>
                           <small className="exerciseSubDesc">
-                            {muscle} · {reps}
+                            {muscle} · {media.equipmentTr}
                           </small>
+                        </div>
+                        <div className="fx-exCardRightCluster">
+                          <b className="exRepsBadge">{reps}</b>
                           <button
                             type="button"
-                            className="guideButton"
+                            className={`guideButton ${guide === key ? 'is-open' : ''}`}
                             onClick={() => setGuide(guide === key ? null : key)}
                           >
                             <HelpCircle size={12} /> Rehber {guide === key ? '−' : '+'}
                           </button>
                         </div>
-                        <b className="exRepsBadge">{reps}</b>
                       </div>
 
                       {/* Technique Guide Box */}
