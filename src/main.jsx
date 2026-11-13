@@ -5,6 +5,7 @@ import App from './App.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import './style.css';
 import './app.css';
+import './leap-unified-theme.css';
 
 createRoot(document.getElementById('root')).render(
   <ErrorBoundary>

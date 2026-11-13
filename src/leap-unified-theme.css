@@ -1,0 +1,763 @@
+/* ==========================================================================
+   FIT. ATELIER — UNIFIED LEAP FITNESS DESIGN SYSTEM
+   Enforces 100% visual consistency across all 6 tabs, sub-views, forms,
+   and modals in both Light Mode (default) and Dark Mode.
+   ========================================================================== */
+
+:root[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --fx-bg: #f4f6fa;
+  --fx-surface: #ffffff;
+  --fx-surface-2: #f1f5f9;
+  --fx-surface-3: #e2e8f0;
+  --fx-card: #ffffff;
+  --fx-card2: #f8fafc;
+  --fx-ink: #0f172a;
+  --fx-text: #0f172a;
+  --fx-muted: #64748b;
+  --fx-faint: #94a3b8;
+  --fx-border: rgba(15, 23, 42, 0.08);
+  --fx-border-strong: rgba(15, 23, 42, 0.16);
+  --fx-accent: #ff3b30;
+  --fx-accent-strong: #e02e24;
+  --fx-accent-ink: #ffffff;
+  --fx-accent-soft: rgba(255, 59, 48, 0.1);
+  --fx-volt: #10b981;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --fx-bg: #090d16;
+  --fx-surface: #111827;
+  --fx-surface-2: #1a2234;
+  --fx-surface-3: #243047;
+  --fx-card: #111827;
+  --fx-card2: #1a2234;
+  --fx-ink: #f8fafc;
+  --fx-text: #f1f5f9;
+  --fx-muted: #94a3b8;
+  --fx-faint: #64748b;
+  --fx-border: rgba(255, 255, 255, 0.09);
+  --fx-border-strong: rgba(255, 255, 255, 0.16);
+  --fx-accent: #ff4d3b;
+  --fx-accent-strong: #ff3b30;
+  --fx-accent-ink: #ffffff;
+  --fx-accent-soft: rgba(255, 77, 59, 0.14);
+  --fx-volt: #10b981;
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   1. GLOBAL HEADER, NAV BAR & DOCK
+   ========================================================================== */
+[data-theme="light"] .fx-spatialHeaderWrap {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 2px 14px rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="light"] .fx-atelierLogo {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-atelierStamp {
+  background: #f1f5f9 !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .fx-atelierNav {
+  background: #eef2f7 !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .fx-atelierNavBtn {
+  color: #475569 !important;
+  background: transparent !important;
+}
+
+[data-theme="light"] .fx-atelierNavBtn:hover {
+  background: rgba(255, 255, 255, 0.65) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-atelierNavBtn.active {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08) !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+}
+
+[data-theme="light"] .fx-atelierNavBtn .fx-navIndex {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .fx-atelierNavBtn.active .fx-navIndex {
+  color: #ff3b30 !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
+   2. HOME TAB FIXES (STREAK RISK BANNER + HERO CARD + MOVE CHIPS)
+   ========================================================================== */
+[data-theme="light"] .fx-streakAuraBar,
+[data-theme="light"] .fx-streakAuraBar.risk {
+  background: linear-gradient(135deg, #fff5f5 0%, #fff1f2 100%) !important;
+  border: 1px solid rgba(255, 59, 48, 0.28) !important;
+  color: #0f172a !important;
+  box-shadow: 0 6px 20px rgba(255, 59, 48, 0.08) !important;
+}
+
+[data-theme="light"] .fx-streakAuraTitle {
+  color: #be123c !important;
+}
+
+[data-theme="light"] .fx-streakAuraSub {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .fx-streakAuraActionBtn {
+  background: #ff3b30 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+[data-theme="light"] .fx-zenReadinessPill {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-zenReadinessTier {
+  color: #475569 !important;
+  opacity: 1 !important;
+}
+
+[data-theme="light"] .fx-zenReadinessDrawer {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-zenFactorCell b {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-zenReadinessAdvice {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .fx-zenHeroSub {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .fx-zenMoveChip {
+  background: #f1f5f9 !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .fx-zenMoveChip b {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-zenMoveChip small {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .fx-zenMoveChip--more {
+  background: rgba(255, 59, 48, 0.1) !important;
+  border-color: rgba(255, 59, 48, 0.25) !important;
+  color: #ff3b30 !important;
+}
+
+[data-theme="light"] .fx-zenAllMovesDrawer {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-moveDetailRow {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  color: #0f172a !important;
+}
+
+/* ==========================================================================
+   3. UNIFIED PANELS, METRICS, INPUTS & BUTTONS ACROSS ALL TABS
+   (Applies directly inside .fx-spatialStage as well as globally)
+   ========================================================================== */
+[data-theme="light"] .fx-spatialStage .panel,
+[data-theme="light"] .fx-spatialStage .miniChartCard,
+[data-theme="light"] .fx-spatialStage .prShowcaseCard,
+[data-theme="light"] .fx-spatialStage .restTimerCard,
+[data-theme="light"] .fx-spatialStage .recipeWizardCard,
+[data-theme="light"] .fx-spatialStage .chatContainer,
+[data-theme="light"] .fx-spatialStage .copyYesterdayBanner,
+[data-theme="light"] .fx-spatialStage .selectedFoodAdjuster,
+[data-theme="light"] .fx-spatialStage .searchResultsDropdown,
+[data-theme="light"] .fx-spatialStage .calendarGrid .dayTile,
+[data-theme="light"] .fx-spatialStage .installGrid > div {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
+}
+
+[data-theme="light"] .fx-spatialStage .panelHead h3,
+[data-theme="light"] .fx-spatialStage .panel h3,
+[data-theme="light"] .fx-spatialStage .metric strong,
+[data-theme="light"] .fx-spatialStage .nutritionNumbers b,
+[data-theme="light"] .fx-spatialStage .favItemMeta b,
+[data-theme="light"] .fx-spatialStage .historyRow b,
+[data-theme="light"] .fx-spatialStage .prExName,
+[data-theme="light"] .fx-spatialStage .prWeightBig strong,
+[data-theme="light"] .fx-spatialStage .exTitleRow b,
+[data-theme="light"] .fx-spatialStage .subTabBar,
+[data-theme="light"] .fx-spatialStage label {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-spatialStage .panelHead span,
+[data-theme="light"] .fx-spatialStage .smallHelp,
+[data-theme="light"] .fx-spatialStage .mutedText,
+[data-theme="light"] .fx-spatialStage .nutritionNumbers small,
+[data-theme="light"] .fx-spatialStage .favItemMeta small,
+[data-theme="light"] .fx-spatialStage .prSubMeta {
+  color: #64748b !important;
+}
+
+/* Sub-tabs & Plan Switchers */
+[data-theme="light"] .subTabBar,
+[data-theme="light"] .planSwitcher,
+[data-theme="light"] .mealCategoryTabs {
+  background: #eef2f7 !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .subTabBtn,
+[data-theme="light"] .planSwitchBtn,
+[data-theme="light"] .mealCatBtn,
+[data-theme="light"] .categoryPill,
+[data-theme="light"] .fx-categoryPill {
+  background: #ffffff !important;
+  color: #475569 !important;
+  border: 1px solid rgba(15, 23, 42, 0.09) !important;
+}
+
+[data-theme="light"] .subTabBtn.active,
+[data-theme="light"] .planSwitchBtn.active,
+[data-theme="light"] .mealCatBtn.active,
+[data-theme="light"] .categoryPill.active,
+[data-theme="light"] .fx-categoryPill.active {
+  background: #007aff !important;
+  border-color: #007aff !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25) !important;
+}
+
+[data-theme="light"] .fx-spatialStage .searchFoodBox,
+[data-theme="light"] .nutritionView .searchFoodBox {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .fx-spatialStage .searchFoodBox .searchInputWrapper,
+[data-theme="light"] .searchInputWrapper {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  border-radius: 12px !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .fx-spatialStage .searchFoodBox .searchInputWrapper svg,
+[data-theme="light"] .searchInputWrapper svg {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .fx-spatialStage .searchFoodBox .searchInputWrapper input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="light"] .searchFoodBox .searchInputWrapper input:not([type="checkbox"]):not([type="radio"]) {
+  border: none !important;
+  background: transparent !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .searchResultsDropdown {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14) !important;
+}
+
+[data-theme="light"] .searchResultItem {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .searchResultItem:hover {
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .searchResultItem b {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .searchResultItem small {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .calBadge {
+  color: #0f766e !important;
+  background: rgba(15, 118, 110, 0.1) !important;
+}
+
+[data-theme="light"] .selectedFoodAdjuster {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .adjusterRow {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .gramBtn {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .gramBtn.active {
+  background: #007aff !important;
+  border-color: #007aff !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .favoritesSection {
+  border-top-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+[data-theme="light"] .favHeader {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-quickMainFab {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14) !important;
+}
+
+[data-theme="light"] .fx-quickMainFab span,
+[data-theme="light"] .fx-quickMainFab b {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-quickMainFab .fx-fabIconWrap {
+  background: rgba(255, 59, 48, 0.12) !important;
+  color: #ff3b30 !important;
+}
+
+/* Inputs, Selects, Nested Cards */
+[data-theme="light"] .fx-spatialStage input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="light"] .fx-spatialStage select,
+[data-theme="light"] .fx-spatialStage textarea,
+[data-theme="light"] .restTimerSelect {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-spatialStage .metric,
+[data-theme="light"] .fx-spatialStage .nutritionNumbers > div,
+[data-theme="light"] .fx-spatialStage .favItemRow,
+[data-theme="light"] .fx-spatialStage .historyRow,
+[data-theme="light"] .fx-spatialStage .exercise,
+[data-theme="light"] .fx-spatialStage .guideBox,
+[data-theme="light"] .fx-spatialStage .supplementScientificNotice,
+[data-theme="light"] .fx-spatialStage .chatInputBar,
+[data-theme="light"] .fx-spatialStage .oneRmCalcBox,
+[data-theme="light"] .fx-spatialStage .coachTipCard {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+/* Rest Timer Digits & Actions (No acid lime glare) */
+[data-theme="light"] .restTimerTitle {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .restTimerDigits {
+  color: #ff3b30 !important;
+}
+
+[data-theme="light"] .restTimerProgressBar {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .restTimerProgressFill {
+  background: linear-gradient(90deg, #ff3b30, #ff6b35) !important;
+}
+
+[data-theme="light"] .soundToggleBtn,
+[data-theme="light"] .timerBtn.secondary,
+[data-theme="light"] .secondary,
+[data-theme="light"] .guideToggleBtn,
+[data-theme="light"] .setQuickBtn {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+}
+
+/* Primary Buttons Uniform Coral Brand */
+[data-theme="light"] .fx-spatialStage .primary,
+[data-theme="light"] .fx-spatialStage .timerBtn.primary,
+[data-theme="light"] .fx-spatialStage .primaryPill,
+[data-theme="light"] .chatInputBar .sendBtn {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b35 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 6px 18px rgba(255, 59, 48, 0.24) !important;
+}
+
+[data-theme="light"] .exerciseIndex {
+  background: rgba(0, 122, 255, 0.12) !important;
+  color: #007aff !important;
+}
+
+/* ==========================================================================
+   4. TOOLS VIEW (FIX WHITE-ON-WHITE CARDS)
+   ========================================================================== */
+[data-theme="light"] .fx-squareToolCard {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .fx-squareToolSymbolBox {
+  background: #f1f5f9 !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .fx-squareToolTitle {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-squareToolSub {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .fx-toolMicroBadge {
+  background: rgba(0, 122, 255, 0.1) !important;
+  border-color: rgba(0, 122, 255, 0.18) !important;
+  color: var(--card-accent, #007aff) !important;
+}
+
+[data-theme="light"] .fx-openToolLink {
+  color: var(--card-accent, #ff3b30) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="light"] .fx-toolsNavBar,
+[data-theme="light"] .fx-toolsMiniBarBtn,
+[data-theme="light"] .fx-toolsBackBtn {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: #0f172a !important;
+}
+
+/* ==========================================================================
+   5. COACH VIEW (UNIFY CHAT BUBBLES & INGREDIENT CHIPS)
+   ========================================================================== */
+[data-theme="light"] .ingChip,
+[data-theme="light"] .suggestionPill {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .ingChip.active {
+  background: #007aff !important;
+  border-color: #007aff !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .isCoach .chatBubble {
+  background: #f1f5f9 !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .isUser .chatBubble {
+  background: linear-gradient(135deg, #007aff 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+[data-theme="light"] .chatBubbleHeader b {
+  color: inherit !important;
+}
+
+/* ==========================================================================
+   6. ACTIVE WORKOUT MODAL & GLOBAL MODALS (UNIFIED LIGHT & DARK)
+   ========================================================================== */
+[data-theme="light"] .activeWorkoutModal,
+[data-theme="light"] .fx-modalCard,
+[data-theme="light"] .fx-spotlightBox {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22) !important;
+}
+
+[data-theme="light"] .activeModalHeader,
+[data-theme="light"] .modalRestBar,
+[data-theme="light"] .activeRestBar,
+[data-theme="light"] .exerciseStepper {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .timerDisplay,
+[data-theme="light"] .liveVolumePill {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .restClock {
+  color: #007aff !important;
+}
+
+.activeModalHeader .headerRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+[data-theme="light"] .liveBadge {
+  color: #10b981 !important;
+}
+
+[data-theme="light"] .liveDot {
+  background: #10b981 !important;
+}
+
+[data-theme="light"] .stepItem {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .stepItem.current {
+  background: rgba(0, 122, 255, 0.08) !important;
+  border-color: #007aff !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .stepItem .stepNum {
+  background: #eef2f7 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .stepItem.current .stepNum {
+  background: #007aff !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .setTrackerTable {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  border-radius: 16px !important;
+}
+
+[data-theme="light"] .setTableHeader {
+  background: #eef2f7 !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .setRow {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .setRow input,
+[data-theme="light"] .setRow select,
+[data-theme="light"] .restDurationSelect,
+[data-theme="light"] .pillBtn,
+[data-theme="light"] .iconBtnSmall,
+[data-theme="light"] .iconBtnClose,
+[data-theme="light"] .setCheckBtn,
+[data-theme="light"] .trashSetBtn,
+[data-theme="light"] .fx-tempoToggleBtn,
+[data-theme="light"] .fx-neuralPrimeBtn,
+[data-theme="light"] .fx-tempoBtn,
+[data-theme="light"] .fx-neuralBtn {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .fx-tempoToggleBtn.active,
+[data-theme="light"] .fx-neuralPrimeBtn.pulsing {
+  background: rgba(0, 122, 255, 0.1) !important;
+  border-color: #007aff !important;
+  color: #007aff !important;
+}
+
+[data-theme="light"] .primary.finishBtnTop,
+[data-theme="light"] .exerciseNavActions .primary {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b35 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+[data-theme="light"] .secondary.finishBtnTop {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .addSetBtn {
+  background: #f1f5f9 !important;
+  border: 1px dashed rgba(0, 122, 255, 0.35) !important;
+  color: #007aff !important;
+}
+
+[data-theme="light"] .setCheckBtn.checked,
+[data-theme="light"] .stepItem.allDone .stepNum {
+  background: #10b981 !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+/* Dark Mode Modal Polish (Unify away from old neon-lime #b0f178) */
+[data-theme="dark"] .finishBtnTop,
+[data-theme="dark"] .exerciseNavActions .primary,
+[data-theme="dark"] .fx-spatialStage .primary {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b35 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+[data-theme="dark"] .fx-atelierNavBtn.active {
+  background: #ff3b30 !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   7. REAL 2-FRAME PHOTO SEQUENCE PLAYER (.fx-photoPlayer)
+   ========================================================================== */
+.fx-photoPlayer {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0f172a;
+  border: 1px solid var(--fx-border, rgba(15, 23, 42, 0.1));
+}
+
+.fx-photoPlayer.is-stage {
+  height: 230px;
+}
+
+.fx-photoPlayer.is-compact {
+  height: 150px;
+}
+
+.fx-photoFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  pointer-events: none;
+}
+
+.fx-photoFrame.is-base {
+  opacity: 1;
+  z-index: 1;
+}
+
+.fx-photoFrame.is-overlay {
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.25s ease;
+}
+
+.fx-photoFrame.is-overlay.visible {
+  opacity: 1;
+}
+
+.fx-photoControlsRow {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  z-index: 2;
+}
+
+.fx-frameSwitchGroup {
+  display: inline-flex;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(8px);
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.fx-frameBtn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.fx-frameBtn.active {
+  background: #007aff;
+  color: #ffffff;
+}
+
+.fx-playPauseBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.fx-animLiveDot.paused {
+  background: #94a3b8;
+  animation: none;
+}
+
+.fx-animStepPill.active-step {
+  border-color: rgba(0, 122, 255, 0.45);
+  background: rgba(0, 122, 255, 0.1);
+}

@@ -13,6 +13,9 @@ import { calculateReadiness } from '../readinessEngine.js';
 import { calculateStreak, calculateGamification } from '../streaks.js';
 import { setLang, getLang, translate } from '../i18n.js';
 import { today, formatDate } from '../calculations.js';
+import { resolveExerciseMedia } from '../exerciseMedia.js';
+import fs from 'node:fs';
+import path from 'node:path';
 
 describe('aiQuota & Membership Engine', () => {
   beforeEach(() => {
@@ -145,5 +148,40 @@ describe('i18n translation engine', () => {
 
     setLang('tr');
     expect(translate('nav.today')).toBe('Ana Sayfa');
+    expect(translate('hero.readyPct', { score: 83 })).toBe('%83 Hazır');
+    expect(translate('hero.movesMeta', { count: 5 })).not.toContain('{count}');
+  });
+});
+
+describe('exerciseMedia resolver & local photo availability', () => {
+  it('resolves all major workout catalog exercises to existing 2-frame photo folders', () => {
+    const samples = [
+      'Incline Push-Ups',
+      'Knee Push-Ups',
+      'Decline Push-Ups',
+      'Bulgarian Split Squat (Ekipmansız)',
+      'DB Romanian Deadlift',
+      'Abdominal Crunches',
+      'Bicycle Crunches',
+      'Plank',
+      'Dead Bug',
+      'Triceps Dips (Sandalye)',
+      'Dumbbell Bicep Curl',
+      'Lateral Raise',
+      'Bent-Over Dumbbell Row',
+      'Glute Bridge',
+      'Cobra Stretch'
+    ];
+
+    const publicDir = path.resolve(process.cwd(), 'public');
+    for (const exName of samples) {
+      const resolved = resolveExerciseMedia(exName);
+      expect(resolved.frame0).toMatch(/^\/exercises\/.+\/0\.jpg$/);
+      expect(resolved.frame1).toMatch(/^\/exercises\/.+\/1\.jpg$/);
+      expect(fs.existsSync(path.join(publicDir, resolved.frame0))).toBe(true);
+      expect(fs.existsSync(path.join(publicDir, resolved.frame1))).toBe(true);
+      expect(resolved.step1.length).toBeGreaterThan(10);
+      expect(resolved.step2.length).toBeGreaterThan(10);
+    }
   });
 });

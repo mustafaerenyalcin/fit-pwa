@@ -75,11 +75,11 @@ export default function HeroWorkoutCard({
           type="button"
           className="fx-zenReadinessPill"
           onClick={toggleReadiness}
-          title={t('hero.readyPct')}
+          title={t('hero.readyPct', { score: readiness.score })}
           style={{ borderColor: readiness.color }}
         >
           <Activity size={12} color={readiness.color} />
-          <b style={{ color: readiness.color }}>{readiness.score}% {t('hero.readyPct')}</b>
+          <b style={{ color: readiness.color }}>{t('hero.readyPct', { score: readiness.score })}</b>
           <span className="fx-zenDotSep">·</span>
           <span className="fx-zenReadinessTier">
             {readiness.tier === 'PEAK' ? t('hero.tierPeak') : readiness.tier === 'OPTIMAL' ? t('hero.tierOptimal') : t('hero.tierRecovery')}
@@ -139,7 +139,7 @@ export default function HeroWorkoutCard({
           ) : isRest ? (
             plan?.tips?.[0] || t('hero.restDefaultSub')
           ) : (
-            `${moveCount} ${t('hero.movesMeta')}`
+            t('hero.movesMeta', { count: moveCount })
           )}
         </p>
 
@@ -172,7 +172,7 @@ export default function HeroWorkoutCard({
                     setShowAllMoves((prev) => !prev);
                   }}
                 >
-                  {showAllMoves ? t('hero.close') : `+${plan.moves.length - 4} ${t('hero.moreMoves')}`}
+                  {showAllMoves ? t('hero.close') : t('hero.moreMoves', { count: plan.moves.length - 4 })}
                 </button>
               )}
             </div>
@@ -181,7 +181,7 @@ export default function HeroWorkoutCard({
             {showAllMoves && (
               <div className="fx-zenAllMovesDrawer animate-scale-in">
                 <div className="fx-allMovesHead">
-                  <span>{t('hero.allMovesHead')} ({plan.moves.length}):</span>
+                  <span>{t('hero.allMovesHead', { count: plan.moves.length })}</span>
                   <button
                     type="button"
                     className="fx-closeMovesBtn"

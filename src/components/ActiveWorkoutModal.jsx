@@ -697,14 +697,11 @@ export default function ActiveWorkoutModal({
               {/* Form & Anatomy Guide */}
               {showGuide && (
                 <div className="activeGuideBox fx-proGuideBox">
-                  <div className="fx-proGuideVisualCol">
-                    <ExerciseVisual name={currentExercise.name} />
-                    <div className="fx-proGuideMuscles">
+                  <div className="guideDetails fx-proGuideDetails" style={{ width: '100%' }}>
+                    <div className="fx-proGuideMuscles" style={{ marginBottom: 10 }}>
                       <span><b>Birincil:</b> {detailedGuide.primary}</span>
                       <span><b>İkincil:</b> {detailedGuide.secondary}</span>
                     </div>
-                  </div>
-                  <div className="guideDetails fx-proGuideDetails">
                     <div className="fx-guideBreathPill">
                       <b>🌬️ Nefes Ritmi:</b> {detailedGuide.breathing}
                     </div>
