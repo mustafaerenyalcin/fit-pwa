@@ -5328,7 +5328,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border-radius: 26px;
   background:
     linear-gradient(180deg, rgba(13, 19, 29, 0.78) 0%, rgba(9, 12, 18, 0.94) 75%, rgba(8, 10, 16, 0.98) 100%),
-    url('/images/squad-bg.jpg') center top / cover no-repeat;
+    url('/images/tools/buddy-squad.svg') center center / cover no-repeat;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 240, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   position: relative;

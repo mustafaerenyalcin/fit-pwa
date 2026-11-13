@@ -316,3 +316,28 @@ describe('Power Athlete Calculations (Plates, Units, PRs)', () => {
     expect(record.lastReps).toBe(5);
   });
 });
+
+describe('Cover Image Uniqueness & Asset Integrity', () => {
+  it('guarantees every Leap program card and Tools card has a unique existing cover asset', () => {
+    const publicDir = path.resolve(process.cwd(), 'public');
+    const progImages = PROGRAMS.map((p) => p.image);
+    expect(new Set(progImages).size).toBe(PROGRAMS.length);
+
+    for (const imgPath of progImages) {
+      expect(imgPath).toMatch(/^\/images\/programs\/.+\.jpg$/);
+      const diskPath = path.join(publicDir, imgPath.replace(/^\//, ''));
+      expect(fs.existsSync(diskPath)).toBe(true);
+    }
+
+    const toolsSrc = fs.readFileSync(path.resolve(process.cwd(), 'src/views/ToolsView.jsx'), 'utf8');
+    const toolImageMatches = [...toolsSrc.matchAll(/image:\s*'([^']+)'/g)].map((m) => m[1]);
+    expect(toolImageMatches.length).toBeGreaterThanOrEqual(11);
+    expect(new Set(toolImageMatches).size).toBe(toolImageMatches.length);
+
+    for (const imgPath of toolImageMatches) {
+      expect(progImages).not.toContain(imgPath);
+      const diskPath = path.join(publicDir, imgPath.replace(/^\//, ''));
+      expect(fs.existsSync(diskPath)).toBe(true);
+    }
+  });
+});

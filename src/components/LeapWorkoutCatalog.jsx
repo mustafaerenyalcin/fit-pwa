@@ -150,7 +150,7 @@ export const PROGRAMS = [
     mins: 14,
     kcal: 140,
     gradient: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-    image: '/images/tools/body.jpg',
+    image: '/images/programs/abs-beginner.jpg',
     moves: [
       { name: 'Jumping Jacks', sets: '30 sn', muscle: 'Kardiyo', tip: 'Kolları tam yukarı aç, ayakları omuz genişliğinde zıpla.' },
       { name: 'Abdominal Crunches', sets: '3 × 16', muscle: 'Üst Karın', tip: 'Boyunu çekmeden kürek kemiklerini yerden kaldır.' },
@@ -166,7 +166,7 @@ export const PROGRAMS = [
     mins: 18,
     kcal: 195,
     gradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-    image: '/images/tools/fasting-v2.jpg',
+    image: '/images/programs/abs-intermediate.jpg',
     moves: [
       { name: 'Bicycle Crunches', sets: '3 × 24', muscle: 'Oblik & Karın', tip: 'Karşı dirsek ile karşı dizi tam sıkıştır.' },
       { name: 'Lying Leg Raises', sets: '3 × 15', muscle: 'Alt Karın', tip: 'Beli yerden kaldırmadan bacakları kontrollü indir.' },
@@ -182,7 +182,7 @@ export const PROGRAMS = [
     mins: 24,
     kcal: 270,
     gradient: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
-    image: '/images/tools/adonis-v2.jpg',
+    image: '/images/programs/abs-advanced.jpg',
     moves: [
       { name: 'Burpees', sets: '3 × 12', muscle: 'Tam Vücut', tip: 'Şınav + patlayıcı sıçrama ile nabzı zirveye çıkar.' },
       { name: 'V-Ups', sets: '4 × 15', muscle: 'Tüm Karın', tip: 'Kol ve bacakları aynı anda V şeklinde yukarıda buluştur.' },
@@ -198,7 +198,7 @@ export const PROGRAMS = [
     mins: 15,
     kcal: 155,
     gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
-    image: '/images/tools/1rm.jpg',
+    image: '/images/programs/chest-beginner.jpg',
     moves: [
       { name: 'Incline Push-Ups', sets: '3 × 12', muscle: 'Alt Göğüs', tip: 'Ellerini yüksek bir yüzeye koyarak kontrollü in.' },
       { name: 'Knee Push-Ups', sets: '3 × 12', muscle: 'Göğüs', tip: 'Dizlerin yerde, gövden düz şekilde göğsünü yere yaklaştır.' },
@@ -214,7 +214,7 @@ export const PROGRAMS = [
     mins: 20,
     kcal: 220,
     gradient: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-    image: '/images/tools/buddy.jpg',
+    image: '/images/programs/chest-intermediate.jpg',
     moves: [
       { name: 'Push-Up Shoulder Taps', sets: '4 × 12', muscle: 'Göğüs & Core', tip: 'Her tam şınavın tepesinde karşı omuza dokun.' },
       { name: 'Decline Push-Ups', sets: '3 × 12', muscle: 'Üst Göğüs', tip: 'Ayaklarını yüksek bir yere koyup üst göğse odaklan.' },
@@ -229,7 +229,7 @@ export const PROGRAMS = [
     mins: 26,
     kcal: 290,
     gradient: 'linear-gradient(135deg, #be123c 0%, #881337 100%)',
-    image: '/images/tools/metabolic-v2.jpg',
+    image: '/images/programs/chest-advanced.jpg',
     moves: [
       { name: 'Explosive Push-Ups', sets: '4 × 10', muscle: 'Patlayıcı Göğüs', tip: 'Göğüsten tüm gücünle iterek ellerini yerden kes.' },
       { name: 'Archer Push-Ups', sets: '3 × 12', muscle: 'Tek Kol Göğüs', tip: 'Bir kolunu yana açıp ağırlığı diğer göğse yükle.' },
@@ -244,7 +244,7 @@ export const PROGRAMS = [
     mins: 14,
     kcal: 135,
     gradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
-    image: '/images/tools/tabata.jpg',
+    image: '/images/programs/arm-beginner.jpg',
     moves: [
       { name: 'Arm Circles', sets: '2 × 30 sn', muscle: 'Omuz & Kol Isınma', tip: 'Kolları yana açıp küçük ve kontrollü daireler çiz.' },
       { name: 'Chair Triceps Dips', sets: '3 × 12', muscle: 'Triceps', tip: 'Sırtını sandalyeye yakın tutarak dirseklerini 90° bük.' },
@@ -259,7 +259,7 @@ export const PROGRAMS = [
     mins: 19,
     kcal: 205,
     gradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
-    image: '/images/tools/genetic.jpg',
+    image: '/images/programs/arm-intermediate.jpg',
     moves: [
       { name: 'Diamond Push-Ups', sets: '4 × 12', muscle: 'Triceps & İç Göğüs', tip: 'Eller üçgen formda arka kolu yakana kadar kontrollü in.' },
       { name: 'Bench Triceps Dips', sets: '3 × 15', muscle: 'Triceps', tip: 'Bacaklar önde düz sehpadan derin iniş ve kilit itiş.' },
@@ -274,7 +274,7 @@ export const PROGRAMS = [
     mins: 16,
     kcal: 185,
     gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-    image: '/images/tools/form_check.jpg',
+    image: '/images/programs/leg-beginner.jpg',
     moves: [
       { name: 'Bodyweight Squat', sets: '3 × 16', muscle: 'Quad & Kalça', tip: 'Topukların yerde, kalçayı geriye iterek paralel in.' },
       { name: 'Forward Lunges', sets: '3 × 16', muscle: 'Bacak & Kalça', tip: 'Gövde dik, öne adımla arka diz yere yaklaşana dek in.' },
@@ -289,7 +289,7 @@ export const PROGRAMS = [
     mins: 24,
     kcal: 310,
     gradient: 'linear-gradient(135deg, #059669 0%, #065f46 100%)',
-    image: '/images/tools/recovery.jpg',
+    image: '/images/programs/leg-advanced.jpg',
     moves: [
       { name: 'Jump Squats', sets: '4 × 15', muscle: 'Patlayıcı Quad', tip: 'Derin çömelip patlayıcı şekilde yukarı sıçra.' },
       { name: 'Bulgarian Split Squat', sets: '3 × 12', muscle: 'Quad & Kalça', tip: 'Arka ayağı koltuk/sandalyeye koyup tek bacak çök.' },
@@ -304,7 +304,7 @@ export const PROGRAMS = [
     mins: 15,
     kcal: 145,
     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
-    image: '/images/tools/hydration.jpg',
+    image: '/images/programs/back-beginner.jpg',
     moves: [
       { name: 'Superman Hold', sets: '3 × 15', muscle: 'Alt Sırt', tip: 'Yüzüstü uzanıp kol ve bacakları aynı anda yerden kaldır.' },
       { name: 'Prone Y Raises', sets: '3 × 12', muscle: 'Alt Trapez & Omuz', tip: 'Kolları Y açısında öne uzatarak kürek kemiklerini çek.' },
@@ -319,7 +319,7 @@ export const PROGRAMS = [
     mins: 22,
     kcal: 245,
     gradient: 'linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%)',
-    image: '/images/tools/form_check.jpg',
+    image: '/images/programs/back-advanced.jpg',
     moves: [
       { name: 'Elevated Pike Push-Ups', sets: '4 × 12', muscle: 'Omuz Başları', tip: 'Ayaklar yüksekte dikey omuz itişi yap.' },
       { name: 'Doorway Rows', sets: '4 × 12', muscle: 'Sırt & Kanat', tip: 'Kapı çerçevesinden kürek kemiklerini sıkarak çekil.' },

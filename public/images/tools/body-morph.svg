@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="gBody" cx="68%" cy="48%" r="55%">
+      <stop offset="0%" stop-color="#94a3b8" stop-opacity="0.24"/>
+      <stop offset="55%" stop-color="#00f0ff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#ffffff" stroke-opacity="0.035" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="500" fill="#090d16"/>
+  <rect width="800" height="500" fill="url(#gBody)"/>
+  <rect width="800" height="500" fill="url(#grid)"/>
+
+  <!-- Before / After Anthropometric Comparison & Scan Wiper -->
+  <g transform="translate(550, 250)" fill="none">
+    <!-- Vertical Anthropometric Ruler Ticks (Left side) -->
+    <g stroke="#94a3b8" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round">
+      <line x1="-160" y1="-150" x2="-160" y2="150"/>
+      <line x1="-160" y1="-120" x2="-142" y2="-120"/>
+      <line x1="-160" y1="-60" x2="-148" y2="-60"/>
+      <line x1="-160" y1="0" x2="-136" y2="0"/>
+      <line x1="-160" y1="60" x2="-148" y2="60"/>
+      <line x1="-160" y1="120" x2="-142" y2="120"/>
+    </g>
+
+    <!-- Left half: Before Silhouette (subtle slate dashed) -->
+    <path d="M 0 -132 C -26 -132, -32 -98, -14 -78 L -88 -54 L -94 36 L -78 136 L 0 136"
+          stroke="#94a3b8" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="6 5"/>
+    <!-- Right half: After Sculpted V-Taper (sharp cyan/emerald) -->
+    <path d="M 0 -132 C 26 -132, 32 -98, 14 -78 L 106 -62 L 62 18 L 72 136 L 0 136"
+          fill="#00f0ff" fill-opacity="0.09" stroke="#00f0ff" stroke-opacity="0.88" stroke-width="2.5"/>
+
+    <!-- Center Slider Divider Line & Handle -->
+    <line x1="0" y1="-170" x2="0" y2="170" stroke="#ffffff" stroke-opacity="0.75" stroke-width="2"/>
+    <circle cx="0" cy="0" r="16" fill="#090d16" stroke="#00f0ff" stroke-width="2.5"/>
+    <path d="M -7 0 L -2 -4 L -2 4 Z M 7 0 L 2 -4 L 2 4 Z" fill="#ffffff"/>
+  </g>
+</svg>

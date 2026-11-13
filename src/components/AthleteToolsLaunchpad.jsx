@@ -22,8 +22,8 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       title: t('launchpad.formTitle'),
       sub: t('launchpad.formSub'),
       badge: t('launchpad.formBadge'),
-      color: '#c8ff00',
-      image: '/images/tools/form_check.jpg',
+      color: '#00f0ff',
+      image: '/images/tools/form-biomech.svg',
       action: () => onNavigate('tools', 'form_check')
     },
     {
@@ -43,7 +43,7 @@ export default function AthleteToolsLaunchpad({ onOpenBarcode, onNavigate }) {
       sub: t('launchpad.coachSub'),
       badge: t('launchpad.coachBadge'),
       color: '#a855f7',
-      image: '/images/tools/buddy.jpg',
+      image: '/images/tools/coach-ai.svg',
       action: () => onNavigate('coach')
     }
   ];

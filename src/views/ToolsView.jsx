@@ -50,7 +50,7 @@ const TOOLS_CONFIG = [
     category: 'training',
     badge: 'Ortak Seri',
     color: '#ff4d1c',
-    image: '/images/tools/buddy.jpg',
+    image: '/images/tools/buddy-squad.svg',
     bg: 'linear-gradient(135deg, rgba(255, 77, 28, 0.18), rgba(255, 77, 28, 0.02))'
   },
   {
@@ -61,7 +61,7 @@ const TOOLS_CONFIG = [
     category: 'training',
     badge: 'Olimpik Bar',
     color: '#f5c451',
-    image: '/images/tools/1rm.jpg',
+    image: '/images/tools/1rm-plates.svg',
     bg: 'linear-gradient(135deg, rgba(245, 196, 81, 0.16), rgba(245, 196, 81, 0.02))'
   },
   {
@@ -72,7 +72,7 @@ const TOOLS_CONFIG = [
     category: 'training',
     badge: '8 Tur · 4 Dk',
     color: '#10b981',
-    image: '/images/tools/tabata.jpg',
+    image: '/images/tools/tabata-hiit.svg',
     bg: 'linear-gradient(135deg, rgba(16, 185, 129, 0.16), rgba(16, 185, 129, 0.02))'
   },
   {
@@ -94,7 +94,7 @@ const TOOLS_CONFIG = [
     category: 'biometrics',
     badge: 'Altın Oran',
     color: '#eab308',
-    image: '/images/tools/adonis-v2.jpg',
+    image: '/images/tools/adonis-ratio.svg',
     bg: 'linear-gradient(135deg, rgba(234, 179, 8, 0.16), rgba(234, 179, 8, 0.02))'
   },
   {
@@ -105,7 +105,7 @@ const TOOLS_CONFIG = [
     category: 'nutrition',
     badge: 'BMR & TDEE',
     color: '#ff4d1c',
-    image: '/images/tools/metabolic-v2.jpg',
+    image: '/images/tools/metabolic-tdee.svg',
     bg: 'linear-gradient(135deg, rgba(255, 77, 28, 0.16), rgba(255, 77, 28, 0.02))'
   },
   {
@@ -116,7 +116,7 @@ const TOOLS_CONFIG = [
     category: 'biometrics',
     badge: 'HRV Telemetri',
     color: '#a855f7',
-    image: '/images/tools/recovery.jpg',
+    image: '/images/tools/recovery-hrv.svg',
     bg: 'linear-gradient(135deg, rgba(168, 85, 247, 0.16), rgba(168, 85, 247, 0.02))'
   },
   {
@@ -127,7 +127,7 @@ const TOOLS_CONFIG = [
     category: 'biometrics',
     badge: 'Before / After',
     color: '#94a3b8',
-    image: '/images/tools/body.jpg',
+    image: '/images/tools/body-morph.svg',
     bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.16), rgba(148, 163, 184, 0.02))'
   },
   {
@@ -138,7 +138,7 @@ const TOOLS_CONFIG = [
     category: 'training',
     badge: 'AI Biyomekanik',
     color: '#00f0ff',
-    image: '/images/tools/form_check.jpg',
+    image: '/images/tools/form-biomech.svg',
     bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(0, 240, 255, 0.02))'
   },
   {
@@ -149,7 +149,7 @@ const TOOLS_CONFIG = [
     category: 'biometrics',
     badge: 'Casey Butt Sınırı',
     color: '#00f0ff',
-    image: '/images/tools/genetic.jpg',
+    image: '/images/tools/genetic-ceiling.svg',
     bg: 'linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(0, 240, 255, 0.02))'
   }
 ];

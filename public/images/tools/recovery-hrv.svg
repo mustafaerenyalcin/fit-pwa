@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="gRec" cx="68%" cy="48%" r="55%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#10b981" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#ffffff" stroke-opacity="0.035" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="500" fill="#090d16"/>
+  <rect width="800" height="500" fill="url(#gRec)"/>
+  <rect width="800" height="500" fill="url(#grid)"/>
+
+  <!-- Parasympathetic Calm Rings -->
+  <g fill="none">
+    <circle cx="560" cy="245" r="170" stroke="#a855f7" stroke-opacity="0.22" stroke-width="1.5"/>
+    <circle cx="560" cy="245" r="120" stroke="#a855f7" stroke-opacity="0.34" stroke-width="1.5" stroke-dasharray="6 8"/>
+    <circle cx="560" cy="245" r="70" fill="#a855f7" fill-opacity="0.08" stroke="#c084fc" stroke-opacity="0.45" stroke-width="1.5"/>
+
+    <!-- Baseline ECG / HRV Trace Waveform -->
+    <path d="M 140 265 L 360 265 L 390 265 L 408 232 L 424 282 L 444 138 L 466 355 L 486 226 L 502 265 L 558 265 L 575 240 L 594 286 L 612 162 L 632 332 L 650 245 L 672 265 L 780 265"
+          stroke="#c084fc" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.88"/>
+    <!-- Glow dot on R-peak -->
+    <circle cx="444" cy="138" r="7" fill="#10b981"/>
+    <circle cx="612" cy="162" r="7" fill="#c084fc"/>
+  </g>
+</svg>

@@ -4,7 +4,7 @@
  * and immediate network-first for document navigation.
  */
 
-const CACHE_NAME = 'fit-atelier-v3.1.0';
+const CACHE_NAME = 'fit-atelier-v3.2.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -15,19 +15,31 @@ const STATIC_ASSETS = [
   '/icons/icon-512.png',
   '/images/workout-bg.jpg',
   '/images/nutrition-bg.jpg',
-  '/images/squad-bg.jpg',
   '/images/recovery-bg.jpg',
+  '/images/programs/abs-beginner.jpg',
+  '/images/programs/abs-intermediate.jpg',
+  '/images/programs/abs-advanced.jpg',
+  '/images/programs/chest-beginner.jpg',
+  '/images/programs/chest-intermediate.jpg',
+  '/images/programs/chest-advanced.jpg',
+  '/images/programs/arm-beginner.jpg',
+  '/images/programs/arm-intermediate.jpg',
+  '/images/programs/leg-beginner.jpg',
+  '/images/programs/leg-advanced.jpg',
+  '/images/programs/back-beginner.jpg',
+  '/images/programs/back-advanced.jpg',
   '/images/tools/fasting-v2.jpg',
-  '/images/tools/buddy.jpg',
-  '/images/tools/1rm.jpg',
-  '/images/tools/tabata.jpg',
   '/images/tools/hydration.jpg',
-  '/images/tools/adonis-v2.jpg',
-  '/images/tools/metabolic-v2.jpg',
-  '/images/tools/recovery.jpg',
-  '/images/tools/body.jpg',
-  '/images/tools/form_check.jpg',
-  '/images/tools/genetic.jpg'
+  '/images/tools/buddy-squad.svg',
+  '/images/tools/1rm-plates.svg',
+  '/images/tools/tabata-hiit.svg',
+  '/images/tools/adonis-ratio.svg',
+  '/images/tools/metabolic-tdee.svg',
+  '/images/tools/recovery-hrv.svg',
+  '/images/tools/body-morph.svg',
+  '/images/tools/form-biomech.svg',
+  '/images/tools/genetic-ceiling.svg',
+  '/images/tools/coach-ai.svg'
 ];
 
 // Install: Cache critical application shell resiliently & skip waiting immediately

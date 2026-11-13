@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="gAdo" cx="68%" cy="46%" r="55%">
+      <stop offset="0%" stop-color="#eab308" stop-opacity="0.28"/>
+      <stop offset="60%" stop-color="#ff4d1c" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+    </radialGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#ffffff" stroke-opacity="0.04" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="500" fill="#090d16"/>
+  <rect width="800" height="500" fill="url(#gAdo)"/>
+  <rect width="800" height="500" fill="url(#grid)"/>
+
+  <!-- Architectural Golden Ratio Concentric Frame & 1.618 Crosshairs -->
+  <g transform="translate(550, 255)" fill="none">
+    <circle cx="0" cy="0" r="185" stroke="#eab308" stroke-opacity="0.22" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="114" stroke="#eab308" stroke-opacity="0.34" stroke-width="1.5" stroke-dasharray="5 6"/>
+    <line x1="-210" y1="0" x2="210" y2="0" stroke="#eab308" stroke-opacity="0.18" stroke-width="1"/>
+    <line x1="0" y1="-205" x2="0" y2="205" stroke="#eab308" stroke-opacity="0.18" stroke-width="1"/>
+
+    <!-- Symmetrical V-Taper Athletic Torso Wireframe -->
+    <path d="M -32 -128 C -28 -148, 28 -148, 32 -128" stroke="#fde047" stroke-opacity="0.45" stroke-width="2"/>
+    <path d="M -126 -88 Q 0 -106 126 -88 L 96 -12 L 64 98 L -64 98 L -96 -12 Z" fill="#eab308" fill-opacity="0.09" stroke="#facc15" stroke-opacity="0.78" stroke-width="2.5"/>
+    <!-- Pectoral & Core Sculpt Lines -->
+    <path d="M -102 -54 Q -45 -22 0 -42 Q 45 -22 102 -54" stroke="#fde047" stroke-opacity="0.62" stroke-width="2"/>
+    <line x1="0" y1="-82" x2="0" y2="92" stroke="#fde047" stroke-opacity="0.45" stroke-width="1.8"/>
+    <path d="M -36 -4 H 36 M -30 30 H 30 M -24 64 H 24" stroke="#fde047" stroke-opacity="0.48" stroke-width="1.8" stroke-linecap="round"/>
+
+    <!-- Caliper Width Indicators (Shoulder vs Waist 1.618 Ratio) -->
+    <line x1="-126" y1="-114" x2="126" y2="-114" stroke="#ffffff" stroke-opacity="0.7" stroke-width="2"/>
+    <line x1="-126" y1="-124" x2="-126" y2="-104" stroke="#ffffff" stroke-opacity="0.7" stroke-width="2"/>
+    <line x1="126" y1="-124" x2="126" y2="-104" stroke="#ffffff" stroke-opacity="0.7" stroke-width="2"/>
+
+    <line x1="-64" y1="122" x2="64" y2="122" stroke="#10b981" stroke-opacity="0.8" stroke-width="2"/>
+    <line x1="-64" y1="112" x2="-64" y2="132" stroke="#10b981" stroke-opacity="0.8" stroke-width="2"/>
+    <line x1="64" y1="112" x2="64" y2="132" stroke="#10b981" stroke-opacity="0.8" stroke-width="2"/>
+  </g>
+</svg>

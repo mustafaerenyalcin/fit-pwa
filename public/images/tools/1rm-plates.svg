@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="g1" cx="72%" cy="46%" r="58%">
+      <stop offset="0%" stop-color="#f5c451" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#ff4d1c" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#ffffff" stroke-opacity="0.04" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="500" fill="#090d16"/>
+  <rect width="800" height="500" fill="url(#g1)"/>
+  <rect width="800" height="500" fill="url(#grid)"/>
+
+  <!-- Barbell Shaft & Knurling -->
+  <g transform="translate(0, 12)">
+    <rect x="260" y="238" width="490" height="14" rx="4" fill="#334155" stroke="#94a3b8" stroke-opacity="0.35" stroke-width="1.5"/>
+    <rect x="330" y="238" width="110" height="14" fill="none" stroke="#f5c451" stroke-opacity="0.4" stroke-width="1" stroke-dasharray="2 3"/>
+    <!-- Collar -->
+    <rect x="462" y="220" width="18" height="50" rx="4" fill="#64748b" stroke="#cbd5e1" stroke-opacity="0.45" stroke-width="1.5"/>
+    <!-- Calibrated Olympic Plates: Red 25kg, Blue 20kg, Yellow 15kg, Green 10kg, White 5kg -->
+    <rect x="484" y="108" width="28" height="274" rx="7" fill="#dc2626" fill-opacity="0.88" stroke="#fca5a5" stroke-opacity="0.55" stroke-width="1.5"/>
+    <rect x="516" y="122" width="24" height="246" rx="7" fill="#2563eb" fill-opacity="0.88" stroke="#93c5fd" stroke-opacity="0.55" stroke-width="1.5"/>
+    <rect x="544" y="138" width="22" height="214" rx="6" fill="#eab308" fill-opacity="0.88" stroke="#fde047" stroke-opacity="0.6" stroke-width="1.5"/>
+    <rect x="570" y="158" width="19" height="174" rx="6" fill="#10b981" fill-opacity="0.88" stroke="#6ee7b7" stroke-opacity="0.55" stroke-width="1.5"/>
+    <rect x="593" y="182" width="16" height="126" rx="5" fill="#e2e8f0" fill-opacity="0.82" stroke="#ffffff" stroke-opacity="0.6" stroke-width="1.5"/>
+    <!-- Spring Collar Lock -->
+    <rect x="613" y="216" width="14" height="58" rx="4" fill="#94a3b8" stroke="#f5c451" stroke-opacity="0.7" stroke-width="1.5"/>
+    <!-- Sleeve End -->
+    <rect x="629" y="231" width="90" height="28" rx="6" fill="#475569" stroke="#cbd5e1" stroke-opacity="0.35" stroke-width="1.5"/>
+  </g>
+
+  <!-- Precision Target Circles & Force Lines -->
+  <g fill="none" stroke="#f5c451" stroke-opacity="0.18">
+    <circle cx="545" cy="256" r="180" stroke-dasharray="6 8" stroke-width="1.5"/>
+    <circle cx="545" cy="256" r="222" stroke-opacity="0.10" stroke-width="1"/>
+  </g>
+</svg>
