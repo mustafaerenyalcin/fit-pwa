@@ -210,7 +210,7 @@ export default function ToolsView({
           <section className="fx-cockpitHeroBar fx-atelierHeroBar">
             <div className="fx-cockpitGreetCol">
               <div className="fx-atelierEyebrow">
-                <span>[LABORATORY // 04]</span> · {t('tools.eyebrow')}
+                <span>[LABORATORY // 05]</span> · {t('tools.eyebrow')}
               </div>
               <h2 className="fx-cockpitGreeting fx-atelierDisplay">
                 {t('tools.title1')} <span>{t('tools.title2')}</span>

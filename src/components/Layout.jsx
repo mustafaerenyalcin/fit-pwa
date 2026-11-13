@@ -25,9 +25,8 @@ const TABS = [
   ['today', 'nav.today', Home, '01'],
   ['training', 'nav.training', Dumbbell, '02'],
   ['nutrition', 'nav.nutrition', Utensils, '03'],
-  ['tools', 'nav.tools', Layers, '04'],
-  ['progress', 'nav.progress', LineChart, '05'],
-  ['coach', 'nav.coach', Bot, '06']
+  ['coach', 'nav.coach', Bot, '04'],
+  ['tools', 'nav.tools', Layers, '05']
 ];
 
 const shiftDay = (iso, delta) => {
@@ -185,7 +184,7 @@ export default function Layout({ tab, setTab, day, setDay, profile, online = tru
                   <Icon size={20} strokeWidth={active ? 2.5 : 1.8} />
                   {active && <span className="fx-dockActiveGlowDot" />}
                 </div>
-                <span>{t(key)}</span>
+                <span>{id === 'coach' ? t('nav.coachShort') : t(key)}</span>
               </button>
             );
           })}

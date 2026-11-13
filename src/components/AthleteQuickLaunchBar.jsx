@@ -56,7 +56,7 @@ export default function AthleteQuickLaunchBar({
           className="fx-quickLaunchCard fx-quickLaunchCard--ai"
           onClick={() => {
             sounds.tap();
-            onNavigate('tools');
+            onNavigate('tools', 'form_check');
           }}
         >
           <div className="fx-quickLaunchIconBox">
@@ -94,7 +94,7 @@ export default function AthleteQuickLaunchBar({
           className="fx-quickLaunchCard fx-quickLaunchCard--fasting"
           onClick={() => {
             sounds.tap();
-            onNavigate('tools');
+            onNavigate('tools', 'fasting');
           }}
         >
           <div className="fx-quickLaunchIconBox">

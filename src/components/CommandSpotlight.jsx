@@ -66,9 +66,11 @@ export default function CommandSpotlight({
       { id: 'nav-today', cat: t('cmd.catNav'), label: `01 ${t('nav.today')}`, icon: Home, run: () => onNavigate('today') },
       { id: 'nav-training', cat: t('cmd.catNav'), label: `02 ${t('nav.training')}`, icon: Dumbbell, run: () => onNavigate('training') },
       { id: 'nav-nutrition', cat: t('cmd.catNav'), label: `03 ${t('nav.nutrition')}`, icon: Utensils, run: () => onNavigate('nutrition') },
-      { id: 'nav-tools', cat: t('cmd.catNav'), label: `04 ${t('nav.tools')}`, icon: Wrench, run: () => onNavigate('tools') },
-      { id: 'nav-progress', cat: t('cmd.catNav'), label: `05 ${t('nav.progress')}`, icon: TrendingUp, run: () => onNavigate('progress') },
-      { id: 'nav-coach', cat: t('cmd.catNav'), label: `06 ${t('nav.coach')}`, icon: Bot, run: () => onNavigate('coach') },
+      { id: 'nav-coach', cat: t('cmd.catNav'), label: `04 ${t('nav.coach')}`, icon: Bot, run: () => onNavigate('coach', 'ai') },
+      { id: 'nav-progress-report', cat: t('cmd.catNav'), label: t('sub.report'), icon: TrendingUp, run: () => onNavigate('coach', 'report') },
+      { id: 'nav-progress-body', cat: t('cmd.catNav'), label: t('sub.body'), icon: TrendingUp, run: () => onNavigate('coach', 'body') },
+      { id: 'nav-progress-habits', cat: t('cmd.catNav'), label: t('sub.habits'), icon: TrendingUp, run: () => onNavigate('coach', 'habits') },
+      { id: 'nav-tools', cat: t('cmd.catNav'), label: `05 ${t('nav.tools')}`, icon: Wrench, run: () => onNavigate('tools') },
       { id: 'nav-settings', cat: t('cmd.catNav'), label: t('nav.settings'), icon: Settings, run: () => onNavigate('settings') }
     ];
 

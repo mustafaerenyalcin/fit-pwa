@@ -308,6 +308,18 @@ select {
   transition: background 0.15s, color 0.15s;
 }
 .fx-segmented button.active { background: var(--fx-surface-3); color: var(--fx-text); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); }
+@media (max-width: 520px) {
+  .fx-segmented {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow-x: visible;
+  }
+  .fx-segmented button {
+    min-height: 36px;
+    padding: 0 8px;
+    font-size: 12.5px;
+  }
+}
 
 /* ---------- Halka ---------- */
 .fx-ring { position: relative; flex-shrink: 0; }
@@ -3432,7 +3444,7 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.16);
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 2px;
 }
 
@@ -3449,10 +3461,12 @@ h1, h2, h3, .fx-logo, .fx-monoBig, .fx-monoVal, .fx-holoMetric strong, .fx-corpH
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 2px;
-  font-size: 10.5px;
+  justify-content: flex-start;
+  padding-top: 8px;
+  gap: 3px;
+  font-size: 10px;
   font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
   transition: all 0.18s ease;
 }

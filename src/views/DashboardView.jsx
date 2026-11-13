@@ -406,7 +406,7 @@ export default function DashboardView({
           ) : (
             <div className="waistEmptyBox">
               <p>Gelişim bölümünden ilk bel çevreni eklediğinde karın kası belirginlik analizi burada aktifleşir.</p>
-              <button type="button" className="inlineAction" onClick={() => onNavigate('progress')}>
+              <button type="button" className="inlineAction" onClick={() => onNavigate('coach', 'body')}>
                 Bel Ölçüsü Ekle <ArrowRight size={15} />
               </button>
             </div>

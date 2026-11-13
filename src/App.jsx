@@ -11,14 +11,12 @@ const ActiveWorkoutModal = lazy(() => import('./components/ActiveWorkoutModal.js
 const AiMealLogger = lazy(() => import('./components/AiMealLogger.jsx'));
 const SmartMealRecommender = lazy(() => import('./components/SmartMealRecommender.jsx'));
 const AdaptiveMacroCoach = lazy(() => import('./components/AdaptiveMacroCoach.jsx'));
-const BodyCompositionPro = lazy(() => import('./components/BodyCompositionPro.jsx'));
 const RecoveryStudio = lazy(() => import('./components/RecoveryStudio.jsx'));
 const WeeklyReport = lazy(() => import('./components/WeeklyReport.jsx'));
 const ProgramGenerator = lazy(() => import('./components/ProgramGenerator.jsx'));
 const CustomWorkoutBuilder = lazy(() => import('./components/CustomWorkoutBuilder.jsx'));
 const StrengthOverloadCard = lazy(() => import('./components/StrengthOverloadCard.jsx'));
 const FastingTimer = lazy(() => import('./components/FastingTimer.jsx'));
-const BeforeAfterSlider = lazy(() => import('./components/BeforeAfterSlider.jsx'));
 const SmartReminders = lazy(() => import('./components/SmartReminders.jsx'));
 const ToolsView = lazy(() => import('./views/ToolsView.jsx'));
 
@@ -40,11 +38,12 @@ import { initTheme } from './lib/notifications.js';
 import { useI18n } from './lib/i18n.js';
 
 const CATEGORIES = ['workout', 'meal', 'habit', 'weight', 'supplement', 'checkin', 'report'];
-const VALID_TABS = ['today', 'training', 'nutrition', 'tools', 'progress', 'coach', 'settings'];
+const VALID_TABS = ['today', 'training', 'nutrition', 'coach', 'tools', 'settings'];
 
 const readTabFromHash = () => {
   const h = (typeof window !== 'undefined' ? window.location.hash : '').replace('#', '');
   if (h === 'dashboard') return 'today';
+  if (h === 'progress') return 'coach';
   return VALID_TABS.includes(h) ? h : 'today';
 };
 
@@ -110,7 +109,10 @@ function MainApp() {
   const [trainingSection, setTrainingSection] = useState('session');
   const [builderMode, setBuilderMode] = useState('ai');
   const [nutritionSection, setNutritionSection] = useState('log');
-  const [progressSection, setProgressSection] = useState('report');
+  const [coachSection, setCoachSection] = useState(() => {
+    const h = window.location.hash.replace('#', '');
+    return h === 'progress' ? 'report' : 'ai';
+  });
 
   const [toast, setToast] = useState('');
   const toastTimer = useRef(null);
@@ -132,16 +134,25 @@ function MainApp() {
   }, []);
 
   const setTab = useCallback((t, subFeature = null) => {
-    setTabState(t);
-    if (t === 'tools' && subFeature) {
+    const resolvedTab = t === 'progress' ? 'coach' : t;
+    setTabState(resolvedTab);
+    if (resolvedTab === 'tools' && subFeature) {
       setActiveToolId(subFeature);
-    } else if (t === 'nutrition' && subFeature) {
+    } else if (resolvedTab === 'nutrition' && subFeature) {
       setNutritionSection(subFeature);
-    } else if (t === 'training' && subFeature) {
+    } else if (resolvedTab === 'training' && subFeature) {
       setTrainingSection(subFeature);
+    } else if (t === 'progress') {
+      setCoachSection(subFeature || 'report');
+    } else if (resolvedTab === 'coach' && subFeature) {
+      setCoachSection(subFeature);
     }
-    if (window.location.hash !== `#${t}`) {
-      window.history.replaceState(null, '', t === 'today' ? window.location.pathname : `#${t}`);
+    if (window.location.hash !== `#${resolvedTab}`) {
+      window.history.replaceState(
+        null,
+        '',
+        resolvedTab === 'today' ? window.location.pathname : `#${resolvedTab}`
+      );
     }
     window.scrollTo({ top: 0 });
   }, []);
@@ -160,7 +171,11 @@ function MainApp() {
       scheduleSync();
     };
     const onOffline = () => setOnline(false);
-    const onHash = () => setTabState(readTabFromHash());
+    const onHash = () => {
+      const h = (typeof window !== 'undefined' ? window.location.hash : '').replace('#', '');
+      if (h === 'progress') setCoachSection('report');
+      setTabState(readTabFromHash());
+    };
     const onVisible = () => document.visibilityState === 'visible' && scheduleSync();
 
     window.addEventListener('fit-sync-change', onSync);
@@ -425,24 +440,26 @@ function MainApp() {
         />
       )}
 
-      {tab === 'progress' && (
+      {tab === 'coach' && (
         <div className="fx-stack">
           <Segmented
-            value={progressSection}
-            onChange={setProgressSection}
+            value={coachSection}
+            onChange={setCoachSection}
             options={[
+              ['ai', t('sub.coachChat')],
               ['report', t('sub.report')],
               ['body', t('sub.body')],
               ['habits', t('sub.habits')]
             ]}
           />
-          {progressSection === 'report' && (
+          {coachSection === 'ai' && (
+            <CoachView profile={profile} entries={entries} target={target} totals={totals} />
+          )}
+          {coachSection === 'report' && (
             <WeeklyReport profile={profile} entries={entries} target={target} onSaveReport={handleSaveReport} />
           )}
-          {progressSection === 'body' && (
-            <>
-              <BodyCompositionPro profile={profile} entries={entries} />
-              <BeforeAfterSlider profile={profile} entries={entries} />
+          {coachSection === 'body' && (
+            <div className="fx-stack">
               <ProgressView
                 day={day}
                 profile={profile}
@@ -450,9 +467,17 @@ function MainApp() {
                 onAddWeight={(payload) => handleAddEntry('weight', payload)}
                 onRemoveWeight={(id) => handleRemoveEntry(id)}
               />
-            </>
+              <button
+                type="button"
+                className="fx-btn fx-btn-ghost"
+                style={{ alignSelf: 'flex-start' }}
+                onClick={() => setTab('tools', 'body')}
+              >
+                {t('tools.bodyStudioCta')}
+              </button>
+            </div>
           )}
-          {progressSection === 'habits' && (
+          {coachSection === 'habits' && (
             <>
               <SmartReminders totals={totals} target={target} setMessage={showToast} />
               <HabitsView
@@ -468,8 +493,6 @@ function MainApp() {
           )}
         </div>
       )}
-
-      {tab === 'coach' && <CoachView profile={profile} entries={entries} target={target} totals={totals} />}
 
       {tab === 'settings' && (
         <div className="fx-stack">
