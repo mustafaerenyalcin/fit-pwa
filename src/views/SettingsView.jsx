@@ -310,6 +310,38 @@ export default function SettingsView({ profile, onSaveProfile, installed, setMes
             </div>
           </Card>
 
+          <Card
+            title="Lisans & Görsel Atıfları"
+            subtitle="Telif haklarına %100 uygun açık lisanslı egzersiz vektörleri"
+          >
+            <div className="fx-stack" style={{ gap: '8px', fontSize: '12.5px', lineHeight: 1.55 }}>
+              <p style={{ margin: 0 }}>
+                Uygulamadaki tüm 3-fazlı egzersiz vektör illüstrasyonları (<strong>133 benzersiz hareket / 399 SVG</strong>),{' '}
+                <strong>@bryllim/workout-guide</strong> (Bryl Lim) ve orijinal{' '}
+                <strong>Everkinetic</strong> (Greg Priday) çizimlerinden{' '}
+                <strong>Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0)</strong> lisansı kapsamında değiştirilmeden kullanılmıştır.
+              </p>
+              <div className="fx-row" style={{ gap: '12px', flexWrap: 'wrap', fontSize: '11.5px' }}>
+                <a
+                  href="https://creativecommons.org/licenses/by-sa/4.0/"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: 'var(--fx-accent, #007aff)', fontWeight: 700 }}
+                >
+                  CC BY-SA 4.0 Lisans Metni ↗
+                </a>
+                <a
+                  href="/exercises/ATTRIBUTION.md"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: 'var(--fx-accent, #007aff)', fontWeight: 700 }}
+                >
+                  Tam Atıf & Kaynak Dosyası (/exercises/ATTRIBUTION.md) ↗
+                </a>
+              </div>
+            </div>
+          </Card>
+
           <p className="fx-muted fx-small fx-center">Fit v{APP_VERSION} · Fit tıbbi tavsiye vermez.</p>
         </>
       )}

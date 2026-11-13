@@ -21,31 +21,31 @@ export const homePlans = [
   {
     day: 0,
     name: 'Pazartesi · Push + Omuz',
-    focus: 'Göğüs, ön/yan omuz, triceps',
+    focus: 'Üst göğüs, ön/yan omuz, triceps',
     moves: [
       {
-        name: 'Dumbbell Floor Press',
-        muscle: 'Göğüs',
+        name: 'Incline Dumbbell Press',
+        muscle: 'Üst Göğüs',
         sets: '3 × 8–12',
         defaultSets: 3,
         defaultReps: '8-12',
         restSeconds: 90,
-        tip: 'Yerde uzanıp dambılları göğsünden yukarı it. Dirsekleri gövdeye 45° açıda tut.',
-        commonMistakes: 'Dirsekleri omuz hizasında 90° açmak, beli aşırı kavislendirmek.',
+        tip: '30° eğimli sehpada dambılları göğüs üst hizasına 45° dirsek açısıyla kontrollü indir ve bas.',
+        commonMistakes: 'Dirsekleri 90° dışa açmak, beli sehpada aşırı kavislendirmek.',
         category: 'push',
-        alternatives: ['Push-ups / Incline Push-ups', 'Dumbbell Incline Press', 'Deficit Push-up']
+        alternatives: ['Dumbbell Bench Press', 'Decline Dumbbell Press', 'Dumbbell Fly']
       },
       {
-        name: 'Dumbbell Shoulder Press',
-        muscle: 'Ön ve Yan Omuz',
+        name: 'Standing Dumbbell Press',
+        muscle: 'Ön & Yan Omuz',
         sets: '3 × 8–12',
         defaultSets: 3,
         defaultReps: '8-12',
         restSeconds: 90,
-        tip: 'Karın sıkı, gövde dik. Dambılları kulak hizasından kontrollü baş üstüne it.',
-        commonMistakes: 'Ağırlığı kaldırırken beli arkaya bükmek, boynu öne itmek.',
+        tip: 'Karın ve kalça sıkı, ayakta gövde dik iken dambılları kulak hizasından baş üstüne dikey it.',
+        commonMistakes: 'Ağırlığı kaldırırken beli geriye bükmek, dizlerden savurmak.',
         category: 'push',
-        alternatives: ['Arnold Press', 'Seated DB Press', 'Pike Push-ups']
+        alternatives: ['Arnold Press', 'Seated Dumbbell Shoulder Press', 'Front Raise']
       },
       {
         name: 'Lateral Raise',
@@ -54,34 +54,34 @@ export const homePlans = [
         defaultSets: 3,
         defaultReps: '12-15',
         restSeconds: 60,
-        tip: 'Dirsekler hafif bükülü, omuzları kulaklara çekmeden kolları yana doğru uzat.',
-        commonMistakes: 'Gövdeyi sallayarak ivme almak, dambılları omuz seviyesinden çok yukarı savurmak.',
+        tip: 'Dirsekler hafif kırık, omuzları kulaklara çekmeden kolları yanlara T gibi aç.',
+        commonMistakes: 'Gövdeyi sallayarak ivme almak, dambılları omuz seviyesinden aşırı yükseğe savurmak.',
         category: 'push',
-        alternatives: ['Dumbbell Y-Raise', 'Lean-away Lateral Raise', 'Dumbbell Upright Row']
+        alternatives: ['Cable Lateral Raise', 'Machine Lateral Raise', 'Front Raise']
       },
       {
-        name: 'Push-ups / Incline Push-ups',
-        muscle: 'Göğüs & Triceps',
-        sets: '2 × 8–15',
-        defaultSets: 2,
-        defaultReps: '8-15',
+        name: 'Dumbbell Fly',
+        muscle: 'İç & Dış Göğüs',
+        sets: '3 × 12–15',
+        defaultSets: 3,
+        defaultReps: '12-15',
         restSeconds: 75,
-        tip: 'Vücut baştan topuğa tek hat. Bel çökmeden göğsü zemine kontrollü yaklaştır.',
-        commonMistakes: 'Kalçayı düşürmek, dirsekleri iki yana açmak.',
+        tip: 'Dirsek açısını bozmadan büyük bir ağaca sarılır gibi göğsü esneterek aç ve yukarı topla.',
+        commonMistakes: 'Kolları fazla büküp harekete press formu vermek.',
         category: 'push',
-        alternatives: ['Dumbbell Floor Press', 'Close-grip Push-up', 'Bench Dip']
+        alternatives: ['Cable Fly', 'Pec Deck', 'Incline Dumbbell Press']
       },
       {
-        name: 'Overhead Triceps Extension',
-        muscle: 'Triceps',
-        sets: '2 × 10–15',
-        defaultSets: 2,
+        name: 'Dumbbell Overhead Triceps Extension',
+        muscle: 'Triceps (Uzun Baş)',
+        sets: '3 × 10–15',
+        defaultSets: 3,
         defaultReps: '10-15',
         restSeconds: 60,
-        tip: 'Dirsekleri başın iki yanında sabit tutarak dambılı enseye doğru indir ve yukarı uzat.',
-        commonMistakes: 'Dirsekleri dışarı açmak, omuzlardan destek almak.',
+        tip: 'Üst kolları başın iki yanında sabit tutarak dambılı enseye indir ve yukarı uzat.',
+        commonMistakes: 'Dirsekleri yanlara açmak, belden destek almak.',
         category: 'push',
-        alternatives: ['Triceps Kickback', 'Diamond Push-ups', 'Floor Skullcrusher']
+        alternatives: ['Single-Arm Dumbbell Tricep Extension', 'Dumbbell Skull Crusher', 'Triceps Kickback']
       }
     ]
   },
@@ -91,40 +91,40 @@ export const homePlans = [
     focus: 'Sırt, arka omuz, biceps ve core',
     moves: [
       {
-        name: 'Single-arm DB Row',
+        name: 'One-Arm Dumbbell Row',
         muscle: 'Sırt (Kanat & Trapez)',
         sets: '3 × 8–12',
         defaultSets: 3,
         defaultReps: '8-12',
         restSeconds: 90,
-        tip: 'Sırt düz, hafifçe öne eğil. Dirseği kalçana doğru çekerek sırt kaslarını sıkıştır.',
+        tip: 'Sırt düz, bir el sehpada sabit. Dirseği kalça cebine doğru kavisli çekip kanadı sıkıştır.',
         commonMistakes: 'Gövdeyi döndürerek çekmek, ağırlığı omuzla fırlatmak.',
         category: 'pull',
-        alternatives: ['Chest-supported DB Row', 'Dumbbell Gorilla Row', 'Two-arm DB Row']
+        alternatives: ['Bent-Over Dumbbell Row', 'Chest-Supported Row', 'Barbell Row']
       },
       {
-        name: 'Reverse Fly',
+        name: 'Rear Delt Fly',
         muscle: 'Arka Omuz & Üst Sırt',
         sets: '3 × 12–15',
         defaultSets: 3,
         defaultReps: '12-15',
         restSeconds: 60,
-        tip: 'Kalçadan öne eğil, omurga nötr. Kolları hafif bükük şekilde yana doğru aç.',
-        commonMistakes: 'Ağır dambıl seçip boyun kaslarını kasmak, sırtı kamburlaştırmak.',
+        tip: 'Kalçadan 45° öne eğil, omurga nötr. Kolları hafif kırık halde yanlara aç.',
+        commonMistakes: 'Ağır seçip boyun kaslarını kasmak, sırtı kamburlaştırmak.',
         category: 'pull',
-        alternatives: ['Rear Delt Row', 'Prone Y-Raise', 'Band Face Pull']
+        alternatives: ['Bent-Over Rear Delt Raise', 'Face Pull', 'Band Pull-Apart']
       },
       {
-        name: 'DB Pullover',
-        muscle: 'Sırt & Göğüs Genişliği',
-        sets: '2 × 10–12',
-        defaultSets: 2,
+        name: 'Inverted Row',
+        muscle: 'Orta Sırt & Postür',
+        sets: '3 × 10–12',
+        defaultSets: 3,
         defaultReps: '10-12',
         restSeconds: 75,
-        tip: 'Yerde uzan, dambılı iki elle tutup başının arkasına kontrollü uzat ve geri çek.',
-        commonMistakes: 'Aşırı derinliğe zorlayıp omuz eklemini zorlamak, beli yerden koparmak.',
+        tip: 'Sabit alçak barın altında vücut baştan topuğa düz hat halindeyken göğsü bara çek.',
+        commonMistakes: 'Kalçayı sarkıtmak, dirsekleri yukarı dik açmak.',
         category: 'pull',
-        alternatives: ['Straight-arm DB Kickback', 'Floor Dumbbell Pull', 'Single-arm DB Row']
+        alternatives: ['Doorway Rows', 'Towel Biceps Rows', 'Seated Cable Row']
       },
       {
         name: 'Hammer Curl',
@@ -133,10 +133,10 @@ export const homePlans = [
         defaultSets: 3,
         defaultReps: '10-12',
         restSeconds: 60,
-        tip: 'Avuç içleri birbirine bakacak şekilde dirsekleri gövdeye sabitleyip kaldır.',
-        commonMistakes: 'Dirsekleri öne arkaya oynatmak, beli sallamak.',
+        tip: 'Avuç içleri gövdeye dönük (nötr tutuş) dirsekleri sabitleyip dambılları yukarı bük.',
+        commonMistakes: 'Dirsekleri öne arkaya savurmak, belden ivme almak.',
         category: 'pull',
-        alternatives: ['Standard Biceps Curl', 'Concentration Curl', 'Zottman Curl']
+        alternatives: ['Dumbbell Bicep Curl', 'Concentration Curl', 'Preacher Curl']
       },
       {
         name: 'Reverse Crunch',
@@ -148,7 +148,7 @@ export const homePlans = [
         tip: 'Dizler 90° bükülü, alt karnı sıkarak kalçayı birkaç santim yerden yukarı yuvarla.',
         commonMistakes: 'Bacakları savurarak ivme kullanmak, beli yere sert çarpmak.',
         category: 'core',
-        alternatives: ['Dead Bug', 'Hanging Knee Raise', 'Lying Leg Raise']
+        alternatives: ['Lying Leg Raises', 'Hanging Knee Raise', 'Dead Bug']
       },
       {
         name: 'Dead Bug',
@@ -157,10 +157,10 @@ export const homePlans = [
         defaultSets: 2,
         defaultReps: '10 / taraf',
         restSeconds: 45,
-        tip: 'Bel boşluğunu zemine yapıştır. Çapraz kol ve bacağı kontrollü uzat.',
-        commonMistakes: 'Hareketi yaparken belin yerden havalanması, hızlı yapmak.',
+        tip: 'Bel boşluğunu zemine yapıştır. Çapraz kol ve bacağı kontrollü uzat ve topla.',
+        commonMistakes: 'Hareketi yaparken belin yerden havalanması, acele etmek.',
         category: 'core',
-        alternatives: ['Plank', 'Bird Dog', 'Hollow Body Hold']
+        alternatives: ['Bird Dog', 'Hollow Body Hold', 'Ab Wheel Rollout']
       }
     ]
   },
@@ -177,21 +177,21 @@ export const homePlans = [
         defaultReps: '8-12',
         restSeconds: 90,
         tip: 'Dambılı göğsünün önünde dikey tut. Dizleri ayak parmak yönünde açarak derin çök.',
-        commonMistakes: 'Topukların yerden kalkması, gövdenin öne aşırı devrilmesi.',
+        commonMistakes: 'Topukların yerden kalkması, gövdenin öne devrilmesi.',
         category: 'legs',
-        alternatives: ['Dumbbell Front Squat', 'Bulgarian Split Squat', 'Bodyweight Pause Squat']
+        alternatives: ['Dumbbell Sumo Squat', 'Bulgarian Split Squat', 'Barbell Squat']
       },
       {
-        name: 'DB Romanian Deadlift',
+        name: 'Dumbbell Romanian Deadlift',
         muscle: 'Arka Bacak & Kalça',
         sets: '3 × 8–12',
         defaultSets: 3,
         defaultReps: '8-12',
         restSeconds: 90,
-        tip: 'Dizler hafif yumuşak, kalçayı geriye it. Dambıllar bacaklara yakın kalarak kaval kemiğine insin.',
+        tip: 'Dizler hafif yumuşak, kalçayı geriye it. Dambıllar kaval kemiğine yakın insin.',
         commonMistakes: 'Sırtı yuvarlamak, dizleri squat gibi çok bükmek.',
         category: 'legs',
-        alternatives: ['Single-leg DB RDL', 'B-Stance DB RDL', 'Good Morning with DB']
+        alternatives: ['Single-Leg Romanian Deadlift', 'Barbell Romanian Deadlift', 'Good Morning']
       },
       {
         name: 'Reverse Lunge',
@@ -201,191 +201,191 @@ export const homePlans = [
         defaultReps: '8-10 / bacak',
         restSeconds: 75,
         tip: 'Geriye geniş bir adım at, ön diz 90° olacak şekilde dik alçal.',
-        commonMistakes: 'Ön dizin içe kaçması, arkadaki dizi sertçe yere çarpmak.',
+        commonMistakes: 'Ön dizin içe kaçması, arka dizi yere sert çarpmak.',
         category: 'legs',
-        alternatives: ['Walking Lunge', 'Bulgarian Split Squat', 'Step-up']
+        alternatives: ['Walking Lunge', 'Step-Up', 'Split Squat']
       },
       {
-        name: 'Glute Bridge with DB',
+        name: 'Dumbbell Glute Bridge',
         muscle: 'Kalça',
-        sets: '2 × 12–15',
-        defaultSets: 2,
+        sets: '3 × 12–15',
+        defaultSets: 3,
         defaultReps: '12-15',
         restSeconds: 60,
-        tip: 'Dambılı kasık hizasına yerleştir, topuklardan güç alarak kalçayı tepe noktada sık.',
-        commonMistakes: 'Hareketi belden yapmak, kalçayı tepe noktada sıkıştırmamak.',
+        tip: 'Dambılı kasık hizasına sabitle, topuklardan güç alarak kalçayı tepe noktada sık.',
+        commonMistakes: 'Hareketi belden yapmak, tepede sıkıştırmamak.',
         category: 'legs',
-        alternatives: ['Single-leg Glute Bridge', 'Hip Thrust', 'Frog Pump']
+        alternatives: ['Dumbbell Hip Thrust', 'Hip Thrust', 'Single-Leg Romanian Deadlift']
       },
       {
-        name: 'Standing Calf Raise',
+        name: 'Single-Leg Calf Raise',
         muscle: 'Baldır (Kalf)',
         sets: '3 × 15–20',
         defaultSets: 3,
         defaultReps: '15-20',
         restSeconds: 45,
-        tip: 'Parmak uçlarında tepeye kadar yüksel, 1 saniye durakla, yavaşça in.',
-        commonMistakes: 'Hızlıca zıplamak, tam hareket aralığını kullanmamak.',
+        tip: 'Tek ayakla yükselip tepede 1 sn sık, basamak altına kontrollü esnet.',
+        commonMistakes: 'Hızlıca yaylanmak, tam hareket aralığını kesmek.',
         category: 'legs',
-        alternatives: ['Single-leg Calf Raise', 'Seated DB Calf Raise', 'Stair Calf Raise']
+        alternatives: ['Standing Calf Raise', 'Calf Raises']
       }
     ]
   },
   {
     day: 3,
     name: 'Perşembe · Üst Vücut + Omuz',
-    focus: 'Göğüs, sırt, yan/arka omuz ve kol hipertrofisi',
+    focus: 'Düz göğüs, orta sırt, 3D omuz ve kol izolasyonu',
     moves: [
       {
-        name: 'Dumbbell Floor Press',
-        muscle: 'Göğüs',
+        name: 'Dumbbell Bench Press',
+        muscle: 'Orta Göğüs',
         sets: '3 × 8–12',
         defaultSets: 3,
         defaultReps: '8-12',
         restSeconds: 90,
-        tip: 'Yerde sabit omuz kürekleriyle dambılları göğsün orta hattına doğru it.',
+        tip: 'Düz sehpada sabit omuz kürekleriyle dambılları göğüs orta yanına indirip dikey it.',
         commonMistakes: 'Dambılları yukarıda birbirine çarpmak, kontrolsüz hızlı indirmek.',
         category: 'push',
-        alternatives: ['Push-ups', 'Close-grip Floor Press', 'Incline Push-ups']
+        alternatives: ['Incline Dumbbell Press', 'Decline Dumbbell Press', 'Dumbbell Fly']
       },
       {
-        name: 'Single-arm DB Row',
-        muscle: 'Sırt',
+        name: 'Bent-Over Dumbbell Row',
+        muscle: 'Orta & Kalın Sırt',
         sets: '3 × 10–12',
         defaultSets: 3,
         defaultReps: '10-12',
         restSeconds: 75,
-        tip: 'Sırtı düz tutarak dambılı kontrollü çek, kanat kasını 1 saniye sık.',
-        commonMistakes: 'Vücudu döndürmek, ağırlığı düşürmek.',
+        tip: '45° öne eğik bel düzken iki dambılı bel hizasına çekip sırt ortasını sık.',
+        commonMistakes: 'Beli yuvarlamak, ağırlığı zıplatarak çekmek.',
         category: 'pull',
-        alternatives: ['Gorilla Row', 'Two-arm DB Row', 'Deadstop Row']
+        alternatives: ['One-Arm Dumbbell Row', 'Chest-Supported Row', 'Barbell Row']
       },
       {
-        name: 'Lateral Raise',
-        muscle: 'Yan Omuz',
+        name: 'Arnold Press',
+        muscle: 'Tüm Omuz (3 Baş)',
+        sets: '3 × 10–12',
+        defaultSets: 3,
+        defaultReps: '10-12',
+        restSeconds: 75,
+        tip: 'Avuçlar çene önünde sana dönük başla, yukarı iterken 180° dışa çevir.',
+        commonMistakes: 'Beli aşırı kavislendirmek, kolları kilitlemek.',
+        category: 'push',
+        alternatives: ['Standing Dumbbell Press', 'Seated Dumbbell Shoulder Press', 'Front Raise']
+      },
+      {
+        name: 'Bent-Over Rear Delt Raise',
+        muscle: 'Arka Omuz',
         sets: '3 × 12–15',
         defaultSets: 3,
         defaultReps: '12-15',
         restSeconds: 60,
-        tip: 'Dambılları yanlara doğru genişçe uzat. Omuz başlarında yanmayı hisset.',
-        commonMistakes: 'Bacaklardan güç almak, omuzları kulaklara yapıştırmak.',
-        category: 'push',
-        alternatives: ['DB Y-Raise', 'Arnold Press', 'Lean-away Lateral Raise']
-      },
-      {
-        name: 'Reverse Fly',
-        muscle: 'Arka Omuz',
-        sets: '2 × 12–15',
-        defaultSets: 2,
-        defaultReps: '12-15',
-        restSeconds: 60,
-        tip: 'Gövde öne eğik, dirsekler hafif kırık. Arka omuzla çekiş yap.',
-        commonMistakes: 'Ağır dambıllarla formu bozmak.',
+        tip: 'Gövde öne paralel eğik, dirsekler hafif kırık. Yalnızca arka omuzla yanlara kaldır.',
+        commonMistakes: 'Trapeze yük bindirip omuz silkmek.',
         category: 'pull',
-        alternatives: ['Rear Delt Row', 'Band Pull-apart', 'Prone Y-Raise']
+        alternatives: ['Rear Delt Fly', 'Face Pull', 'Band Pull-Apart']
       },
       {
-        name: 'DB Curl',
-        muscle: 'Biceps',
-        sets: '2 × 10–12',
-        defaultSets: 2,
+        name: 'Concentration Curl',
+        muscle: 'Biceps (Zirve İzolasyon)',
+        sets: '3 × 10–12',
+        defaultSets: 3,
         defaultReps: '10-12',
         restSeconds: 60,
-        tip: 'Avuç içlerini yukarı çevirerek kontrollü kaldır ve yavaşça indir.',
-        commonMistakes: 'Dirsekleri öne fırlatmak.',
+        tip: 'Otururken dirseği uyluğun iç kısmına yaslayıp savurma olmadan biceps tepe noktasını sık.',
+        commonMistakes: 'Omuzu öne eğip dirseği dizden kaldırmak.',
         category: 'pull',
-        alternatives: ['Hammer Curl', 'Incline DB Curl', 'Concentration Curl']
+        alternatives: ['Dumbbell Bicep Curl', 'Hammer Curl', 'Preacher Curl']
       },
       {
         name: 'Triceps Kickback',
         muscle: 'Triceps',
-        sets: '2 × 10–15',
-        defaultSets: 2,
+        sets: '3 × 10–15',
+        defaultSets: 3,
         defaultReps: '10-15',
         restSeconds: 60,
-        tip: 'Üst kol gövdeye paralel sabit, sadece ön kolu geriye doğru uzatıp tricepsi sık.',
+        tip: 'Üst kol gövdeye paralel sabit, sadece ön kolu geriye tam düz olana dek it.',
         commonMistakes: 'Üst kolu sallamak, dirseği aşağı düşürmek.',
         category: 'push',
-        alternatives: ['Overhead Triceps Extension', 'Diamond Push-ups', 'Bench Dip']
+        alternatives: ['Dumbbell Overhead Triceps Extension', 'Dumbbell Skull Crusher', 'Rope Triceps Pushdown']
       }
     ]
   },
   {
     day: 4,
     name: 'Cuma · Full Body + Core',
-    focus: 'Hafif tüm vücut, omuz stabilitesi ve core',
+    focus: 'Hafif tüm vücut, denge, postür ve oblik',
     moves: [
       {
-        name: 'Goblet Squat',
-        muscle: 'Ön Bacak & Kalça',
-        sets: '2 × 10–12',
-        defaultSets: 2,
-        defaultReps: '10-12',
-        restSeconds: 75,
-        tip: 'Kontrollü tempo, temiz derinlik. Form odaklı.',
-        commonMistakes: 'Tükenişe kadar zorlamak (Cuma toparlanma vurguludur).',
-        category: 'legs',
-        alternatives: ['Bulgarian Split Squat', 'Reverse Lunge', 'Bodyweight Squat']
-      },
-      {
-        name: 'DB Romanian Deadlift',
-        muscle: 'Arka Bacak',
-        sets: '2 × 10–12',
-        defaultSets: 2,
-        defaultReps: '10-12',
-        restSeconds: 75,
-        tip: 'Kalçayı geriye it, arka bacakta esnemeyi hisset ve dik konuma gel.',
-        commonMistakes: 'Beli bükmek.',
-        category: 'legs',
-        alternatives: ['Single-leg RDL', 'Glute Bridge with DB']
-      },
-      {
-        name: 'DB Shoulder Press',
-        muscle: 'Omuz',
-        sets: '2 × 10–12',
-        defaultSets: 2,
-        defaultReps: '10-12',
-        restSeconds: 75,
-        tip: 'Karın sıkı, kontrollü yukarı pres.',
-        commonMistakes: 'Beli aşırı kavislendirmek.',
-        category: 'push',
-        alternatives: ['Lateral Raise', 'Arnold Press', 'Pike Push-ups']
-      },
-      {
-        name: 'Single-arm DB Row',
-        muscle: 'Sırt',
-        sets: '2 × 10–12',
-        defaultSets: 2,
-        defaultReps: '10-12',
-        restSeconds: 75,
-        tip: 'Temiz ve kontrollü çekiş, sırtı tam aktif et.',
-        commonMistakes: 'İvme kullanmak.',
-        category: 'pull',
-        alternatives: ['Two-arm DB Row', 'Reverse Fly', 'Gorilla Row']
-      },
-      {
-        name: 'Plank',
-        muscle: 'Tüm Core',
-        sets: '3 × 30–45 sn',
+        name: 'Dumbbell Sumo Squat',
+        muscle: 'İç Bacak & Kalça',
+        sets: '3 × 10–12',
         defaultSets: 3,
-        defaultReps: '30-45 sn',
-        restSeconds: 60,
-        tip: 'Dirsekler omuzların altında, kalça ve karın taş gibi sıkı, baş nötr.',
-        commonMistakes: 'Kalçayı yukarı dikmek veya beli aşağı sarkıtmak.',
-        category: 'core',
-        alternatives: ['Side Plank', 'Dead Bug', 'Ab Wheel / Walkout']
+        defaultReps: '10-12',
+        restSeconds: 75,
+        tip: 'Ayaklar geniş 45° dışa açık, gövde dik şekilde ortadaki dambılla derine çök.',
+        commonMistakes: 'Dizlerin içe kapanması, öne aşırı eğilmek.',
+        category: 'legs',
+        alternatives: ['Goblet Squat', 'Reverse Lunge', 'Step-Up']
       },
       {
-        name: 'Reverse Crunch',
-        muscle: 'Karın',
-        sets: '2 × 12–15',
-        defaultSets: 2,
-        defaultReps: '12-15',
-        restSeconds: 45,
-        tip: 'Yavaşça karnı sıkıştırarak kalçayı kaldır.',
-        commonMistakes: 'Bacakları savurmak.',
+        name: 'Single-Leg Romanian Deadlift',
+        muscle: 'Tek Bacak Arka Zincir',
+        sets: '3 × 8–10 / bacak',
+        defaultSets: 3,
+        defaultReps: '8-10 / bacak',
+        restSeconds: 75,
+        tip: 'Kalçayı yere paralel sabit tutarak serbest bacağı arkaya düz uzat ve dengeli eğil.',
+        commonMistakes: 'Kalçayı yan açmak, beli yuvarlamak.',
+        category: 'legs',
+        alternatives: ['Dumbbell Romanian Deadlift', 'Dumbbell Glute Bridge']
+      },
+      {
+        name: 'Seated Dumbbell Shoulder Press',
+        muscle: 'Omuz Stabilitesi',
+        sets: '3 × 10–12',
+        defaultSets: 3,
+        defaultReps: '10-12',
+        restSeconds: 75,
+        tip: 'Sehpada sırt dayalı ve karın sıkı, kontrollü yukarı pres yap.',
+        commonMistakes: 'Beli sehpadan koparıp kavislendirmek.',
+        category: 'push',
+        alternatives: ['Arnold Press', 'Standing Dumbbell Press', 'Machine Shoulder Press']
+      },
+      {
+        name: 'Band Pull-Apart',
+        muscle: 'Üst Sırt & Postür',
+        sets: '3 × 15',
+        defaultSets: 3,
+        defaultReps: '15',
+        restSeconds: 60,
+        tip: 'Direnç bandını omuz hizasında düz kollarla göğse doğru açıp kürekleri sıkıştır.',
+        commonMistakes: 'Omuzları kulaklara doğru kaldırmak.',
+        category: 'pull',
+        alternatives: ['Face Pull', 'Rear Delt Fly', 'Inverted Row']
+      },
+      {
+        name: 'Ab Wheel Rollout',
+        muscle: 'Tüm Ön Core',
+        sets: '3 × 10–12',
+        defaultSets: 3,
+        defaultReps: '10-12',
+        restSeconds: 60,
+        tip: 'Karın içeri çekili (hollow) kalçayla birlikte öne uzan, bel çökmeden merkeze çek.',
+        commonMistakes: 'Alt beli çökertip kalçayı geride bırakmak.',
         category: 'core',
-        alternatives: ['Hollow Hold', 'Bicycle Crunch', 'Dead Bug']
+        alternatives: ['Dead Bug', 'Hollow Body Hold', 'Plank']
+      },
+      {
+        name: 'Weighted Russian Twist',
+        muscle: 'Oblik & Rotasyon Gücü',
+        sets: '3 × 20',
+        defaultSets: 3,
+        defaultReps: '20',
+        restSeconds: 45,
+        tip: 'Göğüs önünde dambıl/plakayla gövdeyi 45° eğik tutup sağa sola kontrollü dön.',
+        commonMistakes: 'Sadece kolları döndürüp omuzları sabit bırakmak.',
+        category: 'core',
+        alternatives: ['Russian Twist', 'Side Plank', 'Cable Crunch']
       }
     ]
   }
@@ -398,10 +398,10 @@ export const gymPlans = [
   {
     day: 0,
     name: 'Gün A · Tüm Vücut',
-    focus: 'Göğüs, sırt, omuz, bacak ve karın',
+    focus: 'Halter squat, bench press, lat pulldown ve overhead press',
     moves: [
       {
-        name: 'Barbell / Goblet Squat',
+        name: 'Barbell Squat',
         muscle: 'Bacak & Kalça',
         sets: '3 × 8–12',
         defaultSets: 3,
@@ -410,10 +410,10 @@ export const gymPlans = [
         tip: 'Göğüs dik, kalça topuk hizasında derin çöküş, dizler ayak ucu yönünde.',
         commonMistakes: 'Dizlerin içeri çökmesi, topukların kalkması.',
         category: 'legs',
-        alternatives: ['Leg Press', 'Hack Squat', 'Bulgarian Split Squat']
+        alternatives: ['Leg Press', 'Goblet Squat', 'Bulgarian Split Squat']
       },
       {
-        name: 'Bench Press',
+        name: 'Barbell Bench Press',
         muscle: 'Göğüs & Triceps',
         sets: '3 × 8–12',
         defaultSets: 3,
@@ -422,7 +422,7 @@ export const gymPlans = [
         tip: 'Barı göğsün alt kısmına kontrollü indir, kürek kemiklerini sehpaya sabitle.',
         commonMistakes: 'Barı göğse çarptırmak, kalçayı sehpadan kaldırmak.',
         category: 'push',
-        alternatives: ['Dumbbell Bench Press', 'Incline DB Press', 'Chest Press Machine']
+        alternatives: ['Incline Barbell Bench Press', 'Dumbbell Bench Press', 'Machine Chest Press']
       },
       {
         name: 'Lat Pulldown',
@@ -434,62 +434,62 @@ export const gymPlans = [
         tip: 'Gövde hafif geriye yatık, barı köprücük kemiğine doğru çek, sırtı sıkıştır.',
         commonMistakes: 'Aşırı geriye yatarak ivme almak.',
         category: 'pull',
-        alternatives: ['Pull-up (Barfiks)', 'Assisted Pull-up', 'Neutral-grip Pulldown']
+        alternatives: ['Wide-Grip Lat Pulldown', 'Pull-Up', 'Close-Grip Lat Pulldown']
       },
       {
-        name: 'Dumbbell Shoulder Press',
-        muscle: 'Omuz',
-        sets: '2 × 8–12',
-        defaultSets: 2,
-        defaultReps: '8-12',
+        name: 'Barbell Overhead Press',
+        muscle: 'Omuz & Üst Gövde',
+        sets: '3 × 6–10',
+        defaultSets: 3,
+        defaultReps: '6-10',
         restSeconds: 90,
-        tip: 'Sehpada dik veya 80° açıda dambılları baş üstüne presle.',
+        tip: 'Karın ve kalça kilitli, barı yüz önünden dikey baş üstüne bas.',
         commonMistakes: 'Beli aşırı boşluğa düşürmek.',
         category: 'push',
-        alternatives: ['Overhead Barbell Press', 'Arnold Press', 'Machine Shoulder Press']
+        alternatives: ['Machine Shoulder Press', 'Standing Dumbbell Press', 'Arnold Press']
       },
       {
-        name: 'Lateral Raise',
-        muscle: 'Yan Omuz',
-        sets: '2 × 12–15',
-        defaultSets: 2,
+        name: 'Cable Lateral Raise',
+        muscle: 'Yan Omuz (Sürekli Gerilim)',
+        sets: '3 × 12–15',
+        defaultSets: 3,
         defaultReps: '12-15',
         restSeconds: 60,
-        tip: 'Dirsekleri hafif bükülü tutarak dambılları omuz hizasına aç.',
-        commonMistakes: 'Omuzları yukarı silkmek.',
+        tip: 'Alt makarada kolu yan yukarı sabit gerilimle omuz hizasına kaldır.',
+        commonMistakes: 'Omuzları kulaklara doğru silkmek.',
         category: 'push',
-        alternatives: ['Cable Lateral Raise', 'Machine Lateral Raise', 'DB Y-Raise']
+        alternatives: ['Machine Lateral Raise', 'Lateral Raise']
       },
       {
-        name: 'Plank',
-        muscle: 'Core',
-        sets: '3 × 30–45 sn',
+        name: 'Hanging Knee Raise',
+        muscle: 'Alt Karın',
+        sets: '3 × 12–15',
         defaultSets: 3,
-        defaultReps: '30-45 sn',
+        defaultReps: '12-15',
         restSeconds: 60,
-        tip: 'Gövde düz, karın ve kalça sıkı.',
-        commonMistakes: 'Beli çökertmek.',
+        tip: 'Barda sallanmadan asıl, pelvisi öne kıvırarak dizleri göğse kaldır.',
+        commonMistakes: 'Bacakları sallayarak ivme almak.',
         category: 'core',
-        alternatives: ['Hanging Leg Raise', 'Abdominal Crunch Machine', 'Dead Bug']
+        alternatives: ['Hanging Leg Raise', 'Cable Crunch', 'Reverse Crunch']
       }
     ]
   },
   {
     day: 2,
     name: 'Gün B · Tüm Vücut',
-    focus: 'Posterior zincir, sırt, omuz ve karın',
+    focus: 'Arka zincir, kablo sırt çekişi, incline pres ve core',
     moves: [
       {
-        name: 'Romanian Deadlift',
+        name: 'Barbell Romanian Deadlift',
         muscle: 'Hamstring & Kalça',
         sets: '3 × 8–10',
         defaultSets: 3,
         defaultReps: '8-10',
         restSeconds: 120,
-        tip: 'Kalçayı geriye doğru uzat, omurga nötr kalsın.',
+        tip: 'Kalçayı geriye doğru uzat, omurga nötr kalsın ve barı kaval boyunca indir.',
         commonMistakes: 'Sırtı yuvarlamak.',
         category: 'legs',
-        alternatives: ['Dumbbell RDL', 'Leg Curl Machine', 'Glute Ham Raise']
+        alternatives: ['Dumbbell Romanian Deadlift', 'Good Morning', 'Conventional Deadlift']
       },
       {
         name: 'Seated Cable Row',
@@ -501,134 +501,146 @@ export const gymPlans = [
         tip: 'Kolları çekerken göğsü aç, omuz küreklerini birbirine yaklaştır.',
         commonMistakes: 'Öne arkaya aşırı sallanmak.',
         category: 'pull',
-        alternatives: ['Chest-supported T-Bar Row', 'Single-arm DB Row', 'Barbell Row']
+        alternatives: ['Chest-Supported Row', 'Barbell Row', 'One-Arm Dumbbell Row']
       },
       {
-        name: 'Incline Dumbbell Press',
+        name: 'Incline Barbell Bench Press',
         muscle: 'Üst Göğüs & Ön Omuz',
         sets: '3 × 8–12',
         defaultSets: 3,
         defaultReps: '8-12',
         restSeconds: 90,
-        tip: '30° açılı sehpada kontrollü göğüs presi.',
-        commonMistakes: 'Açıyı çok dik tutup omuz presine çevirmek.',
+        tip: '30° eğimli sehpada barı üst göğse kontrollü indirip dikey bas.',
+        commonMistakes: 'Açıyı çok dik tutup tamamen omuz presine çevirmek.',
         category: 'push',
-        alternatives: ['Incline Barbell Bench Press', 'Incline Machine Press']
+        alternatives: ['Incline Dumbbell Press', 'Machine Chest Press']
       },
       {
-        name: 'Bulgarian Split Squat',
-        muscle: 'Bacak & Kalça',
-        sets: '2 × 8–10 / bacak',
-        defaultSets: 2,
+        name: 'Split Squat',
+        muscle: 'Tek Bacak & Kalça',
+        sets: '3 × 8–10 / bacak',
+        defaultSets: 3,
         defaultReps: '8-10 / bacak',
         restSeconds: 75,
-        tip: 'Arka ayak sehpa üzerinde, ön bacakla derin ve dengeli çök.',
-        commonMistakes: 'Ön topuğu kaldırmak, dengesiz inmek.',
+        tip: 'İki ayak sabit açıkken arka diz yere yaklaşana dek dik alçal.',
+        commonMistakes: 'Ön topuğu kaldırmak, yanlara sendelemek.',
         category: 'legs',
-        alternatives: ['Walking Lunge', 'Reverse Lunge', 'Leg Press']
+        alternatives: ['Bulgarian Split Squat', 'Reverse Lunge', 'Leg Press']
       },
       {
-        name: 'Face Pull / Reverse Fly',
+        name: 'Face Pull',
         muscle: 'Arka Omuz & Postür',
-        sets: '2 × 12–15',
-        defaultSets: 2,
+        sets: '3 × 12–15',
+        defaultSets: 3,
         defaultReps: '12-15',
         restSeconds: 60,
-        tip: 'Halatı alına doğru çek, dirsekleri yüksek tut.',
-        commonMistakes: 'Ağır takıp kollardan çekmek.',
+        tip: 'Halatı alına/kulak yanına çek, dirsekleri yüksek ve açık tut.',
+        commonMistakes: 'Ağır takıp yalnızca kollarla çekmek.',
         category: 'pull',
-        alternatives: ['Reverse Pec Deck', 'Dumbbell Reverse Fly', 'Band Pull-apart']
+        alternatives: ['Rear Delt Fly', 'Band Pull-Apart']
       },
       {
-        name: 'Dead Bug',
-        muscle: 'Core',
+        name: 'Cable Pallof Press',
+        muscle: 'Core Anti-Rotasyon',
         sets: '3 × 10 / taraf',
         defaultSets: 3,
         defaultReps: '10 / taraf',
         restSeconds: 45,
-        tip: 'Beli yere yapıştır, çapraz kol-bacak kontrollü uzansın.',
-        commonMistakes: 'Belin yerden kalkması.',
+        tip: 'Kablo çekişine rağmen gövdeyi çevirmeden kolları öne uzatıp bekle.',
+        commonMistakes: 'Omuzları kablo yönüne döndürmek.',
         category: 'core',
-        alternatives: ['Cable Crunch', 'Hanging Knee Raise']
+        alternatives: ['Ab Wheel Rollout', 'Plank', 'Cable Crunch']
       }
     ]
   },
   {
     day: 4,
     name: 'Gün C · Tüm Vücut',
-    focus: 'Dengeli hipertrofi, omuz ve kol vurgusu',
+    focus: 'Makine hipertrofi, geniş kanat, izole kollar ve karın',
     moves: [
       {
-        name: 'Leg Press / Squat',
-        muscle: 'Bacak',
+        name: 'Leg Press',
+        muscle: 'Ön Bacak & Kalça',
         sets: '3 × 10–12',
         defaultSets: 3,
         defaultReps: '10-12',
         restSeconds: 90,
-        tip: 'Ayaklar omuz genişliğinde, kontrollü iniş ve güçlü itiş.',
-        commonMistakes: 'Dizleri kitleyip geriye atmak.',
+        tip: 'Ayaklar omuz genişliğinde platformda, bel koltuktan kalkmadan derin iniş.',
+        commonMistakes: 'Dizleri üstte tamamen kitleyip geri basmak.',
         category: 'legs',
-        alternatives: ['Goblet Squat', 'Front Squat', 'Hack Squat']
+        alternatives: ['Barbell Squat', 'Goblet Squat', 'Split Squat']
       },
       {
-        name: 'Chest Press',
+        name: 'Machine Chest Press',
         muscle: 'Göğüs',
         sets: '3 × 8–12',
         defaultSets: 3,
         defaultReps: '8-12',
         restSeconds: 90,
-        tip: 'Makinada veya dambıllarla stabil göğüs presi.',
-        commonMistakes: 'Dirsekleri çok açmak.',
+        tip: 'Koltuk ayarını orta göğüs hizasında kurup stabil ve kontrollü itiş yap.',
+        commonMistakes: 'Dirsekleri omuzdan fazla açıp omuzu öne yuvarlamak.',
         category: 'push',
-        alternatives: ['Bench Press', 'Dumbbell Floor Press', 'Push-ups']
+        alternatives: ['Barbell Bench Press', 'Dumbbell Bench Press', 'Cable Fly']
       },
       {
-        name: 'Lat Pulldown / Pull-up',
-        muscle: 'Sırt',
+        name: 'Wide-Grip Lat Pulldown',
+        muscle: 'Geniş Kanat (V-Taper)',
         sets: '3 × 8–12',
         defaultSets: 3,
         defaultReps: '8-12',
         restSeconds: 90,
-        tip: 'Tam esneme ve göğse doğru tam çekiş.',
-        commonMistakes: 'Yarım tekrar yapmak.',
+        tip: 'Omuzlardan geniş tutuşta dirsekleri yan-aşağı çekerek sırtı tam esnet.',
+        commonMistakes: 'Yarım tekrar yapmak veya belden savrulmak.',
         category: 'pull',
-        alternatives: ['Single-arm DB Row', 'Close-grip Cable Pulldown']
+        alternatives: ['Pull-Up', 'Lat Pulldown', 'Close-Grip Lat Pulldown']
       },
       {
-        name: 'Lateral Raise',
-        muscle: 'Yan Omuz',
+        name: 'Machine Lateral Raise',
+        muscle: 'Yan Omuz İzolasyon',
         sets: '3 × 12–15',
         defaultSets: 3,
         defaultReps: '12-15',
         restSeconds: 60,
-        tip: 'Kabloda veya dambılla omuz yan başlarını izole et.',
-        commonMistakes: 'Savurma yapmak.',
+        tip: 'Pedleri dirsekle iterek yan omuz başlarını tepe noktada 1 sn sık.',
+        commonMistakes: 'Gövdeyle yukarı zıplamak.',
         category: 'push',
-        alternatives: ['Cable Y-Raise', 'Dumbbell Upright Row']
+        alternatives: ['Cable Lateral Raise', 'Lateral Raise']
       },
       {
-        name: 'Biceps Curl + Triceps Pushdown',
-        muscle: 'Kollar',
-        sets: '2 × 10–12',
-        defaultSets: 2,
+        name: 'Cable Biceps Curl',
+        muscle: 'Biceps (Sabit Tansiyon)',
+        sets: '3 × 10–12',
+        defaultSets: 3,
         defaultReps: '10-12',
         restSeconds: 60,
-        tip: 'Kolları izole eden süperset veya sıralı setler.',
-        commonMistakes: 'Omuzları dahil etmek.',
+        tip: 'Dirsekler gövde yanında kilitli iken alt makara barını omzlara bük.',
+        commonMistakes: 'Omuzları öne dahil etmek.',
         category: 'pull',
-        alternatives: ['Hammer Curl & Skullcrusher', 'Preacher Curl & Dips']
+        alternatives: ['Preacher Curl', 'Hammer Curl', 'Dumbbell Bicep Curl']
       },
       {
-        name: 'Cable Crunch / Reverse Crunch',
-        muscle: 'Karın',
+        name: 'Rope Triceps Pushdown',
+        muscle: 'Triceps',
+        sets: '3 × 10–15',
+        defaultSets: 3,
+        defaultReps: '10-15',
+        restSeconds: 60,
+        tip: 'En alt noktada halat uçlarını yanlara açarak arka kolu sertçe sık.',
+        commonMistakes: 'Dirsekleri öne arkaya gezdirmek.',
+        category: 'push',
+        alternatives: ['Triceps Pushdown', 'Overhead Tricep Extension', 'Close-Grip Bench Press']
+      },
+      {
+        name: 'Cable Crunch',
+        muscle: 'Üst & Tüm Karın',
         sets: '3 × 12–15',
         defaultSets: 3,
         defaultReps: '12-15',
         restSeconds: 45,
-        tip: 'Omurgayı bükerek karnı tam sıkıştır.',
-        commonMistakes: 'Kalçadan çekmek.',
+        tip: 'Kalçayı sabit tutarak omurgayı aşağı doğru kıvırıp karnı tam sıkıştır.',
+        commonMistakes: 'Kalçadan oturup kalkarak ağırlığı sırtla çekmek.',
         category: 'core',
-        alternatives: ['Plank', 'Dead Bug', 'Hanging Knee Raise']
+        alternatives: ['Weighted Crunch', 'Hanging Knee Raise', 'Ab Wheel Rollout']
       }
     ]
   }

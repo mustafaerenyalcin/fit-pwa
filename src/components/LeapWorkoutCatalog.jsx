@@ -142,7 +142,7 @@ const LEAP_COPY = {
   }
 };
 
-const PROGRAMS = [
+export const PROGRAMS = [
   {
     id: 'abs_1',
     section: 'abs',
@@ -169,7 +169,7 @@ const PROGRAMS = [
     image: '/images/tools/fasting-v2.jpg',
     moves: [
       { name: 'Bicycle Crunches', sets: '3 × 24', muscle: 'Oblik & Karın', tip: 'Karşı dirsek ile karşı dizi tam sıkıştır.' },
-      { name: 'Leg Raises', sets: '3 × 15', muscle: 'Alt Karın', tip: 'Beli yerden kaldırmadan bacakları kontrollü indir.' },
+      { name: 'Lying Leg Raises', sets: '3 × 15', muscle: 'Alt Karın', tip: 'Beli yerden kaldırmadan bacakları kontrollü indir.' },
       { name: 'Heel Touch', sets: '3 × 24', muscle: 'Yan Karın', tip: 'Parmak uçlarınla topuklarına dokunarak yanları sık.' },
       { name: 'Side Plank', sets: '2 × 30 sn', muscle: 'Oblik', tip: 'Kalçayı yukarı iterek yan karın hattını aktif tut.' },
       { name: 'Hollow Body Hold', sets: '3 × 25 sn', muscle: 'Derin Core', tip: 'Bel boşluğunu yere bastırıp kol ve bacakları uzat.' }
@@ -187,7 +187,7 @@ const PROGRAMS = [
       { name: 'Burpees', sets: '3 × 12', muscle: 'Tam Vücut', tip: 'Şınav + patlayıcı sıçrama ile nabzı zirveye çıkar.' },
       { name: 'V-Ups', sets: '4 × 15', muscle: 'Tüm Karın', tip: 'Kol ve bacakları aynı anda V şeklinde yukarıda buluştur.' },
       { name: 'Flutter Kicks', sets: '4 × 30 sn', muscle: 'Alt Karın', tip: 'Bacakları yere değdirmeden hızlı makas hareketi yap.' },
-      { name: 'Spiderman Plank', sets: '3 × 20', muscle: 'Oblik & Core', tip: 'Plankta dizini dışarıdan dirseğine doğru çek.' },
+      { name: 'Plank Jacks', sets: '3 × 24', muscle: 'Karın & Kondisyon', tip: 'Plank sabitken bacakları yanlara zıplatıp kapat.' },
       { name: 'Plank Shoulder Taps', sets: '3 × 24', muscle: 'Core Stabilite', tip: 'Kalçayı oynatmadan ellerinle karşı omuza dokun.' }
     ]
   },
@@ -202,9 +202,9 @@ const PROGRAMS = [
     moves: [
       { name: 'Incline Push-Ups', sets: '3 × 12', muscle: 'Alt Göğüs', tip: 'Ellerini yüksek bir yüzeye koyarak kontrollü in.' },
       { name: 'Knee Push-Ups', sets: '3 × 12', muscle: 'Göğüs', tip: 'Dizlerin yerde, gövden düz şekilde göğsünü yere yaklaştır.' },
-      { name: 'Push-Ups', sets: '3 × 10', muscle: 'Göğüs', tip: 'Dirsekleri 45° açıda tutarak göğsünü yere indir.' },
+      { name: 'Push-Ups', sets: '3 × 10', muscle: 'Orta Göğüs', tip: 'Dirsekleri 45° açıda tutarak göğsünü yere indir.' },
       { name: 'Wide Arm Push-Ups', sets: '3 × 10', muscle: 'Dış Göğüs', tip: 'Eller omuzdan geniş, göğüs kaslarını tam esnet.' },
-      { name: 'Cobra Stretch', sets: '2 × 30 sn', muscle: 'Esneme', tip: 'Göğüs ve karın ön duvarını derin nefesle esnet.' }
+      { name: 'Doorway Chest Stretch', sets: '2 × 30 sn', muscle: 'Göğüs Esneme', tip: 'Kolları kapı pervazına dayayıp göğsü ileri nazikçe aç.' }
     ]
   },
   {
@@ -216,9 +216,9 @@ const PROGRAMS = [
     gradient: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
     image: '/images/tools/buddy.jpg',
     moves: [
-      { name: 'Push-Ups', sets: '4 × 14', muscle: 'Göğüs', tip: '3 saniye yavaş inişle göğüs liflerini yak.' },
+      { name: 'Push-Up Shoulder Taps', sets: '4 × 12', muscle: 'Göğüs & Core', tip: 'Her tam şınavın tepesinde karşı omuza dokun.' },
       { name: 'Decline Push-Ups', sets: '3 × 12', muscle: 'Üst Göğüs', tip: 'Ayaklarını yüksek bir yere koyup üst göğse odaklan.' },
-      { name: 'Diamond Push-Ups', sets: '3 × 10', muscle: 'İç Göğüs & Triceps', tip: 'Başparmak ve işaret parmaklarınla elmas şekli yap.' },
+      { name: 'Chest Dips', sets: '3 × 10', muscle: 'Alt Göğüs', tip: 'Gövde hafif öne eğik paralel barda alt göğsü yükle.' },
       { name: 'Hindu Push-Ups', sets: '3 × 10', muscle: 'Göğüs & Omuz', tip: 'Akıcı dalga hareketiyle göğsü yere yaklaştırıp yukarı aç.' }
     ]
   },
@@ -231,10 +231,10 @@ const PROGRAMS = [
     gradient: 'linear-gradient(135deg, #be123c 0%, #881337 100%)',
     image: '/images/tools/metabolic-v2.jpg',
     moves: [
-      { name: 'Clapping / Explosive Push-Ups', sets: '4 × 10', muscle: 'Patlayıcı Göğüs', tip: 'Göğüsten tüm gücünle iterek ellerini yerden kes.' },
+      { name: 'Explosive Push-Ups', sets: '4 × 10', muscle: 'Patlayıcı Göğüs', tip: 'Göğüsten tüm gücünle iterek ellerini yerden kes.' },
       { name: 'Archer Push-Ups', sets: '3 × 12', muscle: 'Tek Kol Göğüs', tip: 'Bir kolunu yana açıp ağırlığı diğer göğse yükle.' },
-      { name: 'Decline Diamond Push-Ups', sets: '3 × 12', muscle: 'Üst & İç Göğüs', tip: 'Ayaklar yüksekte elmas şınav ile zirve kasılma.' },
-      { name: 'Pseudo Planche Push-Ups', sets: '3 × 10', muscle: 'Göğüs & Ön Omuz', tip: 'Gövdeyi öne eğerek omuz ve göğse ekstra yük bindir.' }
+      { name: 'Typewriter Push-Ups', sets: '3 × 10', muscle: 'İç & Dış Göğüs', tip: 'Alçak şınav noktasında bir elden diğerine yatay kay.' },
+      { name: 'Weighted Push-Ups', sets: '3 × 10', muscle: 'Göğüs Güç & Hacim', tip: '4 saniye yavaş iniş veya sırt ağırlığıyla derin itiş.' }
     ]
   },
   {
@@ -246,10 +246,10 @@ const PROGRAMS = [
     gradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
     image: '/images/tools/tabata.jpg',
     moves: [
-      { name: 'Arm Circles', sets: '2 × 30 sn', muscle: 'Omuz & Kol', tip: 'Kolları yana açıp küçük ve hızlı daireler çiz.' },
-      { name: 'Triceps Dips (Sandalye)', sets: '3 × 12', muscle: 'Triceps', tip: 'Sırtını sandalyeye yakın tutarak dirseklerini 90° bük.' },
-      { name: 'Close-Grip Push-Ups', sets: '3 × 10', muscle: 'Triceps & Göğüs', tip: 'Dirseklerini gövdene yapışık tutarak it.' },
-      { name: 'Isometric Biceps Squeeze', sets: '3 × 20 sn', muscle: 'Biceps', tip: 'Avuçlarını birbirine veya masa altına bastırarak biceps sık.' }
+      { name: 'Arm Circles', sets: '2 × 30 sn', muscle: 'Omuz & Kol Isınma', tip: 'Kolları yana açıp küçük ve kontrollü daireler çiz.' },
+      { name: 'Chair Triceps Dips', sets: '3 × 12', muscle: 'Triceps', tip: 'Sırtını sandalyeye yakın tutarak dirseklerini 90° bük.' },
+      { name: 'Wall Push-Ups', sets: '3 × 15', muscle: 'Triceps & Ön Kol', tip: 'Eller duvarda omuzdan dar tutuşla kontrollü it.' },
+      { name: 'Crab Walk', sets: '3 × 20 sn', muscle: 'Arka Kol & Omuz', tip: 'Ters masa duruşunda dirsek gerginliğiyle ileri-geri yürü.' }
     ]
   },
   {
@@ -261,10 +261,10 @@ const PROGRAMS = [
     gradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
     image: '/images/tools/genetic.jpg',
     moves: [
-      { name: 'Diamond Push-Ups', sets: '4 × 12', muscle: 'Triceps', tip: 'Arka kolu yakana kadar kontrollü in ve kilitle.' },
-      { name: 'Floor Tricep Dips', sets: '3 × 15', muscle: 'Triceps', tip: 'Yerde ters masa pozisyonunda dirsekleri büküp it.' },
-      { name: 'Towel / Bodyweight Biceps Curl', sets: '3 × 12', muscle: 'Biceps', tip: 'Havlu direnci veya kapı/masa altı izometrik çekiş.' },
-      { name: 'Plank Up-Downs', sets: '3 × 14', muscle: 'Kol & Core', tip: 'Dirsek planktan avuç içi planka çıkıp in.' }
+      { name: 'Diamond Push-Ups', sets: '4 × 12', muscle: 'Triceps & İç Göğüs', tip: 'Eller üçgen formda arka kolu yakana kadar kontrollü in.' },
+      { name: 'Bench Triceps Dips', sets: '3 × 15', muscle: 'Triceps', tip: 'Bacaklar önde düz sehpadan derin iniş ve kilit itiş.' },
+      { name: 'Towel Biceps Rows', sets: '3 × 12', muscle: 'Biceps & Ön Kol', tip: 'Sağlam havlu direnciyle dirsekleri gövdeye doğru bük.' },
+      { name: 'Inchworm Walkouts', sets: '3 × 10', muscle: 'Kol & Omuz Stabilite', tip: 'Ayaklar sabitken ellerle ileri plank konumuna yürü ve dön.' }
     ]
   },
   {
@@ -277,9 +277,9 @@ const PROGRAMS = [
     image: '/images/tools/form_check.jpg',
     moves: [
       { name: 'Bodyweight Squat', sets: '3 × 16', muscle: 'Quad & Kalça', tip: 'Topukların yerde, kalçayı geriye iterek paralel in.' },
-      { name: 'Alternating Lunges', sets: '3 × 16', muscle: 'Bacak & Kalça', tip: 'Gövde dik, arka diz yere yaklaşana kadar in.' },
-      { name: 'Glute Bridge', sets: '3 × 15', muscle: 'Kalça & Hamstring', tip: 'Tepede kalçayı 1 saniye sık.' },
-      { name: 'Standing Calf Raises', sets: '3 × 20', muscle: 'Kalf', tip: 'Parmak ucunda en tepeye çıkıp 1 sn bekle.' }
+      { name: 'Forward Lunges', sets: '3 × 16', muscle: 'Bacak & Kalça', tip: 'Gövde dik, öne adımla arka diz yere yaklaşana dek in.' },
+      { name: 'Glute Bridge', sets: '3 × 15', muscle: 'Kalça & Hamstring', tip: 'Tepede kalçayı 1 saniye sertçe sık.' },
+      { name: 'Calf Raises', sets: '3 × 20', muscle: 'Kalf', tip: 'Parmak ucunda en tepeye çıkıp 1 sn bekle.' }
     ]
   },
   {
@@ -292,8 +292,8 @@ const PROGRAMS = [
     image: '/images/tools/recovery.jpg',
     moves: [
       { name: 'Jump Squats', sets: '4 × 15', muscle: 'Patlayıcı Quad', tip: 'Derin çömelip patlayıcı şekilde yukarı sıçra.' },
-      { name: 'Bulgarian Split Squat (Ekipmansız)', sets: '3 × 12', muscle: 'Quad & Kalça', tip: 'Arka ayağı koltuk/sandalyeye koyup tek bacak çök.' },
-      { name: 'Jumping Lunges', sets: '3 × 16', muscle: 'Bacak Kondisyon', tip: 'Havada bacak değiştirerek dengeli in.' },
+      { name: 'Bulgarian Split Squat', sets: '3 × 12', muscle: 'Quad & Kalça', tip: 'Arka ayağı koltuk/sandalyeye koyup tek bacak çök.' },
+      { name: 'Skater Hops', sets: '3 × 18', muscle: 'Yan Kalça & Kondisyon', tip: 'Tek ayaktan yanlamasına diğerine patlayıcı sıçra.' },
       { name: 'Wall Sit', sets: '3 × 45 sn', muscle: 'Quad Dayanıklılık', tip: 'Sırt duvara yaslı, dizler 90° açıda bekle.' }
     ]
   },
@@ -307,9 +307,9 @@ const PROGRAMS = [
     image: '/images/tools/hydration.jpg',
     moves: [
       { name: 'Superman Hold', sets: '3 × 15', muscle: 'Alt Sırt', tip: 'Yüzüstü uzanıp kol ve bacakları aynı anda yerden kaldır.' },
-      { name: 'Prone Y-T-W Raises', sets: '3 × 12', muscle: 'Üst Sırt & Omuz', tip: 'Kürek kemiklerini birbirine yaklaştırarak sırtı sık.' },
-      { name: 'Pike Push-Ups', sets: '3 × 10', muscle: 'Omuz', tip: 'Kalça yukarıda ters V pozisyonunda başını yere yaklaştır.' },
-      { name: 'Snow Angels (Yerde)', sets: '3 × 15', muscle: 'Lat & Postür', tip: 'Yüzüstü kolları önden arkaya geniş kavisle çek.' }
+      { name: 'Prone Y Raises', sets: '3 × 12', muscle: 'Alt Trapez & Omuz', tip: 'Kolları Y açısında öne uzatarak kürek kemiklerini çek.' },
+      { name: 'Pike Push-Ups', sets: '3 × 10', muscle: 'Ön & Yan Omuz', tip: 'Kalça yukarıda ters V pozisyonunda başını yere yaklaştır.' },
+      { name: 'Bird Dog', sets: '3 × 16', muscle: 'Omurga & Postür', tip: 'Dört ayak üzerinde çapraz kol ve bacağı düz hizada uzat.' }
     ]
   },
   {
@@ -321,10 +321,10 @@ const PROGRAMS = [
     gradient: 'linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%)',
     image: '/images/tools/form_check.jpg',
     moves: [
-      { name: 'Elevated Pike Push-Ups', sets: '4 × 12', muscle: 'Ön & Yan Omuz', tip: 'Ayaklar yüksekte dikey omuz itişi yap.' },
-      { name: 'Towel Door / Floor Rows', sets: '4 × 12', muscle: 'Sırt & Kanat', tip: 'Kürek kemiklerini sıkarak göğsünü yukarı çek.' },
-      { name: 'Dive Bomber Push-Ups', sets: '3 × 10', muscle: 'Omuz & Sırt', tip: 'Derin kavisle inip sırtı esneterek geri dön.' },
-      { name: 'Reverse Snow Angels', sets: '3 × 15', muscle: 'Arka Omuz & Trapez', tip: 'Sırt kaslarını son noktada 2 saniye kilitle.' }
+      { name: 'Elevated Pike Push-Ups', sets: '4 × 12', muscle: 'Omuz Başları', tip: 'Ayaklar yüksekte dikey omuz itişi yap.' },
+      { name: 'Doorway Rows', sets: '4 × 12', muscle: 'Sırt & Kanat', tip: 'Kapı çerçevesinden kürek kemiklerini sıkarak çekil.' },
+      { name: 'Prone T Raises', sets: '3 × 14', muscle: 'Arka Omuz & Orta Sırt', tip: 'Yüzüstü kolları T harfi şeklinde yanlara kaldırıp sık.' },
+      { name: 'Reverse Snow Angels', sets: '3 × 15', muscle: 'Arka Omuz & Trapez', tip: 'Geniş kavisle geriye çekip sırt kaslarını 2 saniye kilitle.' }
     ]
   }
 ];

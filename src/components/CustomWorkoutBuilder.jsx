@@ -4,44 +4,44 @@ import { Card } from './ui.jsx';
 import { getSetting, setSetting } from '../lib/store.js';
 import { scheduleSync } from '../lib/supabase.js';
 
-const EXERCISE_LIBRARY = {
+export const EXERCISE_LIBRARY = {
   Omuz: [
-    { name: 'Dumbbell Shoulder Press', sets: '3 × 8-12', muscle: 'Ön & Yan Omuz', tip: 'Karın sıkı, dambılları kulak hizasından yukarı it.' },
+    { name: 'Seated Dumbbell Shoulder Press', sets: '3 × 8-12', muscle: 'Ön & Yan Omuz', tip: 'Sehpada dik otur, karın sıkı, dambılları kulak hizasından yukarı it.' },
     { name: 'Lateral Raise', sets: '4 × 12-15', muscle: 'Yan Omuz', tip: 'Dirsekler hafif bükülü, omuz hizasına kadar kontrollü kaldır.' },
     { name: 'Rear Delt Fly', sets: '3 × 12-15', muscle: 'Arka Omuz', tip: 'Gövde öne eğik, kürek kemiklerini birbirine yaklaştır.' },
     { name: 'Arnold Press', sets: '3 × 10-12', muscle: 'Tüm Omuz', tip: 'Avuç içleri sana bakarken başla, yukarı iterken dışa çevir.' },
-    { name: 'Pike Push-ups', sets: '3 × 8-12', muscle: 'Omuz & Triceps', tip: 'Kalça yukarıda ters V pozisyonunda başı yere yaklaştır.' }
+    { name: 'Pike Push-Ups', sets: '3 × 8-12', muscle: 'Omuz & Triceps', tip: 'Kalça yukarıda ters V pozisyonunda başı yere yaklaştır.' }
   ],
   Göğüs: [
-    { name: 'Dumbbell Floor Press', sets: '3 × 8-12', muscle: 'Göğüs', tip: 'Yerde uzanıp dirsekleri 45° açıyla indir ve yukarı bas.' },
-    { name: 'Push-ups / Incline Push-ups', sets: '3 × 10-15', muscle: 'Göğüs & Core', tip: 'Vücut düz bir çizgi halinde, göğsü yere yaklaştır.' },
-    { name: 'Dumbbell Bench / Incline Press', sets: '3 × 8-12', muscle: 'Üst & Orta Göğüs', tip: 'Sehpada kontrollü indirip göğsü sıkarak bas.' },
-    { name: 'Dumbbell Fly', sets: '3 × 12-15', muscle: 'Göğüs İç/Dış', tip: 'Dirsek açısını bozmadan göğsü esneterek aç ve kapat.' }
+    { name: 'Dumbbell Bench Press', sets: '3 × 8-12', muscle: 'Orta Göğüs', tip: 'Düz sehpada kürek kemiklerini sabitle, dirsekler 45° açıyla indir ve bas.' },
+    { name: 'Incline Dumbbell Press', sets: '3 × 8-12', muscle: 'Üst Göğüs', tip: '30-45° eğimli sehpada dambılları üst göğüs hizasına indirip yukarı bas.' },
+    { name: 'Decline Dumbbell Press', sets: '3 × 10-12', muscle: 'Alt Göğüs', tip: 'Baş aşağı eğimli sehpada göğsün alt liflerini sıkarak kontrollü bas.' },
+    { name: 'Dumbbell Fly', sets: '3 × 12-15', muscle: 'Göğüs İç/Dış', tip: 'Dirsek açısını bozmadan göğsü esneterek aç ve ortada birleştir.' }
   ],
   Sırt: [
     { name: 'One-Arm Dumbbell Row', sets: '3 × 10-12', muscle: 'Kanat (Lat)', tip: 'Dambılı kalçana doğru çek, üst noktada sırtını sık.' },
     { name: 'Bent-Over Dumbbell Row', sets: '3 × 8-12', muscle: 'Orta Sırt', tip: 'Bel düz, gövde 45° eğik, dirsekleri geriye çek.' },
-    { name: 'Pull-ups / Chin-ups', sets: '3 × Maks', muscle: 'Sırt & Biceps', tip: 'Göğsü bara yaklaştır, sallanmadan kontrollü in.' },
-    { name: 'Dumbbell Pullover', sets: '3 × 10-12', muscle: 'Kanat & Göğüs', tip: 'Tek dambılı baş arkasına indirip kanat kaslarıyla çek.' }
+    { name: 'Pull-Up', sets: '3 × Maks', muscle: 'Üst Sırt & Kanat', tip: 'Avuç içleri karşıya bakacak şekilde geniş tut, göğsü bara çek.' },
+    { name: 'Chin-Up', sets: '3 × Maks', muscle: 'Alt Kanat & Biceps', tip: 'Avuç içleri sana bakacak şekilde omuz genişliğinde tut, çeneyi barın üzerine çıkar.' }
   ],
   'Karın / Core': [
     { name: 'Plank', sets: '3 × 45-60 sn', muscle: 'Core', tip: 'Bel çökmeden karın ve kalçayı sıkarak sabit kal.' },
     { name: 'Weighted Crunch', sets: '3 × 15-20', muscle: 'Üst Karın', tip: 'Göğüste dambıl ile omuzları yerden kaldırıp karnı sık.' },
-    { name: 'Leg Raise / Lying Leg Raise', sets: '3 × 12-15', muscle: 'Alt Karın', tip: 'Bel boşluğunu yere bastırarak bacakları kaldır.' },
+    { name: 'Lying Leg Raise', sets: '3 × 12-15', muscle: 'Alt Karın', tip: 'Sırtüstü bel boşluğunu yere bastırarak bacakları kontrollü kaldır.' },
     { name: 'Russian Twist', sets: '3 × 20', muscle: 'Oblik (Yan Karın)', tip: 'Gövdeyi sağa ve sola kontrollü döndür.' },
-    { name: 'Ab Wheel / Dead Bug', sets: '3 × 12', muscle: 'Derin Core', tip: 'Beli sabit tutarak karşı kol ve bacağı uzat.' }
+    { name: 'Dead Bug', sets: '3 × 12', muscle: 'Derin Core', tip: 'Belin yere temasını kesmeden çapraz kol ve bacağı yavaşça uzat.' }
   ],
   Kol: [
     { name: 'Dumbbell Bicep Curl', sets: '3 × 10-12', muscle: 'Biceps', tip: 'Dirsekleri gövdeye sabitle, sallanmadan kaldır.' },
-    { name: 'Hammer Curl', sets: '3 × 10-12', muscle: 'Brachialis & Ön Kol', tip: 'Avuç içleri birbirine bakacak şekilde kaldır.' },
-    { name: 'Overhead Triceps Extension', sets: '3 × 10-15', muscle: 'Triceps', tip: 'Dirsekleri açmadan dambılı baş arkasına indirip kaldır.' },
-    { name: 'Diamond Push-ups / Bench Dip', sets: '3 × 10-15', muscle: 'Triceps', tip: 'Eller yakın, tüm yükü arka kola vererek it.' }
+    { name: 'Hammer Curl', sets: '3 × 10-12', muscle: 'Brachialis & Ön Kol', tip: 'Avuç içleri birbirine bakacak şekilde kontrollü kaldır.' },
+    { name: 'Dumbbell Overhead Triceps Extension', sets: '3 × 10-15', muscle: 'Triceps Uzun Baş', tip: 'Dirsekleri açmadan dambılı baş arkasına indirip yukarı kilitle.' },
+    { name: 'Dumbbell Skull Crusher', sets: '3 × 10-12', muscle: 'Triceps', tip: 'Düz sehpada dirsekleri sabit tutarak dambılları alın yanına indir ve it.' }
   ],
   Bacak: [
     { name: 'Goblet Squat', sets: '3 × 10-12', muscle: 'Ön Bacak & Kalça', tip: 'Dambılı göğüste tut, dik gövdeyle derin çömel.' },
     { name: 'Dumbbell Romanian Deadlift', sets: '3 × 10-12', muscle: 'Arka Bacak & Kalça', tip: 'Dizler hafif bükülü, kalçayı geriye iterek dambılları indir.' },
     { name: 'Bulgarian Split Squat', sets: '3 × 8-10', muscle: 'Bacak & Kalça', tip: 'Arka ayak yüksekte, ön bacakla dengeli çömel.' },
-    { name: 'Dumbbell Calf Raise', sets: '4 × 15-20', muscle: 'Baldır (Kalf)', tip: 'Parmak ucunda yükselip 1 saniye tepe noktada sık.' }
+    { name: 'Standing Calf Raise', sets: '4 × 15-20', muscle: 'Baldır (Kalf)', tip: 'Ayakta parmak ucunda yükselip tepe noktada 1 saniye sık.' }
   ]
 };
 
@@ -93,7 +93,7 @@ export default function CustomWorkoutBuilder({ onStartWorkout }) {
   return (
     <Card
       title="Kendi Antrenmanını Oluştur"
-      subtitle="40+ hareketlik kütüphaneden kendi özel rutinini kur ve kaydet"
+      subtitle="26 benzersiz hareketlik kütüphaneden kendi özel rutinini kur ve kaydet"
       action={
         <button
           type="button"

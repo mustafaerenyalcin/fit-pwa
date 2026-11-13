@@ -13,7 +13,10 @@ import { calculateReadiness } from '../readinessEngine.js';
 import { calculateStreak, calculateGamification } from '../streaks.js';
 import { setLang, getLang, translate } from '../i18n.js';
 import { today, formatDate } from '../calculations.js';
-import { resolveExerciseMedia } from '../exerciseMedia.js';
+import { resolveExerciseMedia, EXERCISE_MEDIA_DB } from '../exerciseMedia.js';
+import { PROGRAMS } from '../../components/LeapWorkoutCatalog.jsx';
+import { EXERCISE_LIBRARY } from '../../components/CustomWorkoutBuilder.jsx';
+import { homePlans, gymPlans } from '../workoutPlans.js';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -153,35 +156,65 @@ describe('i18n translation engine', () => {
   });
 });
 
-describe('exerciseMedia resolver & local photo availability', () => {
-  it('resolves all major workout catalog exercises to existing 2-frame photo folders', () => {
-    const samples = [
-      'Incline Push-Ups',
-      'Knee Push-Ups',
-      'Decline Push-Ups',
-      'Bulgarian Split Squat (Ekipmansız)',
-      'DB Romanian Deadlift',
-      'Abdominal Crunches',
-      'Bicycle Crunches',
-      'Plank',
-      'Dead Bug',
-      'Triceps Dips (Sandalye)',
-      'Dumbbell Bicep Curl',
-      'Lateral Raise',
-      'Bent-Over Dumbbell Row',
-      'Glute Bridge',
-      'Cobra Stretch'
-    ];
-
+describe('exerciseMedia resolver, CC BY-SA 4.0 vector availability & strict uniqueness', () => {
+  it('stores 133+ unique 3-frame SVG sets with legal attribution and zero scraped JPGs on disk', () => {
     const publicDir = path.resolve(process.cwd(), 'public');
-    for (const exName of samples) {
-      const resolved = resolveExerciseMedia(exName);
-      expect(resolved.frame0).toMatch(/^\/exercises\/.+\/0\.jpg$/);
-      expect(resolved.frame1).toMatch(/^\/exercises\/.+\/1\.jpg$/);
-      expect(fs.existsSync(path.join(publicDir, resolved.frame0))).toBe(true);
-      expect(fs.existsSync(path.join(publicDir, resolved.frame1))).toBe(true);
-      expect(resolved.step1.length).toBeGreaterThan(10);
-      expect(resolved.step2.length).toBeGreaterThan(10);
+    const exercisesDir = path.join(publicDir, 'exercises');
+    expect(fs.existsSync(path.join(exercisesDir, 'LICENSE-ASSETS'))).toBe(true);
+    expect(fs.existsSync(path.join(exercisesDir, 'ATTRIBUTION.md'))).toBe(true);
+
+    const entries = Object.values(EXERCISE_MEDIA_DB);
+    expect(entries.length).toBeGreaterThanOrEqual(133);
+
+    const uniqueSlugs = new Set(entries.map((e) => e.slug));
+    expect(uniqueSlugs.size).toBe(entries.length);
+
+    for (const entry of entries) {
+      const frame1 = `/exercises/${entry.slug}/1.svg`;
+      const frame2 = `/exercises/${entry.slug}/2.svg`;
+      const frame3 = `/exercises/${entry.slug}/3.svg`;
+      expect(fs.existsSync(path.join(publicDir, frame1))).toBe(true);
+      expect(fs.existsSync(path.join(publicDir, frame2))).toBe(true);
+      expect(fs.existsSync(path.join(publicDir, frame3))).toBe(true);
+      expect(fs.existsSync(path.join(exercisesDir, entry.slug, '0.jpg'))).toBe(false);
+      expect(entry.label.length).toBeGreaterThan(2);
+      expect(entry.primaryMuscleTr.length).toBeGreaterThan(2);
+      expect(entry.step1.length).toBeGreaterThan(8);
+      expect(entry.step2.length).toBeGreaterThan(8);
+      expect(entry.step3.length).toBeGreaterThan(8);
+    }
+  });
+
+  it('guarantees zero repeated exercises or shared SVG folders across catalog, homePlans, gymPlans & builder', () => {
+    const normalize = (s) => String(s || '').trim().toLowerCase();
+
+    const catalogMoves = PROGRAMS.flatMap((p) => p.moves.map((m) => m.name));
+    const homeMoves = homePlans.flatMap((d) => (d.moves || []).map((e) => e.name));
+    const gymMoves = gymPlans.flatMap((d) => (d.moves || []).map((e) => e.name));
+    const builderMoves = Object.values(EXERCISE_LIBRARY).flat().map((e) => e.name);
+
+    expect(new Set(catalogMoves.map(normalize)).size).toBe(catalogMoves.length);
+    expect(new Set(catalogMoves.map((n) => resolveExerciseMedia(n).folder)).size).toBe(catalogMoves.length);
+
+    expect(new Set(homeMoves.map(normalize)).size).toBe(homeMoves.length);
+    expect(new Set(homeMoves.map((n) => resolveExerciseMedia(n).folder)).size).toBe(homeMoves.length);
+
+    expect(new Set(gymMoves.map(normalize)).size).toBe(gymMoves.length);
+    expect(new Set(gymMoves.map((n) => resolveExerciseMedia(n).folder)).size).toBe(gymMoves.length);
+
+    const allPrebuilt = [...catalogMoves, ...homeMoves, ...gymMoves];
+    expect(allPrebuilt.length).toBe(99);
+    expect(new Set(allPrebuilt.map(normalize)).size).toBe(allPrebuilt.length);
+    expect(new Set(allPrebuilt.map((n) => resolveExerciseMedia(n).folder)).size).toBe(allPrebuilt.length);
+
+    expect(new Set(builderMoves.map(normalize)).size).toBe(builderMoves.length);
+    expect(new Set(builderMoves.map((n) => resolveExerciseMedia(n).folder)).size).toBe(builderMoves.length);
+
+    for (const n of [...allPrebuilt, ...builderMoves]) {
+      const resolved = resolveExerciseMedia(n);
+      expect(resolved.frame1).toMatch(/^\/exercises\/.+\/1\.svg$/);
+      expect(resolved.frame2).toMatch(/^\/exercises\/.+\/2\.svg$/);
+      expect(resolved.frame3).toMatch(/^\/exercises\/.+\/3\.svg$/);
     }
   });
 });

@@ -2,106 +2,160 @@ import React, { useEffect, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 import { resolveExerciseMedia } from '../lib/exerciseMedia.js';
 
+const PING_PONG_SEQUENCE = [1, 2, 3, 2];
+
 export default function ExerciseVisual({ name = '', size = 'compact', muscle = '', tip = '' }) {
   const media = resolveExerciseMedia(name);
-  const isStage = size === 'stage';
-  const [frame, setFrame] = useState(0);
-  const [playing, setPlaying] = useState(true);
+  const [seqIndex, setSeqIndex] = useState(0);
+  const [manualFrame, setManualFrame] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
-    setFrame(0);
-    setPlaying(true);
+    setSeqIndex(0);
+    setManualFrame(null);
+    setIsPlaying(true);
   }, [name]);
 
   useEffect(() => {
-    if (!playing) return undefined;
-    const id = setInterval(() => {
-      setFrame((prev) => (prev === 0 ? 1 : 0));
-    }, 1250);
-    return () => clearInterval(id);
-  }, [playing, name]);
+    if (!isPlaying) return undefined;
+    const id = window.setInterval(() => {
+      setSeqIndex((prev) => (prev + 1) % PING_PONG_SEQUENCE.length);
+    }, size === 'stage' ? 850 : 1000);
+    return () => window.clearInterval(id);
+  }, [isPlaying, size]);
+
+  const activeFrame = isPlaying ? PING_PONG_SEQUENCE[seqIndex] : (manualFrame ?? 1);
+  const isCompact = size === 'compact';
+
+  const selectFrame = (targetFrame) => {
+    setIsPlaying(false);
+    setManualFrame(targetFrame);
+  };
+
+  const togglePlay = () => {
+    setIsPlaying((prev) => {
+      if (prev) {
+        setManualFrame(activeFrame);
+        return false;
+      }
+      setManualFrame(null);
+      return true;
+    });
+  };
+
+  const primaryMuscleLabel = muscle || media.primaryMuscleTr || 'Tüm Vücut';
 
   return (
-    <div
-      className={`exerciseVisual fx-animStage fx-animStage--${size}`}
-      title={name}
-    >
+    <div className={`fx-animStage fx-animStage--${size}`}>
       <div className="fx-animStageBadgeRow">
-        <span className={`fx-animLiveDot ${playing ? 'playing' : 'paused'}`} />
-        <span>{playing ? 'CANLI GÖSTERİM' : 'DURAKLATILDI'}</span>
-        <span className="fx-animPoseSub">{media.label}</span>
-        {muscle && <span className="fx-animMuscleTag">{muscle}</span>}
+        <span className={`fx-animLiveDot ${isPlaying ? '' : 'paused'}`} aria-hidden="true" />
+        <span>{isPlaying ? '3-FAZ VEKTÖR REHBERİ' : `FAZ ${activeFrame} / 3`}</span>
+        <div className="fx-animMetaTags">
+          {media.equipmentTr && (
+            <span className="fx-animEquipTag">{media.equipmentTr}</span>
+          )}
+          <span className="fx-animMuscleTag">{primaryMuscleLabel}</span>
+        </div>
       </div>
 
-      {/* Real 2-Frame Photo Sequence Player (Zero Stick Figures) */}
-      <div className={`fx-photoPlayer ${isStage ? 'is-stage' : 'is-compact'}`}>
-        <img
-          src={media.frame0}
-          alt={`${name} başlangıç pozisyonu`}
-          className="fx-photoFrame is-base visible"
-          loading="eager"
-          decoding="sync"
-        />
+      <div className={`fx-photoPlayer ${isCompact ? 'is-compact' : 'is-stage'}`}>
+        <div className="fx-studioFloor" aria-hidden="true" />
+
         <img
           src={media.frame1}
-          alt={`${name} bitiş pozisyonu`}
-          className={`fx-photoFrame is-overlay ${frame === 1 ? 'visible' : ''}`}
+          alt={`${media.label || name} - Başlangıç pozisyonu`}
+          className={`fx-photoFrame ${activeFrame === 1 ? 'visible' : ''}`}
           loading="eager"
-          decoding="sync"
+          decoding="async"
+        />
+        <img
+          src={media.frame2}
+          alt={`${media.label || name} - Orta hareket fazı`}
+          className={`fx-photoFrame ${activeFrame === 2 ? 'visible' : ''}`}
+          loading="eager"
+          decoding="async"
+        />
+        <img
+          src={media.frame3}
+          alt={`${media.label || name} - Zirve sıkıştırma`}
+          className={`fx-photoFrame ${activeFrame === 3 ? 'visible' : ''}`}
+          loading="eager"
+          decoding="async"
         />
 
-        {/* Overlay Phase Pill & Controls */}
         <div className="fx-photoControlsRow">
-          <div className="fx-frameSwitchGroup">
+          <div className="fx-frameSwitchGroup" role="group" aria-label="Hareket fazı seçimi">
             <button
               type="button"
-              className={`fx-frameBtn ${frame === 0 ? 'active' : ''}`}
-              onClick={() => {
-                setPlaying(false);
-                setFrame(0);
-              }}
+              className={`fx-frameBtn ${activeFrame === 1 ? 'active' : ''}`}
+              onClick={() => selectFrame(1)}
             >
-              1. Başlangıç
+              {isCompact ? '1' : '1. Başlangıç'}
             </button>
             <button
               type="button"
-              className={`fx-frameBtn ${frame === 1 ? 'active' : ''}`}
-              onClick={() => {
-                setPlaying(false);
-                setFrame(1);
-              }}
+              className={`fx-frameBtn ${activeFrame === 2 ? 'active' : ''}`}
+              onClick={() => selectFrame(2)}
             >
-              2. Bitiş
+              {isCompact ? '2' : '2. Orta'}
+            </button>
+            <button
+              type="button"
+              className={`fx-frameBtn ${activeFrame === 3 ? 'active' : ''}`}
+              onClick={() => selectFrame(3)}
+            >
+              {isCompact ? '3' : '3. Zirve'}
             </button>
           </div>
 
           <button
             type="button"
             className="fx-playPauseBtn"
-            onClick={() => setPlaying((p) => !p)}
-            aria-label={playing ? 'Duraklat' : 'Oynat'}
+            onClick={togglePlay}
+            aria-label={isPlaying ? 'Animasyonu duraklat' : 'Animasyonu oynat'}
           >
-            {playing ? <Pause size={13} /> : <Play size={13} fill="currentColor" />}
-            <span>{playing ? 'Duraklat' : 'Oynat'}</span>
+            {isPlaying ? <Pause size={12} /> : <Play size={12} />}
+            <span>{isPlaying ? 'Duraklat' : 'Oynat'}</span>
           </button>
         </div>
       </div>
 
-      {isStage && (
-        <div className="fx-animStepGuide">
-          <div className={`fx-animStepPill ${frame === 0 ? 'active-step' : ''}`}>
-            <strong>1. Başlangıç Pozisyonu</strong>
-            <span>{media.step1}</span>
-          </div>
-          <div className={`fx-animStepPill ${frame === 1 ? 'active-step' : ''}`}>
-            <strong>2. Hareket / Tepe Noktası</strong>
-            <span>{media.step2}</span>
-          </div>
-        </div>
-      )}
+      <div className="fx-animPoseSub">
+        <strong>{media.label || name}</strong>
+        {media.secondaryMusclesTr ? (
+          <span className="fx-animSecondaryLabel"> · Destek: {media.secondaryMusclesTr}</span>
+        ) : null}
+      </div>
 
-      {isStage && tip && (
-        <p className="fx-animStageTip">💡 {tip}</p>
+      <div className={`fx-animStepGuide ${isCompact ? 'is-compact-guide' : ''}`}>
+        <button
+          type="button"
+          className={`fx-animStepPill ${activeFrame === 1 ? 'active-step' : ''}`}
+          onClick={() => selectFrame(1)}
+        >
+          <strong>1. Başlangıç</strong>
+          <span>{media.step1}</span>
+        </button>
+        <button
+          type="button"
+          className={`fx-animStepPill ${activeFrame === 2 ? 'active-step' : ''}`}
+          onClick={() => selectFrame(2)}
+        >
+          <strong>2. Orta Faz</strong>
+          <span>{media.step2}</span>
+        </button>
+        <button
+          type="button"
+          className={`fx-animStepPill ${activeFrame === 3 ? 'active-step' : ''}`}
+          onClick={() => selectFrame(3)}
+        >
+          <strong>3. Zirve / Sıkma</strong>
+          <span>{media.step3}</span>
+        </button>
+      </div>
+
+      {tip && (
+        <p className="fx-animStageTip">{tip}</p>
       )}
     </div>
   );
